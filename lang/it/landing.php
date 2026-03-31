@@ -17,24 +17,24 @@ return [
     ],
 
     'hero' => [
-        'headline' => 'Non perdere mai un\'offerta di lavoro',
-        'subtitle' => 'Monitora le aziende su Workable e ricevi avvisi via email ogni giorno quando si aprono nuove posizioni.',
+        'headline' => 'Monitora le offerte di lavoro, gestisci le tue candidature',
+        'subtitle' => 'Segui le aziende su Workable, ricevi notifiche sulle nuove posizioni e gestisci la tua pipeline di candidature.',
         'cta' => 'Inizia ora',
     ],
 
     'steps_heading' => 'Come funziona',
     'steps' => [
         '1' => [
-            'title' => 'Aggiungi le aziende',
-            'description' => 'Inserisci lo slug dell\'account Workable di qualsiasi azienda che vuoi monitorare.',
+            'title' => 'Registrati e aggiungi le aziende',
+            'description' => 'Crea un account e aggiungi gli slug Workable delle aziende che vuoi monitorare.',
         ],
         '2' => [
-            'title' => 'Controlliamo ogni giorno',
-            'description' => 'Ogni giorno recuperiamo automaticamente le ultime offerte di lavoro da Workable.',
+            'title' => 'Sincronizziamo ogni giorno',
+            'description' => 'Ogni giorno recuperiamo le nuove posizioni. Ricevi notifiche per le aziende che segui.',
         ],
         '3' => [
-            'title' => 'Ricevi le notifiche',
-            'description' => 'Ricevi un\'email con tutte le nuove posizioni, raggruppate per azienda.',
+            'title' => 'Gestisci la tua pipeline',
+            'description' => 'Salva le offerte, segna le candidature inviate, monitora i colloqui.',
         ],
     ],
 
@@ -42,15 +42,15 @@ return [
     'features' => [
         'notifications' => [
             'title' => 'Notifiche email giornaliere',
-            'description' => 'Le nuove offerte di lavoro consegnate nella tua casella ogni mattina.',
+            'description' => 'Ricevi notifiche sulle nuove posizioni. Attiva o disattiva le notifiche per ogni azienda.',
         ],
         'workable' => [
             'title' => 'Integrazione Workable',
-            'description' => 'Sincronizzazione automatica con le API pubbliche di Workable, nessuna API key necessaria.',
+            'description' => 'Aggiungi qualsiasi azienda con il suo slug Workable. Validiamo e sincronizziamo automaticamente.',
         ],
         'admin' => [
-            'title' => 'Pannello di amministrazione',
-            'description' => 'Gestisci aziende, offerte di lavoro e utenti da una dashboard pulita.',
+            'title' => 'Pipeline personale',
+            'description' => 'Salva, candidati, colloquio, scarta. Monitora ogni candidatura in un unico posto.',
         ],
         'opensource' => [
             'title' => 'Open source',

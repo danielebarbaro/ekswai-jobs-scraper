@@ -17,24 +17,24 @@ return [
     ],
 
     'hero' => [
-        'headline' => 'Never miss a job posting',
-        'subtitle' => 'Track companies on Workable and get daily email alerts when new positions open.',
+        'headline' => 'Track job postings, manage your applications',
+        'subtitle' => 'Follow companies on Workable, get notified about new positions, and track your application pipeline.',
         'cta' => 'Get started',
     ],
 
     'steps_heading' => 'How it works',
     'steps' => [
         '1' => [
-            'title' => 'Add companies',
-            'description' => 'Enter the Workable account slug of any company you want to monitor.',
+            'title' => 'Sign up and add companies',
+            'description' => 'Register and add Workable company slugs you want to track.',
         ],
         '2' => [
-            'title' => 'We check daily',
-            'description' => 'Every day we fetch the latest job postings from Workable automatically.',
+            'title' => 'We sync daily',
+            'description' => 'Every day we fetch new positions. You get notified for companies you follow.',
         ],
         '3' => [
-            'title' => 'Get notified',
-            'description' => 'Receive an email with all the new positions, grouped by company.',
+            'title' => 'Manage your pipeline',
+            'description' => 'Bookmark jobs, mark applications as submitted, track your interviews.',
         ],
     ],
 
@@ -42,15 +42,15 @@ return [
     'features' => [
         'notifications' => [
             'title' => 'Daily email notifications',
-            'description' => 'New job postings delivered to your inbox every morning.',
+            'description' => 'Get notified about new positions. Toggle notifications per company.',
         ],
         'workable' => [
             'title' => 'Workable integration',
-            'description' => 'Automatic sync with Workable public API, no API key required.',
+            'description' => 'Add any company by their Workable slug. We validate and sync automatically.',
         ],
         'admin' => [
-            'title' => 'Admin panel',
-            'description' => 'Manage companies, job postings, and users from a clean dashboard.',
+            'title' => 'Personal job pipeline',
+            'description' => 'Bookmark, submit, interview, dismiss. Track every application in one place.',
         ],
         'opensource' => [
             'title' => 'Open source',
