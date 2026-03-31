@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 return [
     'meta' => [
-        'title' => 'EksWai Position Scraper — Non perdere mai un\'offerta di lavoro',
-        'description' => 'Monitora le offerte di lavoro su Workable e ricevi notifiche giornaliere quando si aprono nuove posizioni. Gratuito, open source, costruito con Laravel.',
-        'og_title' => 'EksWai Position Scraper',
-        'og_description' => 'Tieni traccia delle offerte di lavoro su Workable e ricevi email giornaliere per le nuove posizioni.',
+        'title' => 'ekswai — Monitora le offerte di lavoro, gestisci le tue candidature',
+        'description' => 'Segui le aziende su Workable, ricevi notifiche giornaliere per le nuove posizioni e gestisci la tua pipeline di candidature. Gratuito e open source.',
+        'og_title' => 'ekswai — Job Tracking semplice',
+        'og_description' => 'Segui le aziende su Workable, ricevi notifiche giornaliere, gestisci la tua pipeline di candidature.',
     ],
 
     'nav' => [
@@ -18,7 +18,7 @@ return [
 
     'hero' => [
         'headline' => 'Monitora le offerte di lavoro, gestisci le tue candidature',
-        'subtitle' => 'Segui le aziende su Workable, ricevi notifiche sulle nuove posizioni e gestisci la tua pipeline di candidature.',
+        'subtitle' => 'Segui le aziende su Workable, ricevi notifiche sulle nuove posizioni e gestisci tutta la tua pipeline di candidature in un unico posto.',
         'cta' => 'Inizia ora',
     ],
 
@@ -26,15 +26,27 @@ return [
     'steps' => [
         '1' => [
             'title' => 'Registrati e aggiungi le aziende',
-            'description' => 'Crea un account e aggiungi gli slug Workable delle aziende che vuoi monitorare.',
+            'description' => 'Crea il tuo account gratuito. Poi vai su Le Mie Aziende, inserisci uno slug Workable (come "laravel" da apply.workable.com/laravel) e lo validiamo subito.',
         ],
         '2' => [
             'title' => 'Sincronizziamo ogni giorno',
-            'description' => 'Ogni giorno recuperiamo le nuove posizioni. Ricevi notifiche per le aziende che segui.',
+            'description' => 'Ogni mattina controlliamo tutte le tue aziende per nuove posizioni. Attiva le notifiche email per azienda, o controlla la dashboard quando vuoi.',
         ],
         '3' => [
             'title' => 'Gestisci la tua pipeline',
-            'description' => 'Salva le offerte, segna le candidature inviate, monitora i colloqui.',
+            'description' => 'Salva i ruoli interessanti, segna dove hai inviato il CV, monitora i colloqui. Scarta quello che non ti serve. Tutto in una dashboard pulita.',
+        ],
+    ],
+
+    'preview_heading' => 'Guarda come funziona',
+    'preview' => [
+        'companies' => [
+            'title' => 'Le Mie Aziende',
+            'description' => 'Aggiungi qualsiasi azienda Workable, gestisci le notifiche email',
+        ],
+        'dashboard' => [
+            'title' => 'La Tua Dashboard',
+            'description' => 'Monitora ogni candidatura in un unico posto',
         ],
     ],
 
@@ -46,11 +58,11 @@ return [
         ],
         'workable' => [
             'title' => 'Integrazione Workable',
-            'description' => 'Aggiungi qualsiasi azienda con il suo slug Workable. Validiamo e sincronizziamo automaticamente.',
+            'description' => 'Aggiungi qualsiasi azienda con il suo slug Workable. Lo validiamo tramite API e sincronizziamo automaticamente.',
         ],
-        'admin' => [
+        'pipeline' => [
             'title' => 'Pipeline personale',
-            'description' => 'Salva, candidati, colloquio, scarta. Monitora ogni candidatura in un unico posto.',
+            'description' => 'Salva, candidati, colloquio, scarta. Monitora ogni stato di candidatura in un unico posto.',
         ],
         'opensource' => [
             'title' => 'Open source',
