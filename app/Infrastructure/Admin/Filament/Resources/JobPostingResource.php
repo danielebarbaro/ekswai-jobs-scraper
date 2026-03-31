@@ -14,9 +14,9 @@ class JobPostingResource extends Resource
 {
     protected static ?string $model = JobPosting::class;
 
-    protected static $navigationIcon = 'heroicon-o-briefcase';
+    protected static ?string $navigationIcon = 'heroicon-o-briefcase';
 
-    protected static $navigationSort = 3;
+    protected static ?int $navigationSort = 3;
 
     public static function form(Form $form): Form
     {
