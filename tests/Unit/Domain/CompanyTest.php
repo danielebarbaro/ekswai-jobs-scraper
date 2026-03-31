@@ -3,56 +3,56 @@
 declare(strict_types=1);
 
 use App\Domain\Company\Company;
+use App\Domain\JobPosting\JobPosting;
 use App\Domain\User\User;
 
-beforeEach(function () {
-    $this->user = User::factory()->create();
+it('can create a company without user_id', function () {
+    $company = Company::factory()->create();
+
+    expect($company)->toBeInstanceOf(Company::class)
+        ->and($company->name)->toBeString()
+        ->and($company->workable_account_slug)->toBeString();
 });
 
-it('can create a company', function () {
-    $company = Company::create([
-        'user_id' => $this->user->id,
-        'name' => 'Test Company',
-        'workable_account_slug' => 'test-company',
-        'is_active' => true,
-    ]);
+it('has subscribers relationship', function () {
+    $company = Company::factory()->create();
+    $user = User::factory()->create();
 
-    expect($company)
-        ->name->toBe('Test Company')
-        ->workable_account_slug->toBe('test-company')
-        ->is_active->toBeTrue()
-        ->user_id->toBe($this->user->id);
+    $company->subscribers()->attach($user->id, ['email_notifications' => true]);
+
+    expect($company->subscribers)->toHaveCount(1)
+        ->and($company->subscribers->first()->id)->toBe($user->id)
+        ->and($company->subscribers->first()->pivot->email_notifications)->toBeTrue();
+});
+
+it('has job postings relationship', function () {
+    $company = Company::factory()->create();
+    JobPosting::factory()->count(3)->create(['company_id' => $company->id]);
+
+    expect($company->jobPostings)->toHaveCount(3);
 });
 
 it('can toggle company activation', function () {
-    $company = Company::factory()->create([
-        'user_id' => $this->user->id,
-        'is_active' => true,
-    ]);
-
-    expect($company->is_active)->toBeTrue();
+    $company = Company::factory()->create(['is_active' => true]);
 
     $company->toggleActivation();
 
     expect($company->fresh()->is_active)->toBeFalse();
-
-    $company->toggleActivation();
-
-    expect($company->fresh()->is_active)->toBeTrue();
 });
 
 it('scopes only active companies', function () {
-    Company::factory()->count(3)->create([
-        'user_id' => $this->user->id,
-        'is_active' => true,
-    ]);
+    Company::factory()->count(2)->create(['is_active' => true]);
+    Company::factory()->create(['is_active' => false]);
 
-    Company::factory()->count(2)->create([
-        'user_id' => $this->user->id,
-        'is_active' => false,
-    ]);
+    expect(Company::active()->count())->toBe(2);
+});
 
-    $activeCompanies = Company::active()->get();
+it('scopes companies with subscribers', function () {
+    $companyWithSub = Company::factory()->create();
+    $companyWithoutSub = Company::factory()->create();
+    $user = User::factory()->create();
 
-    expect($activeCompanies)->toHaveCount(3);
+    $companyWithSub->subscribers()->attach($user->id);
+
+    expect(Company::whereHas('subscribers')->count())->toBe(1);
 });

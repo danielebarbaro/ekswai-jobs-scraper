@@ -6,8 +6,10 @@ namespace App\Domain\JobPosting;
 
 use App\Domain\Company\Company;
 use App\Domain\Shared\BaseModel;
+use App\Domain\User\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class JobPosting extends BaseModel
 {
@@ -25,6 +27,13 @@ class JobPosting extends BaseModel
     public function company(): BelongsTo
     {
         return $this->belongsTo(Company::class);
+    }
+
+    public function userStatuses(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class)
+            ->withPivot('status')
+            ->withTimestamps();
     }
 
     public function markAsSeen(): void
