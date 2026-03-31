@@ -5,8 +5,8 @@ namespace App\Infrastructure\Admin\Filament\Resources;
 use App\Domain\JobPosting\JobPosting;
 use App\Infrastructure\Admin\Filament\Resources\JobPostingResource\Pages;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
 
@@ -14,13 +14,13 @@ class JobPostingResource extends Resource
 {
     protected static ?string $model = JobPosting::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-briefcase';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-briefcase';
 
     protected static ?int $navigationSort = 3;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->schema([
                 Forms\Components\Section::make('Job Posting Information')
                     ->schema([

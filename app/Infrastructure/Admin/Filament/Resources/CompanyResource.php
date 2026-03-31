@@ -5,8 +5,8 @@ namespace App\Infrastructure\Admin\Filament\Resources;
 use App\Domain\Company\Company;
 use App\Infrastructure\Admin\Filament\Resources\CompanyResource\Pages;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
 
@@ -24,9 +24,9 @@ class CompanyResource extends Resource
         return 2;
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->schema([
                 Forms\Components\Section::make('Company Information')
                     ->schema([
