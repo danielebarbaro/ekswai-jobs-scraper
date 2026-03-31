@@ -95,8 +95,8 @@ export default function Landing({ locale, alternateLocale, translations: t, conf
                 {/* Header */}
                 <header className="mx-auto flex max-w-5xl items-center justify-between px-6 py-6">
                     <div className="flex items-center gap-2">
-                        <img src="/images/logo.png" alt="ekswai" className="size-7" />
-                        <span className="text-lg font-semibold" style={{ fontFamily: "'Leckerli One', cursive" }}>ekswai</span>
+                        <img src="/images/logo.png" alt="ekswai" className="w-12" />
+                        <span className=" font-semibold text-4xl" style={{ fontFamily: "'Leckerli One', cursive" }}>ekswai</span>
                     </div>
                     <nav className="flex items-center gap-3 text-sm">
                         <button
@@ -323,7 +323,7 @@ export default function Landing({ locale, alternateLocale, translations: t, conf
                 <footer className="border-t border-stone-200 px-6 py-8 dark:border-stone-800">
                     <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-4 text-sm text-stone-600 sm:flex-row dark:text-stone-400">
                         <div className="flex items-center gap-2">
-                            <img src="/images/logo.png" alt="ekswai" className="size-5" />
+                            <img src="/images/logo.png" alt="ekswai" className="w-12" />
                             <p>
                                 {t.footer.opensource_by}{' '}
                                 <a
