@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Infrastructure\Admin\Filament\Resources;
 
 use App\Domain\JobPosting\JobPosting;
@@ -16,9 +14,9 @@ class JobPostingResource extends Resource
 {
     protected static ?string $model = JobPosting::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-briefcase';
+    protected static $navigationIcon = 'heroicon-o-briefcase';
 
-    protected static ?int $navigationSort = 3;
+    protected static $navigationSort = 3;
 
     public static function form(Form $form): Form
     {

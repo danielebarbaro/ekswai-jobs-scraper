@@ -29,7 +29,7 @@ class NotifyUserOfNewJobsAction
 
         $totalJobs = $jobsByCompany->sum(fn ($item) => $item['jobs']->count());
 
-        Log::info('Sending new jobs notification to user', [
+        Log::info('Queueing new jobs notification to user', [
             'user_id' => $user->id,
             'user_email' => $user->email,
             'companies_count' => $jobsByCompany->count(),
@@ -37,13 +37,19 @@ class NotifyUserOfNewJobsAction
         ]);
 
         try {
-            Mail::to($user->email)->send(new NewJobsFoundMail($user, $jobsByCompany));
+            // Queue the email instead of sending synchronously
+            Mail::to($user->email)
+                ->queue(
+                    (new NewJobsFoundMail($user, $jobsByCompany))
+                        ->onQueue('emails')
+                );
 
-            Log::info('New jobs notification sent successfully', [
+            Log::info('New jobs notification queued successfully', [
                 'user_id' => $user->id,
+                'queue' => 'emails',
             ]);
         } catch (\Throwable $e) {
-            Log::error('Failed to send new jobs notification', [
+            Log::error('Failed to queue new jobs notification', [
                 'user_id' => $user->id,
                 'error' => $e->getMessage(),
             ]);

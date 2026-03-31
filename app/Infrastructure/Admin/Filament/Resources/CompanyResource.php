@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Infrastructure\Admin\Filament\Resources;
 
 use App\Domain\Company\Company;
@@ -16,9 +14,15 @@ class CompanyResource extends Resource
 {
     protected static ?string $model = Company::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-building-office';
+    public static function getNavigationIcon(): string
+    {
+        return 'heroicon-o-building-office';
+    }
 
-    protected static ?int $navigationSort = 2;
+    public static function getNavigationSort(): int
+    {
+        return 2;
+    }
 
     public static function form(Form $form): Form
     {
