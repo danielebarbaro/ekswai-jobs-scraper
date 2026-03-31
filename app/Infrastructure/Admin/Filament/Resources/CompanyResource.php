@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Admin\Filament\Resources;
 
 use App\Domain\Company\Company;
+use App\Domain\Company\JobBoardProvider;
 use App\Infrastructure\Admin\Filament\Resources\CompanyResource\Pages;
 use Filament\Actions;
 use Filament\Forms;
@@ -37,10 +38,18 @@ class CompanyResource extends Resource
                         Forms\Components\TextInput::make('name')
                             ->required()
                             ->maxLength(255),
-                        Forms\Components\TextInput::make('workable_account_slug')
+                        Forms\Components\Select::make('provider')
+                            ->options(
+                                collect(JobBoardProvider::cases())
+                                    ->mapWithKeys(fn (JobBoardProvider $p) => [$p->value => ucfirst($p->value)])
+                                    ->toArray()
+                            )
+                            ->default(JobBoardProvider::Workable->value)
+                            ->required(),
+                        Forms\Components\TextInput::make('provider_slug')
                             ->required()
                             ->maxLength(255)
-                            ->helperText('The Workable account identifier (e.g., "company-name" from https://apply.workable.com/company-name)')
+                            ->helperText('The provider account identifier (e.g., "company-name")')
                             ->unique(ignoreRecord: true),
                         Forms\Components\Toggle::make('is_active')
                             ->required()
@@ -58,7 +67,10 @@ class CompanyResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('workable_account_slug')
+                Tables\Columns\TextColumn::make('provider')
+                    ->badge()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('provider_slug')
                     ->searchable()
                     ->sortable()
                     ->copyable(),
