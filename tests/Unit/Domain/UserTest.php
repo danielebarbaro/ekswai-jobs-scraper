@@ -35,5 +35,5 @@ it('can check email notification preference for a company', function () {
 
     $pivot = $user->subscribedCompanies()->where('company_id', $company->id)->first()->pivot;
 
-    expect($pivot->email_notifications)->toBeFalse();
+    expect((bool) $pivot->email_notifications)->toBeFalse();
 });

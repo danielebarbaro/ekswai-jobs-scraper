@@ -22,7 +22,7 @@ it('has subscribers relationship', function () {
 
     expect($company->subscribers)->toHaveCount(1)
         ->and($company->subscribers->first()->id)->toBe($user->id)
-        ->and($company->subscribers->first()->pivot->email_notifications)->toBeTrue();
+        ->and((bool) $company->subscribers->first()->pivot->email_notifications)->toBeTrue();
 });
 
 it('has job postings relationship', function () {

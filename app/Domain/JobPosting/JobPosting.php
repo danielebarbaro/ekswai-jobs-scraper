@@ -7,13 +7,20 @@ namespace App\Domain\JobPosting;
 use App\Domain\Company\Company;
 use App\Domain\Shared\BaseModel;
 use App\Domain\User\User;
+use Database\Factories\JobPostingFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class JobPosting extends BaseModel
 {
+    /** @use HasFactory<JobPostingFactory> */
     use HasFactory;
+
+    protected static function newFactory(): JobPostingFactory
+    {
+        return JobPostingFactory::new();
+    }
 
     protected function casts(): array
     {
