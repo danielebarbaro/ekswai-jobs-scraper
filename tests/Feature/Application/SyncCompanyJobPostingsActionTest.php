@@ -3,26 +3,30 @@
 declare(strict_types=1);
 
 use App\Application\Actions\JobPosting\SyncCompanyJobPostingsAction;
-use App\Application\DTOs\WorkableJobDTO;
+use App\Application\DTOs\JobPostingDTO;
 use App\Domain\Company\Company;
 use App\Domain\JobPosting\JobPosting;
 use App\Domain\User\User;
-use App\Infrastructure\Services\Workable\WorkableHttpClient;
+use App\Infrastructure\Services\Contracts\JobBoardClient;
+use App\Infrastructure\Services\JobBoardClientFactory;
 
 beforeEach(function () {
     $this->user = User::factory()->create();
     $this->company = Company::factory()->create([
-        'workable_account_slug' => 'test-company',
+        'provider_slug' => 'test-company',
     ]);
     $this->company->subscribers()->attach($this->user->id);
 
-    $this->workableClient = Mockery::mock(WorkableHttpClient::class);
-    $this->action = new SyncCompanyJobPostingsAction($this->workableClient);
+    $this->jobBoardClient = Mockery::mock(JobBoardClient::class);
+    $this->factory = Mockery::mock(JobBoardClientFactory::class);
+    $this->factory->shouldReceive('make')->andReturn($this->jobBoardClient);
+
+    $this->action = new SyncCompanyJobPostingsAction($this->factory);
 });
 
-it('creates new job postings from workable api', function () {
-    $workableJobs = collect([
-        new WorkableJobDTO(
+it('creates new job postings from api', function () {
+    $jobs = collect([
+        new JobPostingDTO(
             externalId: 'job-1',
             title: 'Software Engineer',
             location: 'Remote',
@@ -30,7 +34,7 @@ it('creates new job postings from workable api', function () {
             department: 'Engineering',
             rawPayload: ['shortcode' => 'job-1', 'title' => 'Software Engineer']
         ),
-        new WorkableJobDTO(
+        new JobPostingDTO(
             externalId: 'job-2',
             title: 'Product Manager',
             location: 'New York',
@@ -40,11 +44,11 @@ it('creates new job postings from workable api', function () {
         ),
     ]);
 
-    $this->workableClient
+    $this->jobBoardClient
         ->shouldReceive('fetchJobsForCompany')
         ->with('test-company')
         ->once()
-        ->andReturn($workableJobs);
+        ->andReturn($jobs);
 
     $newJobs = $this->action->execute($this->company);
 
@@ -62,8 +66,8 @@ it('creates job_posting_user records for all subscribers', function () {
     $user2 = User::factory()->create();
     $this->company->subscribers()->attach($user2->id);
 
-    $workableJobs = collect([
-        new WorkableJobDTO(
+    $jobs = collect([
+        new JobPostingDTO(
             externalId: 'job-1',
             title: 'Software Engineer',
             location: 'Remote',
@@ -73,11 +77,11 @@ it('creates job_posting_user records for all subscribers', function () {
         ),
     ]);
 
-    $this->workableClient
+    $this->jobBoardClient
         ->shouldReceive('fetchJobsForCompany')
         ->with('test-company')
         ->once()
-        ->andReturn($workableJobs);
+        ->andReturn($jobs);
 
     $this->action->execute($this->company);
 
@@ -94,8 +98,8 @@ it('does not create duplicate jobs', function () {
         'first_seen_at' => now()->subDays(5),
     ]);
 
-    $workableJobs = collect([
-        new WorkableJobDTO(
+    $jobs = collect([
+        new JobPostingDTO(
             externalId: 'job-1',
             title: 'Software Engineer',
             location: 'Remote',
@@ -103,7 +107,7 @@ it('does not create duplicate jobs', function () {
             department: 'Engineering',
             rawPayload: ['shortcode' => 'job-1']
         ),
-        new WorkableJobDTO(
+        new JobPostingDTO(
             externalId: 'job-2',
             title: 'Product Manager',
             location: 'New York',
@@ -113,11 +117,11 @@ it('does not create duplicate jobs', function () {
         ),
     ]);
 
-    $this->workableClient
+    $this->jobBoardClient
         ->shouldReceive('fetchJobsForCompany')
         ->with('test-company')
         ->once()
-        ->andReturn($workableJobs);
+        ->andReturn($jobs);
 
     $newJobs = $this->action->execute($this->company);
 
@@ -129,7 +133,7 @@ it('does not create duplicate jobs', function () {
 });
 
 it('returns empty collection when api returns no jobs', function () {
-    $this->workableClient
+    $this->jobBoardClient
         ->shouldReceive('fetchJobsForCompany')
         ->with('test-company')
         ->once()
