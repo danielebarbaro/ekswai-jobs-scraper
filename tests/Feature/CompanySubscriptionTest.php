@@ -36,7 +36,7 @@ it('can follow a company', function () {
         ->assertRedirect();
 
     expect($this->user->fresh()->subscribedCompanies)->toHaveCount(1)
-        ->and($this->user->subscribedCompanies->first()->workable_account_slug)->toBe('laravel');
+        ->and($this->user->subscribedCompanies->first()->provider_slug)->toBe('laravel');
 });
 
 it('returns validation error for invalid slug', function () {
@@ -49,7 +49,7 @@ it('returns validation error for invalid slug', function () {
 });
 
 it('returns validation error when already following', function () {
-    $company = Company::factory()->create(['workable_account_slug' => 'already']);
+    $company = Company::factory()->create(['provider_slug' => 'already']);
     $this->user->subscribedCompanies()->attach($company->id);
 
     $this->post(route('companies.follow'), ['slug' => 'already'])
