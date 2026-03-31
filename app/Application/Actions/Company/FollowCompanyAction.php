@@ -37,7 +37,7 @@ class FollowCompanyAction
 
         if ($companyName === null) {
             throw ValidationException::withMessages([
-                'slug' => ['This company does not exist on ' . $provider->value . '.'],
+                'slug' => ['This company does not exist on '.$provider->value.'.'],
             ]);
         }
 
