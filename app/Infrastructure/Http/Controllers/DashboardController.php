@@ -17,7 +17,7 @@ class DashboardController extends Controller
         $companyId = $request->query('company');
 
         $query = $user->jobPostingStatuses()
-            ->with('company:id,name,workable_account_slug')
+            ->with('company:id,name,provider,provider_slug')
             ->orderByPivot('updated_at', 'desc');
 
         if ($status && $status !== 'all') {

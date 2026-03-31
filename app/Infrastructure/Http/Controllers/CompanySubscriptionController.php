@@ -7,6 +7,7 @@ namespace App\Infrastructure\Http\Controllers;
 use App\Application\Actions\Company\FollowCompanyAction;
 use App\Application\Actions\Company\UnfollowCompanyAction;
 use App\Domain\Company\Company;
+use App\Domain\Company\JobBoardProvider;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -41,7 +42,9 @@ class CompanySubscriptionController extends Controller
             'slug' => ['required', 'string', 'max:255'],
         ]);
 
-        $action->execute($request->user(), $request->input('slug'));
+        $provider = JobBoardProvider::from($request->input('provider', 'workable'));
+
+        $action->execute($request->user(), $request->input('slug'), $provider);
 
         return back()->with('success', 'Company followed successfully.');
     }
