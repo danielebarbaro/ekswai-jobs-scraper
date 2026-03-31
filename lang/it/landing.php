@@ -38,7 +38,7 @@ return [
         ],
     ],
 
-    'features_heading' => 'Funzionalita\'',
+    'features_heading' => 'Funzionalità',
     'features' => [
         'notifications' => [
             'title' => 'Notifiche email giornaliere',

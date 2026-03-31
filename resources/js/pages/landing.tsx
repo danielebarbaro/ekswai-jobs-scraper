@@ -46,10 +46,11 @@ interface LandingProps {
     alternateLocale: string;
     translations: LandingTranslations;
     config: LandingConfig;
+    baseUrl: string;
     auth: { user: unknown | null };
 }
 
-export default function Landing({ locale, alternateLocale, translations: t, config, auth }: LandingProps) {
+export default function Landing({ locale, alternateLocale, translations: t, config, baseUrl, auth }: LandingProps) {
     return (
         <>
             <Head title={t.meta.title}>
@@ -58,11 +59,11 @@ export default function Landing({ locale, alternateLocale, translations: t, conf
                 <meta property="og:description" content={t.meta.og_description} />
                 <meta property="og:type" content="website" />
                 <meta property="og:locale" content={locale === 'it' ? 'it_IT' : 'en_US'} />
-                <meta property="og:image" content="/images/og-landing.png" />
-                <meta property="og:url" content={`/${locale}`} />
-                <link rel="canonical" href={`/${locale}`} />
-                <link rel="alternate" hrefLang="en" href="/en" />
-                <link rel="alternate" hrefLang="it" href="/it" />
+                <meta property="og:image" content={`${baseUrl}/images/og-landing.png`} />
+                <meta property="og:url" content={`${baseUrl}/${locale}`} />
+                <link rel="canonical" href={`${baseUrl}/${locale}`} />
+                <link rel="alternate" hrefLang="en" href={`${baseUrl}/en`} />
+                <link rel="alternate" hrefLang="it" href={`${baseUrl}/it`} />
                 <link rel="preconnect" href="https://fonts.bunny.net" />
                 <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
                 {config.umami.enabled && config.umami.script_url && config.umami.website_id && (
@@ -82,7 +83,7 @@ export default function Landing({ locale, alternateLocale, translations: t, conf
                 </script>
             </Head>
 
-            <div className="min-h-screen bg-white font-[family-name:Instrument_Sans] text-slate-900 dark:bg-slate-950 dark:text-slate-100">
+            <div className="min-h-screen bg-white font-[family-name:Instrument_Sans] text-slate-900 opacity-100 transition-opacity duration-750 dark:bg-slate-950 dark:text-slate-100 starting:opacity-0">
                 {/* Header */}
                 <header className="mx-auto flex max-w-5xl items-center justify-between px-6 py-6">
                     <span className="text-lg font-semibold">EksWai</span>

@@ -30,6 +30,7 @@ class LandingController extends Controller
             'locale' => $locale,
             'alternateLocale' => $locale === 'en' ? 'it' : 'en',
             'translations' => __('landing'),
+            'baseUrl' => config('app.url'),
             'config' => [
                 'repo_url' => config('landing.repo_url'),
                 'umami' => config('landing.umami'),
