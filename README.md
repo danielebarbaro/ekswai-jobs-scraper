@@ -1,307 +1,103 @@
-# EksWai Position Scraper
+# ekswai
 
-> Laravel 12 application with DDD & Hexagonal Architecture for monitoring Workable job positions.
+<p align="center">
+  <img src="public/images/hero.png" alt="ekswai" width="480">
+</p>
 
-[![Tests](https://github.com/danielebarbaro/ekswai-jobs-scraper/actions/workflows/tests.yml/badge.svg)](https://github.com/danielebarbaro/ekswai-jobs-scraper/actions/workflows/tests.yml)
-[![Static Analysis](https://github.com/danielebarbaro/ekswai-jobs-scraper/actions/workflows/analyse.yml/badge.svg)](https://github.com/danielebarbaro/ekswai-jobs-scraper/actions/workflows/analyse.yml)
-[![Linter](https://github.com/danielebarbaro/ekswai-jobs-scraper/actions/workflows/lint.yml/badge.svg)](https://github.com/danielebarbaro/ekswai-jobs-scraper/actions/workflows/lint.yml)
+<p align="center">
+  Track job postings from Workable, manage your application pipeline.
+</p>
 
-## Overview
+<p align="center">
+  <a href="https://github.com/danielebarbaro/ekswai-jobs-scraper/actions/workflows/tests.yml"><img src="https://github.com/danielebarbaro/ekswai-jobs-scraper/actions/workflows/tests.yml/badge.svg" alt="Tests"></a>
+  <a href="https://github.com/danielebarbaro/ekswai-jobs-scraper/actions/workflows/analyse.yml"><img src="https://github.com/danielebarbaro/ekswai-jobs-scraper/actions/workflows/analyse.yml/badge.svg" alt="Static Analysis"></a>
+  <a href="https://github.com/danielebarbaro/ekswai-jobs-scraper/actions/workflows/lint.yml"><img src="https://github.com/danielebarbaro/ekswai-jobs-scraper/actions/workflows/lint.yml/badge.svg" alt="Linter"></a>
+</p>
 
-**EksWai Position Scraper** is a Laravel 12 application built with Domain-Driven Design (DDD) and Hexagonal Architecture. It allows users to:
+## What it does
 
-- Register and manage a list of companies (Workable accounts) to track
-- Automatically fetch job postings from Workable's public API
-- Detect and store new job positions
-- Receive email notifications when new jobs are found
-- Manage everything through a Filament 4 admin panel
+ekswai lets you follow companies on Workable and track their job postings. You add companies by their Workable slug, the system validates them against the API and syncs new positions every day. You get email notifications for companies you care about, and you manage your entire application pipeline from one dashboard.
 
-## Features
+**For users:**
+1. Register and go to My Companies
+2. Add a Workable slug (e.g. `laravel` from apply.workable.com/laravel)
+3. The system validates and syncs job postings automatically
+4. Browse your dashboard: bookmark, mark as submitted, track interviews, dismiss
 
-- ✅ **DDD & Hexagonal Architecture** - Clean separation of concerns
-- ✅ **Laravel 12** with PHP 8.4
-- ✅ **PostgreSQL** - Production database with UUIDs
-- ✅ **Filament 4** - Modern admin panel
-- ✅ **Workable Integration** - Automatic job scraping
-- ✅ **Email Notifications** - HTML emails for new positions
-- ✅ **Scheduled Tasks** - Daily automatic sync
-- ✅ **Code Quality** - PHPStan, Pint, Rector
-- ✅ **Testing** - Pest for unit and feature tests
-- ✅ **CI/CD** - GitHub Actions workflows
+**For admins:**
+Filament 4 panel to manage companies, job postings, and users.
 
-## Technical Stack
+## Tech Stack
 
 | Component | Technology |
 |-----------|------------|
-| Framework | Laravel 12 |
-| PHP Version | 8.4+ |
-| Local Environment | Laravel Sail (Docker) |
+| Framework | Laravel 12 (PHP 8.4) |
+| Frontend | React 19, Inertia.js, TypeScript, Tailwind CSS 4 |
 | Database | PostgreSQL (SQLite for tests) |
-| Admin Panel | Filament 4 |
+| Admin | Filament 4 |
 | Testing | Pest |
-| Static Analysis | PHPStan (Larastan) |
-| Code Style | Laravel Pint (PSR-12) |
-| Refactoring | Rector |
+| Static Analysis | PHPStan (Larastan) level 5 |
+| Code Style | Laravel Pint |
+| CI/CD | GitHub Actions |
+| Local Dev | Laravel Sail (Docker) |
 
 ## Architecture
 
+DDD with three layers:
+
 ```
 app/
-├── Domain/              # Business logic layer
-│   ├── Company/
-│   ├── JobPosting/
-│   ├── Shared/
-│   └── User/
-├── Application/         # Use case orchestration
-│   ├── Actions/
-│   └── DTOs/
+├── Domain/              # Models, business logic
+│   ├── Company/         # Company entity (global, shared between users)
+│   ├── JobPosting/      # Job posting entity with per-user status
+│   ├── Shared/          # BaseModel (UUIDs, guarded)
+│   └── User/            # User with subscriptions and job statuses
+├── Application/         # Use cases
+│   ├── Actions/         # FollowCompany, UnfollowCompany, Sync, Notify
+│   └── DTOs/            # WorkableJobDTO
 └── Infrastructure/      # External adapters
-    ├── Admin/
-    │   └── Filament/
-    ├── Console/
-    ├── Mail/
-    └── Services/
-        └── Workable/
+    ├── Admin/Filament/  # Admin panel resources
+    ├── Console/         # Artisan commands (jobs:sync-daily)
+    ├── Mail/            # Email templates
+    └── Services/        # Workable API client
 ```
 
-## Installation
+**Key relationships:**
+Users subscribe to companies via `company_user` pivot (with email notification toggle). Each user has a per-job status via `job_posting_user` pivot (new, bookmarked, submitted, interview, dismissed). The sync is shared: one API call per company regardless of subscriber count.
 
-### Prerequisites
-
-- PHP 8.4+
-- Composer
-- Docker & Docker Compose (for Sail)
-- Node.js & NPM (optional, for frontend assets)
-
-### Quick Start
-
-1. **Clone the repository**
+## Quick Start
 
 ```bash
 git clone https://github.com/danielebarbaro/ekswai-jobs-scraper.git
 cd ekswai-jobs-scraper
-```
-
-2. **Install dependencies**
-
-```bash
 composer install
-```
-
-3. **Set up environment**
-
-```bash
 cp .env.example .env
 php artisan key:generate
-```
-
-4. **Start Laravel Sail (Docker)**
-
-```bash
 ./vendor/bin/sail up -d
+./vendor/bin/sail artisan migrate --seed
+npm install && npm run build
 ```
 
-5. **Run migrations**
+Open http://localhost and register. Then go to /companies and add a Workable slug.
+
+## Commands
 
 ```bash
-./vendor/bin/sail artisan migrate
-```
-
-6. **Create a Filament admin user**
-
-```bash
-./vendor/bin/sail artisan make:filament-user
-```
-
-7. **Access the application**
-
-- Admin Panel: http://localhost/admin
-- Login with the credentials you just created
-
-## Usage
-
-### Managing Companies
-
-1. Log in to the Filament admin panel at `/admin`
-2. Navigate to **Companies**
-3. Click **New Company** and enter:
-   - **Name**: Display name for the company
-   - **Workable Account Slug**: The identifier from the Workable URL
-     (e.g., `company-name` from `https://apply.workable.com/company-name`)
-   - **User**: Select which user owns this company
-   - **Active**: Toggle to enable/disable tracking
-
-### Running the Sync
-
-**Manual sync:**
-
-```bash
+# Sync job postings from Workable
 ./vendor/bin/sail artisan jobs:sync-daily
-```
 
-**Automatic sync:**
+# Run tests
+composer test
 
-The sync runs automatically every day at 9:00 AM UTC via Laravel's scheduler.
-
-In production, add this to your crontab:
-
-```bash
-* * * * * cd /path-to-project && php artisan schedule:run >> /dev/null 2>&1
-```
-
-### Email Notifications
-
-When new job positions are found, users receive an HTML email with:
-- List of new jobs grouped by company
-- Job title, location, and department
-- Direct links to apply
-
-Configure your mail settings in `.env`:
-
-```env
-MAIL_MAILER=smtp
-MAIL_HOST=smtp.mailtrap.io
-MAIL_PORT=2525
-MAIL_USERNAME=your_username
-MAIL_PASSWORD=your_password
-MAIL_FROM_ADDRESS="noreply@ekswai.com"
-MAIL_FROM_NAME="EksWai Position Scraper"
-```
-
-## Development
-
-### Code Quality
-
-**Run code linter:**
-
-```bash
+# Code style
 composer lint
-```
 
-**Static analysis:**
-
-```bash
+# Static analysis
 composer analyse
 ```
 
-**Refactoring suggestions:**
-
-```bash
-composer rector-dry
-```
-
-**Run all checks:**
-
-```bash
-composer check
-```
-
-### Testing
-
-**Run tests:**
-
-```bash
-composer test
-```
-
-**With coverage:**
-
-```bash
-./vendor/bin/sail artisan test --coverage
-```
-
-### Database
-
-**Fresh migration:**
-
-```bash
-./vendor/bin/sail artisan migrate:fresh
-```
-
-**Seed data (if seeders exist):**
-
-```bash
-./vendor/bin/sail artisan db:seed
-```
-
-## Deployment
-
-The application is production-ready and can be deployed to any Laravel-compatible hosting:
-
-- **Forge** - Laravel Forge (recommended)
-- **Vapor** - AWS Lambda
-- **Docker** - Using the Sail configuration
-- **Traditional** - Apache/Nginx + PHP-FPM
-
-Ensure you:
-1. Set `APP_ENV=production` and `APP_DEBUG=false`
-2. Configure PostgreSQL database
-3. Set up the scheduler cron job
-4. Configure mail settings
-5. Run migrations: `php artisan migrate --force`
-
-## Project Structure
-
-### Domain Layer (`app/Domain/`)
-
-Contains pure business logic:
-- `User` - User aggregate
-- `Company` - Company entity with activation logic
-- `JobPosting` - Job posting entity with tracking
-- `Shared` - Shared value objects and base classes
-
-### Application Layer (`app/Application/`)
-
-Use case orchestration:
-- `Actions/` - Command handlers for business operations
-- `DTOs/` - Data transfer objects
-- `Contracts/` - Interfaces and ports
-
-### Infrastructure Layer (`app/Infrastructure/`)
-
-External adapters:
-- `Admin/Filament/` - Filament resources and pages
-- `Console/` - Artisan commands
-- `Mail/` - Email templates
-- `Services/Workable/` - Workable API client
-
-## API Documentation
-
-API documentation can be generated with Scribe:
-
-```bash
-php artisan scribe:generate
-```
-
-Access at `/docs` after generation.
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'feat: add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-### Commit Convention
-
-We follow [Conventional Commits](https://www.conventionalcommits.org/):
-
-```
-feat(scope): add new feature
-fix(scope): fix bug
-refactor(scope): refactor code
-test(scope): add tests
-docs(scope): update documentation
-chore(scope): update dependencies
-```
+The sync runs automatically every day at 9:00 AM UTC via Laravel scheduler.
 
 ## License
 
-This project is licensed under the MIT License.
-
-## Support
-
-For issues and questions:
-- **Issues**: [GitHub Issues](https://github.com/danielebarbaro/ekswai-jobs-scraper/issues)
-- **Email**: your-email@example.com
+MIT
