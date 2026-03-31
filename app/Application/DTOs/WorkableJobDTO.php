@@ -17,11 +17,16 @@ readonly class WorkableJobDTO
 
     public static function fromApiResponse(array $data): self
     {
+        $location = collect([
+            $data['city'] ?? null,
+            $data['country'] ?? null,
+        ])->filter()->implode(', ') ?: null;
+
         return new self(
-            externalId: (string) $data['id'],
+            externalId: $data['shortcode'] ?? (string) ($data['id'] ?? ''),
             title: $data['title'] ?? 'Untitled Position',
-            location: $data['location']['city'] ?? null,
-            url: $data['url'] ?? '',
+            location: $location,
+            url: $data['url'] ?? $data['shortlink'] ?? '',
             department: $data['department'] ?? null,
             rawPayload: $data,
         );
