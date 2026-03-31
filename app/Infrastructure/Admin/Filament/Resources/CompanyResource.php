@@ -50,7 +50,7 @@ class CompanyResource extends Resource
                             ->required()
                             ->maxLength(255)
                             ->helperText('The provider account identifier (e.g., "company-name")')
-                            ->unique(ignoreRecord: true),
+                            ->unique(modifyRuleUsing: fn ($rule, $get) => $rule->where('provider', $get('provider')), ignoreRecord: true),
                         Forms\Components\Toggle::make('is_active')
                             ->required()
                             ->default(true)

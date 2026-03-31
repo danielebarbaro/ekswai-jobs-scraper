@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
 
         // Default company
         $company = Company::firstOrCreate(
-            ['workable_account_slug' => 'laravel'],
+            ['provider' => 'workable', 'provider_slug' => 'laravel'],
             [
                 'name' => 'Laravel',
                 'is_active' => true,
