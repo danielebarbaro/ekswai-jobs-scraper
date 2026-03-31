@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Domain\Company\Company;
+use App\Domain\Company\JobBoardProvider;
 use App\Domain\JobPosting\JobPosting;
 use App\Domain\User\User;
 
@@ -11,7 +12,14 @@ it('can create a company without user_id', function () {
 
     expect($company)->toBeInstanceOf(Company::class)
         ->and($company->name)->toBeString()
-        ->and($company->workable_account_slug)->toBeString();
+        ->and($company->provider_slug)->toBeString()
+        ->and($company->provider)->toBe(JobBoardProvider::Workable);
+});
+
+it('casts provider to JobBoardProvider enum', function () {
+    $company = Company::factory()->create(['provider' => 'workable']);
+
+    expect($company->provider)->toBe(JobBoardProvider::Workable);
 });
 
 it('has subscribers relationship', function () {
