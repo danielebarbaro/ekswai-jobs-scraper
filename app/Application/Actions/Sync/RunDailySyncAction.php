@@ -57,6 +57,7 @@ class RunDailySyncAction
                         ->get();
 
                     foreach ($notifiableUsers as $user) {
+                        /** @var User $user */
                         $userId = $user->id;
 
                         if (! $jobsByUser->has($userId)) {
