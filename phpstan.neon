@@ -11,10 +11,10 @@ parameters:
     level: 5
 
     excludePaths:
-        - app/Actions/Fortify
-        - app/Http/Controllers/Settings
-        - app/Http/Requests/Settings
-        - app/Http/Controllers/DashboardController.php
+        - app/Application/Actions/Fortify
+        - app/Infrastructure/Http/Controllers/Settings
+        - app/Infrastructure/Http/Requests/Settings
+        - app/Infrastructure/Http/Controllers/DashboardController.php
         - database/factories
 
     reportUnmatchedIgnoredErrors: false
