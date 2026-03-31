@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Database\Factories;
 
 use App\Domain\Company\Company;
-use App\Domain\User\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class CompanyFactory extends Factory
@@ -15,7 +14,6 @@ class CompanyFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::factory(),
             'name' => $this->faker->company(),
             'workable_account_slug' => $this->faker->unique()->slug(2),
             'is_active' => true,

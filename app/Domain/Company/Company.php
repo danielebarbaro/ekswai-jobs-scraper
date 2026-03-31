@@ -8,7 +8,7 @@ use App\Domain\JobPosting\JobPosting;
 use App\Domain\Shared\BaseModel;
 use App\Domain\User\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Company extends BaseModel
@@ -22,9 +22,11 @@ class Company extends BaseModel
         ];
     }
 
-    public function user(): BelongsTo
+    public function subscribers(): BelongsToMany
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsToMany(User::class)
+            ->withPivot('email_notifications')
+            ->withTimestamps();
     }
 
     public function jobPostings(): HasMany
