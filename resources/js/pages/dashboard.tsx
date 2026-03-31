@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
@@ -44,14 +45,16 @@ const statusTabs = [
 ];
 
 const statusColors: Record<string, string> = {
-    new: 'bg-sky-100 text-sky-800 dark:bg-sky-900 dark:text-sky-300',
+    new: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300',
     bookmarked: 'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300',
-    submitted: 'bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-300',
+    submitted: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
     interview: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300',
-    dismissed: 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400',
+    dismissed: 'bg-stone-100 text-stone-500 dark:bg-stone-800 dark:text-stone-400',
 };
 
 export default function Dashboard({ jobPostings, companies, filters }: DashboardProps) {
+    const [animating, setAnimating] = useState<Record<string, string>>({});
+
     const navigate = (params: Record<string, string | null>) => {
         const query: Record<string, string> = {};
         const merged = { ...filters, ...params };
@@ -61,6 +64,8 @@ export default function Dashboard({ jobPostings, companies, filters }: Dashboard
     };
 
     const changeStatus = (jobPostingId: string, status: string) => {
+        setAnimating((prev) => ({ ...prev, [jobPostingId]: status }));
+        setTimeout(() => setAnimating((prev) => { const next = { ...prev }; delete next[jobPostingId]; return next; }), 300);
         router.patch(`/job-postings/${jobPostingId}/status`, { status }, { preserveScroll: true });
     };
 
@@ -112,17 +117,18 @@ export default function Dashboard({ jobPostings, companies, filters }: Dashboard
                                 : 'No job postings match your filters.'}
                         </p>
                         {companies.length === 0 && (
-                            <Link href="/companies" className="mt-2 inline-block text-sm text-teal-600 hover:underline dark:text-teal-400">
+                            <Link href="/companies" className="mt-2 inline-block text-sm text-orange-600 hover:underline dark:text-orange-400">
                                 Go to My Companies
                             </Link>
                         )}
                     </div>
                 ) : (
                     <div className="mt-6 space-y-3">
-                        {jobPostings.data.map((jp) => (
+                        {jobPostings.data.map((jp, index) => (
                             <div
                                 key={jp.id}
-                                className="flex items-start justify-between gap-4 rounded-lg border border-border bg-card p-4"
+                                className="flex items-start justify-between gap-4 rounded-lg border border-border bg-card p-4 animate-fade-slide-up"
+                                style={{ animationDelay: `${Math.min(index * 50, 500)}ms` }}
                             >
                                 <div className="min-w-0 flex-1">
                                     <div className="flex items-center gap-2">
@@ -149,22 +155,22 @@ export default function Dashboard({ jobPostings, companies, filters }: Dashboard
                                 <div className="flex shrink-0 items-center gap-1">
                                     {jp.status !== 'bookmarked' && (
                                         <Button variant="ghost" size="icon" onClick={() => changeStatus(jp.id, 'bookmarked')} title="Bookmark">
-                                            <Bookmark className="size-4" />
+                                            <Bookmark className={`size-4 transition-transform duration-200 ${animating[jp.id] === 'bookmarked' ? 'scale-125' : ''}`} />
                                         </Button>
                                     )}
                                     {jp.status !== 'submitted' && (
                                         <Button variant="ghost" size="icon" onClick={() => changeStatus(jp.id, 'submitted')} title="Mark as submitted">
-                                            <Check className="size-4" />
+                                            <Check className={`size-4 transition-transform duration-300 ${animating[jp.id] === 'submitted' ? '-translate-y-1' : ''}`} />
                                         </Button>
                                     )}
                                     {jp.status !== 'interview' && (
                                         <Button variant="ghost" size="icon" onClick={() => changeStatus(jp.id, 'interview')} title="Mark as interview">
-                                            <MessageSquare className="size-4" />
+                                            <MessageSquare className={`size-4 transition-transform duration-300 ${animating[jp.id] === 'interview' ? '-translate-y-1' : ''}`} />
                                         </Button>
                                     )}
                                     {jp.status !== 'dismissed' ? (
                                         <Button variant="ghost" size="icon" onClick={() => changeStatus(jp.id, 'dismissed')} title="Dismiss">
-                                            <EyeOff className="size-4 text-muted-foreground" />
+                                            <EyeOff className={`size-4 text-muted-foreground transition-opacity duration-200 ${animating[jp.id] === 'dismissed' ? 'opacity-30' : ''}`} />
                                         </Button>
                                     ) : (
                                         <Button variant="ghost" size="icon" onClick={() => changeStatus(jp.id, 'new')} title="Restore">
