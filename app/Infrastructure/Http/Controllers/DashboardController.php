@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers;
+namespace App\Infrastructure\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -32,18 +32,18 @@ class DashboardController extends Controller
         }
 
         $jobPostings = $query->paginate(20)->through(fn ($jp) => [
-                'id' => $jp->id,
-                'title' => $jp->title,
-                'location' => $jp->location,
-                'department' => $jp->department,
-                'url' => $jp->url,
-                'first_seen_at' => $jp->first_seen_at->toDateString(),
-                'status' => $jp->pivot->status,
-                'company' => [
-                    'id' => $jp->company->id,
-                    'name' => $jp->company->name,
-                ],
-            ]);
+            'id' => $jp->id,
+            'title' => $jp->title,
+            'location' => $jp->location,
+            'department' => $jp->department,
+            'url' => $jp->url,
+            'first_seen_at' => $jp->first_seen_at->toDateString(),
+            'status' => $jp->pivot->status,
+            'company' => [
+                'id' => $jp->company->id,
+                'name' => $jp->company->name,
+            ],
+        ]);
 
         $companies = $user->subscribedCompanies()
             ->orderBy('name')

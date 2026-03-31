@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Settings;
+namespace App\Infrastructure\Http\Requests\Settings;
 
 use App\Domain\User\User;
 use Illuminate\Contracts\Validation\ValidationRule;

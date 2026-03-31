@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Controllers\CompanySubscriptionController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\JobPostingStatusController;
-use App\Http\Controllers\LandingController;
+use App\Infrastructure\Http\Controllers\CompanySubscriptionController;
+use App\Infrastructure\Http\Controllers\DashboardController;
+use App\Infrastructure\Http\Controllers\JobPostingStatusController;
+use App\Infrastructure\Http\Controllers\LandingController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [LandingController::class, 'redirect'])->name('home');

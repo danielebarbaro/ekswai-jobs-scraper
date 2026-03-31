@@ -12,7 +12,7 @@ beforeEach(function () {
     $this->company = Company::factory()->create();
     $this->user->subscribedCompanies()->attach($this->company->id);
 
-    $this->action = new UnfollowCompanyAction();
+    $this->action = new UnfollowCompanyAction;
 });
 
 it('removes the subscription', function () {

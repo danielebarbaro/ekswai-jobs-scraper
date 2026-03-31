@@ -20,6 +20,7 @@ class User extends Authenticatable implements FilamentUser
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory;
+
     use HasUuids;
     use Notifiable;
     use TwoFactorAuthenticatable;
