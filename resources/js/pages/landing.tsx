@@ -1,5 +1,6 @@
+import { useAppearance } from '@/hooks/use-appearance';
 import { Head, Link } from '@inertiajs/react';
-import { Building2, Mail, Monitor, Github, ArrowRight } from 'lucide-react';
+import { Building2, Mail, Monitor, Moon, Sun, Github, ArrowRight } from 'lucide-react';
 
 interface LandingTranslations {
     meta: {
@@ -51,6 +52,13 @@ interface LandingProps {
 }
 
 export default function Landing({ locale, alternateLocale, translations: t, config, baseUrl, auth }: LandingProps) {
+    const { appearance, updateAppearance } = useAppearance();
+
+    const toggleTheme = () => {
+        const isDark = appearance === 'dark' || (appearance === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        updateAppearance(isDark ? 'light' : 'dark');
+    };
+
     return (
         <>
             <Head title={t.meta.title}>
@@ -87,7 +95,15 @@ export default function Landing({ locale, alternateLocale, translations: t, conf
                 {/* Header */}
                 <header className="mx-auto flex max-w-5xl items-center justify-between px-6 py-6">
                     <span className="text-lg font-semibold">EksWai</span>
-                    <nav className="flex items-center gap-4 text-sm">
+                    <nav className="flex items-center gap-3 text-sm">
+                        <button
+                            onClick={toggleTheme}
+                            className="rounded-md p-1.5 text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
+                            aria-label="Toggle theme"
+                        >
+                            <Sun className="size-4 dark:hidden" />
+                            <Moon className="hidden size-4 dark:block" />
+                        </button>
                         <Link
                             href={`/${alternateLocale}`}
                             className="rounded-md px-3 py-1.5 font-medium uppercase text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
