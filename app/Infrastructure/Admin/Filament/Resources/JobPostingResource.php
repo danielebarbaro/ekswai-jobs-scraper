@@ -4,6 +4,7 @@ namespace App\Infrastructure\Admin\Filament\Resources;
 
 use App\Domain\JobPosting\JobPosting;
 use App\Infrastructure\Admin\Filament\Resources\JobPostingResource\Pages;
+use Filament\Actions;
 use Filament\Forms;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -110,18 +111,18 @@ class JobPostingResource extends Resource
                     }),
             ])
             ->actions([
-                Tables\Actions\Action::make('view')
+                Actions\Action::make('view')
                     ->label('View Job')
                     ->icon('heroicon-o-arrow-top-right-on-square')
                     ->url(fn (JobPosting $record) => $record->url)
                     ->openUrlInNewTab(),
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Actions\ViewAction::make(),
+                Actions\EditAction::make(),
+                Actions\DeleteAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                Actions\BulkActionGroup::make([
+                    Actions\DeleteBulkAction::make(),
                 ]),
             ])
             ->defaultSort('first_seen_at', 'desc');
