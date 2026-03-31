@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Application\Actions\Company\FollowCompanyAction;
+use App\Application\Actions\JobPosting\SyncCompanyJobPostingsAction;
 use App\Domain\Company\Company;
 use App\Domain\Company\JobBoardProvider;
 use App\Domain\JobPosting\JobPosting;
@@ -18,7 +19,7 @@ beforeEach(function () {
     $this->factory = Mockery::mock(JobBoardClientFactory::class);
     $this->factory->shouldReceive('make')->with(JobBoardProvider::Workable)->andReturn($this->jobBoardClient);
 
-    $this->syncAction = new \App\Application\Actions\JobPosting\SyncCompanyJobPostingsAction($this->factory);
+    $this->syncAction = new SyncCompanyJobPostingsAction($this->factory);
     $this->action = new FollowCompanyAction($this->factory, $this->syncAction);
 });
 
