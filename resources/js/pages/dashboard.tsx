@@ -155,26 +155,26 @@ export default function Dashboard({ jobPostings, companies, filters }: Dashboard
                                 <div className="flex shrink-0 items-center gap-1">
                                     {jp.status !== 'bookmarked' && (
                                         <Button variant="ghost" size="icon" onClick={() => changeStatus(jp.id, 'bookmarked')} title="Bookmark">
-                                            <Bookmark className={`size-4 transition-transform duration-200 ${animating[jp.id] === 'bookmarked' ? 'scale-125' : ''}`} />
+                                            <Bookmark className={`size-4 text-amber-500 transition-transform duration-200 ${animating[jp.id] === 'bookmarked' ? 'scale-125' : ''}`} />
                                         </Button>
                                     )}
                                     {jp.status !== 'submitted' && (
                                         <Button variant="ghost" size="icon" onClick={() => changeStatus(jp.id, 'submitted')} title="Mark as submitted">
-                                            <Check className={`size-4 transition-transform duration-300 ${animating[jp.id] === 'submitted' ? '-translate-y-1' : ''}`} />
+                                            <Check className={`size-4 text-green-600 transition-transform duration-300 ${animating[jp.id] === 'submitted' ? '-translate-y-1' : ''}`} />
                                         </Button>
                                     )}
                                     {jp.status !== 'interview' && (
                                         <Button variant="ghost" size="icon" onClick={() => changeStatus(jp.id, 'interview')} title="Mark as interview">
-                                            <MessageSquare className={`size-4 transition-transform duration-300 ${animating[jp.id] === 'interview' ? '-translate-y-1' : ''}`} />
+                                            <MessageSquare className={`size-4 text-purple-600 transition-transform duration-300 ${animating[jp.id] === 'interview' ? '-translate-y-1' : ''}`} />
                                         </Button>
                                     )}
                                     {jp.status !== 'dismissed' ? (
                                         <Button variant="ghost" size="icon" onClick={() => changeStatus(jp.id, 'dismissed')} title="Dismiss">
-                                            <EyeOff className={`size-4 text-muted-foreground transition-opacity duration-200 ${animating[jp.id] === 'dismissed' ? 'opacity-30' : ''}`} />
+                                            <EyeOff className={`size-4 text-stone-400 transition-opacity duration-200 ${animating[jp.id] === 'dismissed' ? 'opacity-30' : ''}`} />
                                         </Button>
                                     ) : (
                                         <Button variant="ghost" size="icon" onClick={() => changeStatus(jp.id, 'new')} title="Restore">
-                                            <Eye className="size-4" />
+                                            <Eye className="size-4 text-orange-500" />
                                         </Button>
                                     )}
                                 </div>
