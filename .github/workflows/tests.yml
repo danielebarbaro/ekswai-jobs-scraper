@@ -50,6 +50,12 @@ jobs:
       - name: Generate Application Key
         run: php artisan key:generate
 
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Build assets
+        run: npm run build
+
       - name: Run Migrations
         env:
           DB_CONNECTION: pgsql
