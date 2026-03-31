@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Daniele Barbaro',
                 'password' => 'password',
                 'email_verified_at' => now(),
+                'is_admin' => true,
             ]
         );
 
