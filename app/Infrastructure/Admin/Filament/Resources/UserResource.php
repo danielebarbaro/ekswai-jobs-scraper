@@ -4,6 +4,7 @@ namespace App\Infrastructure\Admin\Filament\Resources;
 
 use App\Domain\User\User;
 use App\Infrastructure\Admin\Filament\Resources\UserResource\Pages;
+use Filament\Actions;
 use Filament\Forms;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -74,12 +75,12 @@ class UserResource extends Resource
                     ->query(fn ($query) => $query->whereNull('email_verified_at')),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Actions\EditAction::make(),
+                Actions\DeleteAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                Actions\BulkActionGroup::make([
+                    Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }
