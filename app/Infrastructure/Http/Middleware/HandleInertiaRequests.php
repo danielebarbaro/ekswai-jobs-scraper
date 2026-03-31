@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Middleware;
+namespace App\Infrastructure\Http\Middleware;
 
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
@@ -45,7 +45,7 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user() ? array_merge(
                     $request->user()->toArray(),
-                    ['avatar' => 'https://www.gravatar.com/avatar/' . md5(strtolower(trim($request->user()->email))) . '?d=mp&s=80']
+                    ['avatar' => 'https://www.gravatar.com/avatar/'.md5(strtolower(trim($request->user()->email))).'?d=mp&s=80']
                 ) : null,
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Settings;
+namespace App\Infrastructure\Http\Controllers\Settings;
 
-use App\Http\Controllers\Controller;
+use App\Infrastructure\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Password;

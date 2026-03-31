@@ -7,7 +7,6 @@ namespace App\Application\Actions\Company;
 use App\Application\Actions\JobPosting\SyncCompanyJobPostingsAction;
 use App\Domain\Company\Company;
 use App\Domain\User\User;
-use App\Infrastructure\Services\Workable\WorkableHttpClient;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\ValidationException;
 

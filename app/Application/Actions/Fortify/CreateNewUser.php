@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Actions\Fortify;
+namespace App\Application\Actions\Fortify;
 
 use App\Domain\User\User;
 use Illuminate\Support\Facades\Validator;

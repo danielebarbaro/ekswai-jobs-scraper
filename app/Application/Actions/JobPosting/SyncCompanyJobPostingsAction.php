@@ -53,6 +53,7 @@ class SyncCompanyJobPostingsAction
 
                 if ($existing) {
                     $existing->update(['last_seen_at' => now()]);
+
                     continue;
                 }
 

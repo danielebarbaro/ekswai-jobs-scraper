@@ -6,7 +6,6 @@ use App\Application\Actions\Company\FollowCompanyAction;
 use App\Domain\Company\Company;
 use App\Domain\JobPosting\JobPosting;
 use App\Domain\User\User;
-use App\Infrastructure\Services\Workable\WorkableHttpClient;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\ValidationException;
 
