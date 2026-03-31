@@ -15,7 +15,8 @@ class CompanyFactory extends Factory
     {
         return [
             'name' => $this->faker->company(),
-            'workable_account_slug' => $this->faker->unique()->slug(2),
+            'provider' => 'workable',
+            'provider_slug' => $this->faker->unique()->slug(2),
             'is_active' => true,
         ];
     }

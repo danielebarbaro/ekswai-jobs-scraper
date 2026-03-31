@@ -26,6 +26,7 @@ class Company extends BaseModel
     {
         return [
             'is_active' => 'boolean',
+            'provider' => JobBoardProvider::class,
         ];
     }
 
