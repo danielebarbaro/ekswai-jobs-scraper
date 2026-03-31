@@ -7,6 +7,7 @@ use App\Infrastructure\Admin\Filament\Resources\CompanyResource\Pages;
 use Filament\Actions;
 use Filament\Forms;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -29,7 +30,7 @@ class CompanyResource extends Resource
     {
         return $schema
             ->schema([
-                Forms\Components\Section::make('Company Information')
+                Section::make('Company Information')
                     ->schema([
                         Forms\Components\Select::make('user_id')
                             ->relationship('user', 'name')
