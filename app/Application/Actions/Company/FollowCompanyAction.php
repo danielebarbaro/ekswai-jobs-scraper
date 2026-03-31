@@ -49,23 +49,20 @@ class FollowCompanyAction
         // Create subscription
         $user->subscribedCompanies()->attach($company->id, ['email_notifications' => true]);
 
-        // Sync jobs for this company (creates job_posting_user records for new subscriber)
-        $this->syncAction->execute($company);
+        // If company is new (no job postings yet), trigger a sync
+        if ($company->jobPostings()->count() === 0) {
+            $this->syncAction->execute($company);
+        }
 
-        // Also create job_posting_user records for any existing job postings
-        // that were already synced before this user subscribed
-        $existingJobIds = $company->jobPostings()
-            ->whereDoesntHave('userStatuses', function ($query) use ($user) {
-                $query->where('user_id', $user->id);
-            })
-            ->pluck('id');
+        // Create job_posting_user records for all existing job postings
+        $existingJobIds = $company->jobPostings()->pluck('id');
 
         if ($existingJobIds->isNotEmpty()) {
             $pivotData = $existingJobIds->mapWithKeys(fn ($id) => [
                 $id => ['status' => 'new'],
             ])->toArray();
 
-            $user->jobPostingStatuses()->attach($pivotData);
+            $user->jobPostingStatuses()->syncWithoutDetaching($pivotData);
         }
 
         return $company->fresh();
