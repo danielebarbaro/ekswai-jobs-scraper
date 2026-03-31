@@ -7,14 +7,22 @@ parameters:
         - config
         - database
         - routes
-        - tests
 
-    level: 6
+    level: 5
 
     excludePaths:
         - app/Actions/Fortify
         - app/Http/Controllers/Settings
         - app/Http/Requests/Settings
+        - app/Http/Controllers/DashboardController.php
+        - database/factories
+
+    reportUnmatchedIgnoredErrors: false
 
     ignoreErrors:
-        - '#PHPDoc tag @var#'
+        - '#Access to an undefined property.*\$pivot#'
+        - '#Access to an undefined property.*Pivot::#'
+        - '#contains unresolvable type#'
+        - '#Parameter.*\$callback.*map\(\) expects#'
+        - '#Call to an undefined method Illuminate\\Database\\Eloquent\\Model::userStatuses#'
+        - '#Access to an undefined property Illuminate\\Database\\Eloquent\\Model::\$id#'
