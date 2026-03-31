@@ -31,7 +31,7 @@ class JobPostingFactory extends Factory
         ];
     }
 
-    public function new(): static
+    public function recent(): static
     {
         return $this->state(fn (array $attributes) => [
             'first_seen_at' => now()->subHours(2),
