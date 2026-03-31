@@ -12,7 +12,8 @@ const breadcrumbs: BreadcrumbItem[] = [
 interface CompanySubscription {
     id: string;
     name: string;
-    workable_account_slug: string;
+    provider: string;
+    provider_slug: string;
     is_active: boolean;
     job_postings_count: number;
     email_notifications: boolean;
@@ -48,13 +49,13 @@ export default function Companies({ companies }: CompaniesProps) {
             <div className="mx-auto w-full max-w-5xl p-6">
                 <h1 className="text-2xl font-semibold">My Companies</h1>
                 <p className="mt-1 text-sm text-muted-foreground">
-                    Add Workable companies to track their job postings.
+                    Add companies to track their job postings.
                 </p>
 
                 {/* Add company form */}
                 <form onSubmit={handleFollow} className="mt-6 flex gap-3">
                     <Input
-                        placeholder="Enter Workable slug (e.g. laravel)"
+                        placeholder="Enter company slug (e.g. laravel)"
                         value={form.data.slug}
                         onChange={(e) => form.setData('slug', e.target.value)}
                         className="flex-1"
@@ -84,7 +85,7 @@ export default function Companies({ companies }: CompaniesProps) {
                                 <div className="min-w-0 flex-1">
                                     <h3 className="font-medium">{company.name}</h3>
                                     <p className="text-sm text-muted-foreground">
-                                        {company.workable_account_slug} · {company.job_postings_count} jobs
+                                        {company.provider_slug} · {company.job_postings_count} jobs
                                     </p>
                                 </div>
                                 <div className="flex items-center gap-2">
