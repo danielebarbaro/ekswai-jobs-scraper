@@ -45,17 +45,14 @@ class SyncCompanyJobPostingsAction
         $subscriberIds = $company->subscribers()->pluck('users.id')->toArray();
 
         DB::transaction(function () use ($company, $workableJobs, &$newJobs, $subscriberIds) {
-            $existingExternalIds = $company->jobPostings()
-                ->pluck('external_id')
-                ->toArray();
-
             foreach ($workableJobs as $workableJob) {
                 /** @var WorkableJobDTO $workableJob */
-                if (in_array($workableJob->externalId, $existingExternalIds, true)) {
-                    $company->jobPostings()
-                        ->where('external_id', $workableJob->externalId)
-                        ->update(['last_seen_at' => now()]);
+                $existing = $company->jobPostings()
+                    ->where('external_id', $workableJob->externalId)
+                    ->first();
 
+                if ($existing) {
+                    $existing->update(['last_seen_at' => now()]);
                     continue;
                 }
 
