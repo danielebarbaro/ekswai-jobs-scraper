@@ -4,6 +4,7 @@ namespace App\Infrastructure\Admin\Filament\Resources;
 
 use App\Domain\Company\Company;
 use App\Infrastructure\Admin\Filament\Resources\CompanyResource\Pages;
+use Filament\Actions;
 use Filament\Forms;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -95,18 +96,18 @@ class CompanyResource extends Resource
                     ->preload(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\Action::make('toggle')
+                Actions\EditAction::make(),
+                Actions\Action::make('toggle')
                     ->label(fn (Company $record) => $record->is_active ? 'Deactivate' : 'Activate')
                     ->icon(fn (Company $record) => $record->is_active ? 'heroicon-o-pause-circle' : 'heroicon-o-play-circle')
                     ->color(fn (Company $record) => $record->is_active ? 'warning' : 'success')
                     ->requiresConfirmation()
                     ->action(fn (Company $record) => $record->toggleActivation()),
-                Tables\Actions\DeleteAction::make(),
+                Actions\DeleteAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                Actions\BulkActionGroup::make([
+                    Actions\DeleteBulkAction::make(),
                 ]),
             ])
             ->defaultSort('created_at', 'desc');
