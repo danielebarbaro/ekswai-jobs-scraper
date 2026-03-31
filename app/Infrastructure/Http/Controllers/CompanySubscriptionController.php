@@ -23,7 +23,8 @@ class CompanySubscriptionController extends Controller
             ->map(fn (Company $company) => [
                 'id' => $company->id,
                 'name' => $company->name,
-                'workable_account_slug' => $company->workable_account_slug,
+                'provider' => $company->provider->value,
+                'provider_slug' => $company->provider_slug,
                 'is_active' => $company->is_active,
                 'job_postings_count' => $company->job_postings_count,
                 'email_notifications' => (bool) $company->pivot->email_notifications,
