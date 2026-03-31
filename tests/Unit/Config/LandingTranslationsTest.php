@@ -15,7 +15,10 @@ it('has english translations with all required keys', function () {
     expect(__('landing.steps.3.title'))->toBeString()->not->toContain('landing.');
     expect(__('landing.features.notifications.title'))->toBeString()->not->toContain('landing.');
     expect(__('landing.features.workable.title'))->toBeString()->not->toContain('landing.');
-    expect(__('landing.features.admin.title'))->toBeString()->not->toContain('landing.');
+    expect(__('landing.features.pipeline.title'))->toBeString()->not->toContain('landing.');
+    expect(__('landing.preview_heading'))->toBeString()->not->toContain('landing.');
+    expect(__('landing.preview.companies.title'))->toBeString()->not->toContain('landing.');
+    expect(__('landing.preview.dashboard.title'))->toBeString()->not->toContain('landing.');
     expect(__('landing.features.opensource.title'))->toBeString()->not->toContain('landing.');
     expect(__('landing.footer.opensource_by'))->toBeString()->not->toContain('landing.');
 });
@@ -33,7 +36,10 @@ it('has italian translations with all required keys', function () {
     expect(__('landing.steps.3.title'))->toBeString()->not->toContain('landing.');
     expect(__('landing.features.notifications.title'))->toBeString()->not->toContain('landing.');
     expect(__('landing.features.workable.title'))->toBeString()->not->toContain('landing.');
-    expect(__('landing.features.admin.title'))->toBeString()->not->toContain('landing.');
+    expect(__('landing.features.pipeline.title'))->toBeString()->not->toContain('landing.');
+    expect(__('landing.preview_heading'))->toBeString()->not->toContain('landing.');
+    expect(__('landing.preview.companies.title'))->toBeString()->not->toContain('landing.');
+    expect(__('landing.preview.dashboard.title'))->toBeString()->not->toContain('landing.');
     expect(__('landing.features.opensource.title'))->toBeString()->not->toContain('landing.');
     expect(__('landing.footer.opensource_by'))->toBeString()->not->toContain('landing.');
 });
