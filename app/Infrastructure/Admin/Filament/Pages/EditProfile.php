@@ -15,7 +15,7 @@ use Illuminate\Validation\Rules\Password;
 
 class EditProfile extends Page
 {
-    protected static ?string $navigationIcon = 'heroicon-o-user-circle';
+    protected static string|null|\BackedEnum $navigationIcon = 'heroicon-o-user-circle';
 
     protected static ?string $navigationLabel = 'Profile';
 
@@ -23,7 +23,7 @@ class EditProfile extends Page
 
     protected static ?int $navigationSort = 99;
 
-    protected static string $view = 'filament.pages.edit-profile';
+    protected string $view = 'filament.pages.edit-profile';
 
     public ?array $profileData = [];
 
