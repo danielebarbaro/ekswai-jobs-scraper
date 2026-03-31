@@ -42,8 +42,9 @@ class SyncCompanyJobPostingsAction
         }
 
         $newJobs = collect();
+        $subscriberIds = $company->subscribers()->pluck('users.id')->toArray();
 
-        DB::transaction(function () use ($company, $workableJobs, &$newJobs) {
+        DB::transaction(function () use ($company, $workableJobs, &$newJobs, $subscriberIds) {
             $existingExternalIds = $company->jobPostings()
                 ->pluck('external_id')
                 ->toArray();
@@ -51,7 +52,6 @@ class SyncCompanyJobPostingsAction
             foreach ($workableJobs as $workableJob) {
                 /** @var WorkableJobDTO $workableJob */
                 if (in_array($workableJob->externalId, $existingExternalIds, true)) {
-                    // Job already exists, update last_seen_at
                     $company->jobPostings()
                         ->where('external_id', $workableJob->externalId)
                         ->update(['last_seen_at' => now()]);
@@ -59,7 +59,6 @@ class SyncCompanyJobPostingsAction
                     continue;
                 }
 
-                // Create new job posting
                 $jobPosting = $company->jobPostings()->create([
                     'external_id' => $workableJob->externalId,
                     'title' => $workableJob->title,
@@ -70,6 +69,13 @@ class SyncCompanyJobPostingsAction
                     'last_seen_at' => now(),
                     'raw_payload' => $workableJob->rawPayload,
                 ]);
+
+                // Create job_posting_user records for all subscribers
+                $pivotData = [];
+                foreach ($subscriberIds as $userId) {
+                    $pivotData[$userId] = ['status' => 'new'];
+                }
+                $jobPosting->userStatuses()->attach($pivotData);
 
                 $newJobs->push($jobPosting);
             }

@@ -12,9 +12,9 @@ use App\Infrastructure\Services\Workable\WorkableHttpClient;
 beforeEach(function () {
     $this->user = User::factory()->create();
     $this->company = Company::factory()->create([
-        'user_id' => $this->user->id,
         'workable_account_slug' => 'test-company',
     ]);
+    $this->company->subscribers()->attach($this->user->id);
 
     $this->workableClient = Mockery::mock(WorkableHttpClient::class);
     $this->action = new SyncCompanyJobPostingsAction($this->workableClient);
@@ -28,7 +28,7 @@ it('creates new job postings from workable api', function () {
             location: 'Remote',
             url: 'https://apply.workable.com/test-company/j/job-1',
             department: 'Engineering',
-            rawPayload: ['id' => 'job-1', 'title' => 'Software Engineer']
+            rawPayload: ['shortcode' => 'job-1', 'title' => 'Software Engineer']
         ),
         new WorkableJobDTO(
             externalId: 'job-2',
@@ -36,7 +36,7 @@ it('creates new job postings from workable api', function () {
             location: 'New York',
             url: 'https://apply.workable.com/test-company/j/job-2',
             department: 'Product',
-            rawPayload: ['id' => 'job-2', 'title' => 'Product Manager']
+            rawPayload: ['shortcode' => 'job-2', 'title' => 'Product Manager']
         ),
     ]);
 
@@ -58,8 +58,36 @@ it('creates new job postings from workable api', function () {
         ->department->toBe('Engineering');
 });
 
+it('creates job_posting_user records for all subscribers', function () {
+    $user2 = User::factory()->create();
+    $this->company->subscribers()->attach($user2->id);
+
+    $workableJobs = collect([
+        new WorkableJobDTO(
+            externalId: 'job-1',
+            title: 'Software Engineer',
+            location: 'Remote',
+            url: 'https://apply.workable.com/test-company/j/job-1',
+            department: 'Engineering',
+            rawPayload: ['shortcode' => 'job-1']
+        ),
+    ]);
+
+    $this->workableClient
+        ->shouldReceive('fetchJobsForCompany')
+        ->with('test-company')
+        ->once()
+        ->andReturn($workableJobs);
+
+    $this->action->execute($this->company);
+
+    $jobPosting = JobPosting::where('external_id', 'job-1')->first();
+
+    expect($jobPosting->userStatuses)->toHaveCount(2);
+    expect($jobPosting->userStatuses->pluck('pivot.status')->unique()->toArray())->toBe(['new']);
+});
+
 it('does not create duplicate jobs', function () {
-    // Create existing job
     JobPosting::factory()->create([
         'company_id' => $this->company->id,
         'external_id' => 'job-1',
@@ -73,7 +101,7 @@ it('does not create duplicate jobs', function () {
             location: 'Remote',
             url: 'https://apply.workable.com/test-company/j/job-1',
             department: 'Engineering',
-            rawPayload: ['id' => 'job-1']
+            rawPayload: ['shortcode' => 'job-1']
         ),
         new WorkableJobDTO(
             externalId: 'job-2',
@@ -81,7 +109,7 @@ it('does not create duplicate jobs', function () {
             location: 'New York',
             url: 'https://apply.workable.com/test-company/j/job-2',
             department: 'Product',
-            rawPayload: ['id' => 'job-2']
+            rawPayload: ['shortcode' => 'job-2']
         ),
     ]);
 
