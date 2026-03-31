@@ -1,21 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Seeders;
 
+use App\Domain\Company\Company;
 use App\Domain\User\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::firstOrCreate(
+        $user = User::firstOrCreate(
             ['email' => 'test@example.com'],
             [
                 'name' => 'Test User',
@@ -23,5 +20,17 @@ class DatabaseSeeder extends Seeder
                 'email_verified_at' => now(),
             ]
         );
+
+        $company = Company::firstOrCreate(
+            ['workable_account_slug' => 'laravel'],
+            [
+                'name' => 'Laravel',
+                'is_active' => true,
+            ]
+        );
+
+        $user->subscribedCompanies()->syncWithoutDetaching([
+            $company->id => ['email_notifications' => true],
+        ]);
     }
 }
