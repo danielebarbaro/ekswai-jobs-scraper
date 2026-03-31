@@ -1,35 +1,200 @@
-import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
+import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
-import { dashboard } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
-import { Head } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
+import { Bookmark, Building2, Check, ExternalLink, Eye, EyeOff, MessageSquare, X } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Dashboard',
-        href: dashboard().url,
-    },
+    { title: 'Dashboard', href: '/dashboard' },
 ];
 
-export default function Dashboard() {
+interface JobPostingItem {
+    id: string;
+    title: string;
+    location: string | null;
+    department: string | null;
+    url: string;
+    first_seen_at: string;
+    status: string;
+    company: { id: string; name: string };
+}
+
+interface PaginationLink {
+    url: string | null;
+    label: string;
+    active: boolean;
+}
+
+interface DashboardProps {
+    jobPostings: {
+        data: JobPostingItem[];
+        links: PaginationLink[];
+    };
+    companies: { id: string; name: string }[];
+    filters: { status: string; company: string | null };
+}
+
+const statusTabs = [
+    { value: 'all', label: 'All' },
+    { value: 'new', label: 'New' },
+    { value: 'bookmarked', label: 'Bookmarked' },
+    { value: 'submitted', label: 'Submitted' },
+    { value: 'interview', label: 'Interview' },
+    { value: 'dismissed', label: 'Dismissed' },
+];
+
+const statusColors: Record<string, string> = {
+    new: 'bg-sky-100 text-sky-800 dark:bg-sky-900 dark:text-sky-300',
+    bookmarked: 'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300',
+    submitted: 'bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-300',
+    interview: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300',
+    dismissed: 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400',
+};
+
+export default function Dashboard({ jobPostings, companies, filters }: DashboardProps) {
+    const navigate = (params: Record<string, string | null>) => {
+        const query: Record<string, string> = {};
+        const merged = { ...filters, ...params };
+        if (merged.status && merged.status !== 'all') query.status = merged.status;
+        if (merged.company) query.company = merged.company;
+        router.get('/dashboard', query, { preserveState: true, preserveScroll: true });
+    };
+
+    const changeStatus = (jobPostingId: string, status: string) => {
+        router.patch(`/job-postings/${jobPostingId}/status`, { status }, { preserveScroll: true });
+    };
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
-            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
-                <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-                    <div className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                        <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
+            <div className="mx-auto w-full max-w-5xl p-6">
+                {/* Filters */}
+                <div className="flex flex-wrap items-center gap-3">
+                    {/* Status tabs */}
+                    <div className="flex flex-wrap gap-1 rounded-lg bg-muted p-1">
+                        {statusTabs.map((tab) => (
+                            <button
+                                key={tab.value}
+                                onClick={() => navigate({ status: tab.value })}
+                                className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
+                                    filters.status === tab.value
+                                        ? 'bg-background text-foreground shadow-sm'
+                                        : 'text-muted-foreground hover:text-foreground'
+                                }`}
+                            >
+                                {tab.label}
+                            </button>
+                        ))}
                     </div>
-                    <div className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                        <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                    </div>
-                    <div className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                        <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                    </div>
+
+                    {/* Company filter */}
+                    {companies.length > 0 && (
+                        <select
+                            value={filters.company ?? ''}
+                            onChange={(e) => navigate({ company: e.target.value || null })}
+                            className="rounded-md border border-input bg-background px-3 py-1.5 text-sm"
+                        >
+                            <option value="">All companies</option>
+                            {companies.map((c) => (
+                                <option key={c.id} value={c.id}>{c.name}</option>
+                            ))}
+                        </select>
+                    )}
                 </div>
-                <div className="relative min-h-[100vh] flex-1 overflow-hidden rounded-xl border border-sidebar-border/70 md:min-h-min dark:border-sidebar-border">
-                    <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                </div>
+
+                {/* Job postings list */}
+                {jobPostings.data.length === 0 ? (
+                    <div className="mt-16 text-center text-muted-foreground">
+                        <Building2 className="mx-auto size-12 opacity-30" />
+                        <p className="mt-4">
+                            {companies.length === 0
+                                ? 'Follow some companies to start tracking jobs.'
+                                : 'No job postings match your filters.'}
+                        </p>
+                        {companies.length === 0 && (
+                            <Link href="/companies" className="mt-2 inline-block text-sm text-teal-600 hover:underline dark:text-teal-400">
+                                Go to My Companies
+                            </Link>
+                        )}
+                    </div>
+                ) : (
+                    <div className="mt-6 space-y-3">
+                        {jobPostings.data.map((jp) => (
+                            <div
+                                key={jp.id}
+                                className="flex items-start justify-between gap-4 rounded-lg border border-border bg-card p-4"
+                            >
+                                <div className="min-w-0 flex-1">
+                                    <div className="flex items-center gap-2">
+                                        <a
+                                            href={jp.url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="font-medium hover:underline"
+                                        >
+                                            {jp.title}
+                                            <ExternalLink className="ml-1 inline size-3 opacity-50" />
+                                        </a>
+                                        <span className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ${statusColors[jp.status] ?? ''}`}>
+                                            {jp.status}
+                                        </span>
+                                    </div>
+                                    <p className="mt-1 text-sm text-muted-foreground">
+                                        {jp.company.name}
+                                        {jp.location && ` · ${jp.location}`}
+                                        {jp.department && ` · ${jp.department}`}
+                                        {` · ${jp.first_seen_at}`}
+                                    </p>
+                                </div>
+                                <div className="flex shrink-0 items-center gap-1">
+                                    {jp.status !== 'bookmarked' && (
+                                        <Button variant="ghost" size="icon" onClick={() => changeStatus(jp.id, 'bookmarked')} title="Bookmark">
+                                            <Bookmark className="size-4" />
+                                        </Button>
+                                    )}
+                                    {jp.status !== 'submitted' && (
+                                        <Button variant="ghost" size="icon" onClick={() => changeStatus(jp.id, 'submitted')} title="Mark as submitted">
+                                            <Check className="size-4" />
+                                        </Button>
+                                    )}
+                                    {jp.status !== 'interview' && (
+                                        <Button variant="ghost" size="icon" onClick={() => changeStatus(jp.id, 'interview')} title="Mark as interview">
+                                            <MessageSquare className="size-4" />
+                                        </Button>
+                                    )}
+                                    {jp.status !== 'dismissed' ? (
+                                        <Button variant="ghost" size="icon" onClick={() => changeStatus(jp.id, 'dismissed')} title="Dismiss">
+                                            <EyeOff className="size-4 text-muted-foreground" />
+                                        </Button>
+                                    ) : (
+                                        <Button variant="ghost" size="icon" onClick={() => changeStatus(jp.id, 'new')} title="Restore">
+                                            <Eye className="size-4" />
+                                        </Button>
+                                    )}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+
+                {/* Pagination */}
+                {jobPostings.links.length > 3 && (
+                    <div className="mt-6 flex justify-center gap-1">
+                        {jobPostings.links.map((link, i) => (
+                            <button
+                                key={i}
+                                disabled={!link.url}
+                                onClick={() => link.url && router.get(link.url, {}, { preserveState: true, preserveScroll: true })}
+                                className={`rounded-md px-3 py-1.5 text-sm ${
+                                    link.active
+                                        ? 'bg-foreground text-background'
+                                        : 'text-muted-foreground hover:bg-muted'
+                                } ${!link.url ? 'opacity-30' : ''}`}
+                                dangerouslySetInnerHTML={{ __html: link.label }}
+                            />
+                        ))}
+                    </div>
+                )}
             </div>
         </AppLayout>
     );
