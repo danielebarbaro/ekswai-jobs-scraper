@@ -1,0 +1,23 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+
+parameters:
+    paths:
+        - app
+        - config
+        - database
+        - routes
+        - tests
+
+    level: 6
+
+    checkMissingIterableValueType: false
+    checkGenericClassInNonGenericObjectType: false
+
+    excludePaths:
+        - app/Actions/Fortify
+        - app/Http/Controllers/Settings
+        - app/Http/Requests/Settings
+
+    ignoreErrors:
+        - '#PHPDoc tag @var#'

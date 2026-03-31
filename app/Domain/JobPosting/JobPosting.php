@@ -1,0 +1,39 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Domain\JobPosting;
+
+use App\Domain\Company\Company;
+use App\Domain\Shared\BaseModel;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+class JobPosting extends BaseModel
+{
+    use HasFactory;
+
+    protected function casts(): array
+    {
+        return [
+            'first_seen_at' => 'datetime',
+            'last_seen_at' => 'datetime',
+            'raw_payload' => 'array',
+        ];
+    }
+
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+    public function markAsSeen(): void
+    {
+        $this->update(['last_seen_at' => now()]);
+    }
+
+    public function scopeNew($query, string $since = '24 hours')
+    {
+        return $query->where('first_seen_at', '>=', now()->sub($since));
+    }
+}
