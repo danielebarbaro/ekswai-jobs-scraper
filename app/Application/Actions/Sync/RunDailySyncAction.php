@@ -19,15 +19,15 @@ class RunDailySyncAction
 
     public function execute(): array
     {
-        Log::info('Starting daily sync for all active companies');
+        Log::info('Starting daily sync for all active companies with subscribers');
 
         $companies = Company::query()
             ->active()
-            ->with('user')
+            ->whereHas('subscribers')
             ->get();
 
         if ($companies->isEmpty()) {
-            Log::info('No active companies found for syncing');
+            Log::info('No active companies with subscribers found for syncing');
 
             return [
                 'companies_synced' => 0,
@@ -42,7 +42,6 @@ class RunDailySyncAction
             'users_notified' => 0,
         ];
 
-        // Group companies by user to batch notifications
         $jobsByUser = collect();
 
         foreach ($companies as $company) {
@@ -53,19 +52,25 @@ class RunDailySyncAction
                 $stats['new_jobs_found'] += $newJobs->count();
 
                 if ($newJobs->isNotEmpty()) {
-                    $userId = $company->user_id;
+                    $notifiableUsers = $company->subscribers()
+                        ->wherePivot('email_notifications', true)
+                        ->get();
 
-                    if (! $jobsByUser->has($userId)) {
-                        $jobsByUser->put($userId, [
-                            'user' => $company->user,
-                            'jobs' => collect(),
+                    foreach ($notifiableUsers as $user) {
+                        $userId = $user->id;
+
+                        if (! $jobsByUser->has($userId)) {
+                            $jobsByUser->put($userId, [
+                                'user' => $user,
+                                'jobs' => collect(),
+                            ]);
+                        }
+
+                        $jobsByUser->get($userId)['jobs']->push([
+                            'company' => $company,
+                            'jobs' => $newJobs,
                         ]);
                     }
-
-                    $jobsByUser->get($userId)['jobs']->push([
-                        'company' => $company,
-                        'jobs' => $newJobs,
-                    ]);
                 }
             } catch (\Throwable $e) {
                 Log::error('Failed to sync company', [
@@ -75,7 +80,6 @@ class RunDailySyncAction
             }
         }
 
-        // Send notifications to users who have new jobs
         foreach ($jobsByUser as $userId => $data) {
             try {
                 /** @var User $user */
