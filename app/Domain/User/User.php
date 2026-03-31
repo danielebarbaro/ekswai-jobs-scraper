@@ -8,7 +8,9 @@ use App\Domain\Company\Company;
 use App\Domain\JobPosting\JobPosting;
 use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
+use Filament\Models\Contracts\HasName;
 use Filament\Panel;
+use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -16,7 +18,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 
-class User extends Authenticatable implements FilamentUser
+class User extends Authenticatable implements CanResetPassword, FilamentUser, HasName
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory;
@@ -51,6 +53,11 @@ class User extends Authenticatable implements FilamentUser
     public function canAccessPanel(Panel $panel): bool
     {
         return $this->is_admin;
+    }
+
+    public function getFilamentName(): string
+    {
+        return $this->username ?? 'John Doe';
     }
 
     public function subscribedCompanies(): BelongsToMany
