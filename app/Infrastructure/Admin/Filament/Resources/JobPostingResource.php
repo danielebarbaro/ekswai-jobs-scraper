@@ -112,19 +112,12 @@ class JobPostingResource extends Resource
                     }),
             ])
             ->actions([
-                Actions\Action::make('view')
+                Actions\Action::make('view_job')
                     ->label('View Job')
                     ->icon('heroicon-o-arrow-top-right-on-square')
                     ->url(fn (JobPosting $record) => $record->url)
                     ->openUrlInNewTab(),
                 Actions\ViewAction::make(),
-                Actions\EditAction::make(),
-                Actions\DeleteAction::make(),
-            ])
-            ->bulkActions([
-                Actions\BulkActionGroup::make([
-                    Actions\DeleteBulkAction::make(),
-                ]),
             ])
             ->defaultSort('first_seen_at', 'desc');
     }
@@ -136,13 +129,16 @@ class JobPostingResource extends Resource
         ];
     }
 
+    public static function canCreate(): bool
+    {
+        return false;
+    }
+
     public static function getPages(): array
     {
         return [
             'index' => Pages\ListJobPostings::route('/'),
-            'create' => Pages\CreateJobPosting::route('/create'),
             'view' => Pages\ViewJobPosting::route('/{record}'),
-            'edit' => Pages\EditJobPosting::route('/{record}/edit'),
         ];
     }
 }
