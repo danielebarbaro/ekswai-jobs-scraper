@@ -56,8 +56,8 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('email')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('companies_count')
-                    ->counts('companies')
+                Tables\Columns\TextColumn::make('subscribed_companies_count')
+                    ->counts('subscribedCompanies')
                     ->label('Companies')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('email_verified_at')

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Infrastructure\Admin\Filament\Resources;
 
 use App\Domain\Company\Company;
@@ -32,11 +34,6 @@ class CompanyResource extends Resource
             ->schema([
                 Section::make('Company Information')
                     ->schema([
-                        Forms\Components\Select::make('user_id')
-                            ->relationship('user', 'name')
-                            ->required()
-                            ->searchable()
-                            ->preload(),
                         Forms\Components\TextInput::make('name')
                             ->required()
                             ->maxLength(255),
@@ -58,9 +55,6 @@ class CompanyResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('user.name')
-                    ->searchable()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
@@ -71,15 +65,15 @@ class CompanyResource extends Resource
                 Tables\Columns\IconColumn::make('is_active')
                     ->boolean()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('subscribers_count')
+                    ->counts('subscribers')
+                    ->label('Subscribers')
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('job_postings_count')
                     ->counts('jobPostings')
                     ->label('Jobs')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -91,10 +85,6 @@ class CompanyResource extends Resource
                     ->trueLabel('Active only')
                     ->falseLabel('Inactive only')
                     ->native(false),
-                Tables\Filters\SelectFilter::make('user')
-                    ->relationship('user', 'name')
-                    ->searchable()
-                    ->preload(),
             ])
             ->actions([
                 Actions\EditAction::make(),
@@ -116,9 +106,7 @@ class CompanyResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array
