@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace App\Application\Actions\JobPosting;
 
-use App\Application\DTOs\WorkableJobDTO;
 use App\Domain\Company\Company;
 use App\Domain\JobPosting\JobPosting;
-use App\Infrastructure\Services\Workable\WorkableHttpClient;
+use App\Infrastructure\Services\JobBoardClientFactory;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -15,7 +14,7 @@ use Illuminate\Support\Facades\Log;
 class SyncCompanyJobPostingsAction
 {
     public function __construct(
-        private readonly WorkableHttpClient $workableClient
+        private readonly JobBoardClientFactory $clientFactory
     ) {}
 
     /**
@@ -28,13 +27,15 @@ class SyncCompanyJobPostingsAction
         Log::info('Starting job sync for company', [
             'company_id' => $company->id,
             'company_name' => $company->name,
-            'workable_slug' => $company->workable_account_slug,
+            'provider' => $company->provider->value,
+            'provider_slug' => $company->provider_slug,
         ]);
 
-        $workableJobs = $this->workableClient->fetchJobsForCompany($company->workable_account_slug);
+        $client = $this->clientFactory->make($company->provider);
+        $jobs = $client->fetchJobsForCompany($company->provider_slug);
 
-        if ($workableJobs->isEmpty()) {
-            Log::info('No jobs found from Workable API', [
+        if ($jobs->isEmpty()) {
+            Log::info('No jobs found from API', [
                 'company_id' => $company->id,
             ]);
 
@@ -44,11 +45,10 @@ class SyncCompanyJobPostingsAction
         $newJobs = collect();
         $subscriberIds = $company->subscribers()->pluck('users.id')->toArray();
 
-        DB::transaction(function () use ($company, $workableJobs, &$newJobs, $subscriberIds) {
-            foreach ($workableJobs as $workableJob) {
-                /** @var WorkableJobDTO $workableJob */
+        DB::transaction(function () use ($company, $jobs, &$newJobs, $subscriberIds) {
+            foreach ($jobs as $jobDTO) {
                 $existing = $company->jobPostings()
-                    ->where('external_id', $workableJob->externalId)
+                    ->where('external_id', $jobDTO->externalId)
                     ->first();
 
                 if ($existing) {
@@ -58,17 +58,16 @@ class SyncCompanyJobPostingsAction
                 }
 
                 $jobPosting = $company->jobPostings()->create([
-                    'external_id' => $workableJob->externalId,
-                    'title' => $workableJob->title,
-                    'location' => $workableJob->location,
-                    'url' => $workableJob->url,
-                    'department' => $workableJob->department,
+                    'external_id' => $jobDTO->externalId,
+                    'title' => $jobDTO->title,
+                    'location' => $jobDTO->location,
+                    'url' => $jobDTO->url,
+                    'department' => $jobDTO->department,
                     'first_seen_at' => now(),
                     'last_seen_at' => now(),
-                    'raw_payload' => $workableJob->rawPayload,
+                    'raw_payload' => $jobDTO->rawPayload,
                 ]);
 
-                // Create job_posting_user records for all subscribers
                 $pivotData = [];
                 foreach ($subscriberIds as $userId) {
                     $pivotData[$userId] = ['status' => 'new'];
@@ -81,7 +80,7 @@ class SyncCompanyJobPostingsAction
 
         Log::info('Job sync completed', [
             'company_id' => $company->id,
-            'total_jobs_from_api' => $workableJobs->count(),
+            'total_jobs_from_api' => $jobs->count(),
             'new_jobs_found' => $newJobs->count(),
         ]);
 
