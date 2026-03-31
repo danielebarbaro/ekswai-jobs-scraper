@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 
@@ -26,5 +28,9 @@ class AppServiceProvider extends ServiceProvider
             ->symbols()
             ->uncompromised()
         );
+
+        RateLimiter::for('emails', function () {
+            return Limit::perSecond(1);
+        });
     }
 }

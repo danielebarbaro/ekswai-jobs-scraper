@@ -12,15 +12,17 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        $user = User::firstOrCreate(
-            ['email' => 'test@example.com'],
+        // Admin user
+        $admin = User::firstOrCreate(
+            ['email' => 'me@plincode.tech'],
             [
-                'name' => 'Test User',
+                'name' => 'Daniele Barbaro',
                 'password' => 'password',
                 'email_verified_at' => now(),
             ]
         );
 
+        // Default company
         $company = Company::firstOrCreate(
             ['workable_account_slug' => 'laravel'],
             [
@@ -29,7 +31,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        $user->subscribedCompanies()->syncWithoutDetaching([
+        $admin->subscribedCompanies()->syncWithoutDetaching([
             $company->id => ['email_notifications' => true],
         ]);
     }
