@@ -73,6 +73,11 @@ return [
     'extensibility' => [
         'heading' => 'Progettato per essere estensibile',
         'description' => 'ekswai ha un\'architettura provider-agnostic. Workable è la prima job board supportata, e aggiungere nuovi provider è semplice. Vuoi vedere la tua job board preferita? I contributi sono benvenuti.',
+        'steps' => [
+            '1' => 'Aggiungi un nuovo case all\'enum JobBoardProvider',
+            '2' => 'Crea una classe che implementa l\'interfaccia JobBoardClient',
+            '3' => 'Registrala nella JobBoardClientFactory',
+        ],
         'cta' => 'Contribuisci su GitHub',
     ],
 
