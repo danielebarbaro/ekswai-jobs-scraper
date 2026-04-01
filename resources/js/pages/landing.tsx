@@ -1,6 +1,6 @@
 import { useAppearance } from '@/hooks/use-appearance';
 import { Head, Link } from '@inertiajs/react';
-import { Bell, Bookmark, Building2, Check, Github, Mail, Monitor, Moon, Sun, ArrowRight } from 'lucide-react';
+import { Bell, Bookmark, Building2, Check, Github, Mail, Puzzle, Moon, Sun, ArrowRight } from 'lucide-react';
 
 interface LandingTranslations {
     meta: {
@@ -25,6 +25,11 @@ interface LandingTranslations {
     preview: Record<string, { title: string; description: string }>;
     features_heading: string;
     features: Record<string, { title: string; description: string }>;
+    extensibility: {
+        heading: string;
+        description: string;
+        cta: string;
+    };
     cta_final: {
         headline: string;
         cta: string;
@@ -175,7 +180,7 @@ export default function Landing({ locale, alternateLocale, translations: t, conf
                         </h2>
                         <div className="mt-12 grid gap-8 lg:grid-cols-3">
                             {Object.entries(t.steps).map(([key, step]) => {
-                                const icons = [Building2, Monitor, Mail];
+                                const icons = [Building2, Puzzle, Mail];
                                 const Icon = icons[Number(key) - 1] ?? Building2;
                                 return (
                                     <div key={key} className="rounded-lg border border-stone-200 bg-white p-6 shadow-sm dark:border-stone-800 dark:bg-stone-900">
@@ -259,7 +264,7 @@ export default function Landing({ locale, alternateLocale, translations: t, conf
                             {Object.entries(t.features).map(([key, feature]) => {
                                 const iconMap: Record<string, typeof Mail> = {
                                     notifications: Mail,
-                                    workable: Monitor,
+                                    providers: Puzzle,
                                     pipeline: Building2,
                                     opensource: Github,
                                 };
@@ -300,6 +305,27 @@ export default function Landing({ locale, alternateLocale, translations: t, conf
                                 );
                             })}
                         </div>
+                    </div>
+                </section>
+
+                {/* Extensibility */}
+                <section className="bg-stone-50 px-6 py-24 dark:bg-stone-900">
+                    <div className="mx-auto max-w-3xl text-center">
+                        <h2 className="text-2xl font-semibold lg:text-3xl">
+                            {t.extensibility.heading}
+                        </h2>
+                        <p className="mt-4 text-lg text-stone-600 dark:text-stone-400">
+                            {t.extensibility.description}
+                        </p>
+                        <a
+                            href={config.repo_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="mt-8 inline-flex items-center gap-2 rounded-md border border-stone-300 px-6 py-3 text-base font-medium text-stone-700 hover:bg-stone-100 dark:border-stone-600 dark:text-stone-300 dark:hover:bg-stone-800"
+                        >
+                            <Github className="size-4" />
+                            {t.extensibility.cta}
+                        </a>
                     </div>
                 </section>
 
