@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Http\Controllers;
 
 use App\Application\Actions\Company\FollowCompanyAction;
+use App\Application\Actions\Company\LoadDemoCompaniesAction;
 use App\Application\Actions\Company\UnfollowCompanyAction;
 use App\Domain\Company\Company;
 use App\Domain\Company\JobBoardProvider;
@@ -54,6 +55,17 @@ class CompanySubscriptionController extends Controller
         $action->execute($request->user(), $company);
 
         return back()->with('success', 'Company unfollowed.');
+    }
+
+    public function loadDefaults(Request $request, LoadDemoCompaniesAction $action): RedirectResponse
+    {
+        $count = $action->execute($request->user());
+
+        if ($count === 0) {
+            return back()->with('info', 'All demo companies are already in your list.');
+        }
+
+        return back()->with('success', "{$count} demo companies added.");
     }
 
     public function toggleNotifications(Request $request, Company $company): RedirectResponse
