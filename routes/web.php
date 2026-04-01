@@ -4,6 +4,7 @@ use App\Infrastructure\Http\Controllers\CompanySubscriptionController;
 use App\Infrastructure\Http\Controllers\DashboardController;
 use App\Infrastructure\Http\Controllers\JobPostingStatusController;
 use App\Infrastructure\Http\Controllers\LandingController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [LandingController::class, 'redirect'])->name('home');
@@ -21,9 +22,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::patch('job-postings/{jobPosting}/status', [JobPostingStatusController::class, 'update'])->name('job-postings.status');
 
-    Route::patch('user/locale', function (\Illuminate\Http\Request $request) {
+    Route::patch('user/locale', function (Request $request) {
         $request->validate(['locale' => 'required|in:en,it']);
         $request->user()->update(['locale' => $request->locale]);
+
         return back();
     })->name('user.locale');
 });

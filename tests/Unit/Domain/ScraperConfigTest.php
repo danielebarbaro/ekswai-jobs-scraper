@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 use App\Domain\Company\JobBoardProvider;
 use App\Domain\ScraperConfig\ScraperConfig;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Carbon;
 
 it('casts provider to JobBoardProvider enum', function () {
     $config = ScraperConfig::factory()->create([
@@ -39,14 +41,14 @@ it('casts last_health_check_at to datetime', function () {
         'last_health_check_at' => '2026-04-01 10:00:00',
     ]);
 
-    expect($config->last_health_check_at)->toBeInstanceOf(\Illuminate\Support\Carbon::class);
+    expect($config->last_health_check_at)->toBeInstanceOf(Carbon::class);
 });
 
 it('enforces unique provider constraint', function () {
     ScraperConfig::factory()->create(['provider' => 'teamtailor']);
 
     ScraperConfig::factory()->create(['provider' => 'teamtailor']);
-})->throws(\Illuminate\Database\QueryException::class);
+})->throws(QueryException::class);
 
 it('scopes to active configs', function () {
     ScraperConfig::factory()->create(['provider' => 'teamtailor', 'is_active' => true]);
