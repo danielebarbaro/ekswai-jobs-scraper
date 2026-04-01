@@ -6,8 +6,8 @@ namespace App\Infrastructure\Services;
 
 use App\Domain\Company\JobBoardProvider;
 use App\Infrastructure\Services\Contracts\JobBoardClient;
-use App\Infrastructure\Services\Lever\LeverHttpClient;
 use App\Infrastructure\Services\Factorial\FactorialScraper;
+use App\Infrastructure\Services\Lever\LeverHttpClient;
 use App\Infrastructure\Services\Teamtailor\TeamtailorScraper;
 use App\Infrastructure\Services\Workable\WorkableHttpClient;
 

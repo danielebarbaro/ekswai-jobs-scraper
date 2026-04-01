@@ -13,9 +13,9 @@ use Illuminate\Support\Facades\Log;
 
 class WorkableHttpClient implements JobBoardClient
 {
-    private const API_BASE_URL = 'https://apply.workable.com/api/v1/widget/accounts';
+    private const string API_BASE_URL = 'https://apply.workable.com/api/v1/widget/accounts';
 
-    private const TIMEOUT_SECONDS = 30;
+    private const int TIMEOUT_SECONDS = 30;
 
     /**
      * @return Collection<int, JobPostingDTO>

@@ -13,9 +13,9 @@ use Illuminate\Support\Facades\Log;
 
 class LeverHttpClient implements JobBoardClient
 {
-    private const API_BASE_URL = 'https://api.lever.co/v0/postings';
+    private const string API_BASE_URL = 'https://api.lever.co/v0/postings';
 
-    private const TIMEOUT_SECONDS = 30;
+    private const int TIMEOUT_SECONDS = 30;
 
     /**
      * @return Collection<int, JobPostingDTO>

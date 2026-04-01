@@ -8,6 +8,7 @@ use App\Domain\Company\JobBoardProvider;
 use App\Domain\Shared\BaseModel;
 use Database\Factories\ScraperConfigFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Carbon;
 
 /**
  * @property JobBoardProvider $provider
@@ -17,7 +18,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property int $retry_attempts
  * @property int $retry_delay_seconds
  * @property bool $is_active
- * @property \Illuminate\Support\Carbon|null $last_health_check_at
+ * @property Carbon|null $last_health_check_at
  * @property bool|null $last_health_check_passed
  */
 class ScraperConfig extends BaseModel
