@@ -34,4 +34,18 @@ class CompanyFactory extends Factory
             'is_active' => true,
         ]);
     }
+
+    public function teamtailor(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'provider' => 'teamtailor',
+        ]);
+    }
+
+    public function factorial(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'provider' => 'factorial',
+        ]);
+    }
 }
