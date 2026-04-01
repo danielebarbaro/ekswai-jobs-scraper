@@ -1,0 +1,140 @@
+<?php
+
+declare(strict_types=1);
+
+return [
+    'common' => [
+        'save' => 'Save',
+        'saved' => 'Saved',
+        'cancel' => 'Cancel',
+        'close' => 'Close',
+        'back' => 'Back',
+        'confirm' => 'Confirm',
+        'continue' => 'Continue',
+        'warning' => 'Warning',
+        'password' => 'Password',
+    ],
+
+    'nav' => [
+        'dashboard' => 'Dashboard',
+        'companies' => 'Companies',
+        'settings' => 'Settings',
+        'profile' => 'Profile',
+        'password' => 'Password',
+        'two_factor' => 'Two-Factor Auth',
+        'appearance' => 'Appearance',
+    ],
+
+    'dashboard' => [
+        'title' => 'Dashboard',
+        'all' => 'All',
+        'new' => 'New',
+        'bookmarked' => 'Bookmarked',
+        'submitted' => 'Submitted',
+        'interview' => 'Interview',
+        'dismissed' => 'Dismissed',
+        'all_companies' => 'All companies',
+        'empty_no_subscriptions' => 'Follow some companies to start tracking jobs.',
+        'empty_no_results' => 'No job postings match your filters.',
+        'go_to_companies' => 'Go to My Companies',
+        'bookmark' => 'Bookmark',
+        'mark_submitted' => 'Mark as submitted',
+        'mark_interview' => 'Mark as interview',
+        'dismiss' => 'Dismiss',
+        'restore' => 'Restore',
+    ],
+
+    'companies' => [
+        'title' => 'My Companies',
+        'description' => 'Add companies to track their job postings.',
+        'add_placeholder' => 'Enter company slug (e.g. laravel)',
+        'follow' => 'Follow',
+        'unfollow_confirm' => 'Are you sure you want to unfollow this company?',
+        'unfollow' => 'Unfollow',
+        'enable_notifications' => 'Enable notifications',
+        'disable_notifications' => 'Disable notifications',
+        'empty' => 'No companies yet. Add one above to start tracking jobs.',
+        'jobs_count' => ':count jobs',
+    ],
+
+    'settings' => [
+        'title' => 'Settings',
+        'description' => 'Manage your profile and account settings',
+
+        'profile' => [
+            'title' => 'Profile settings',
+            'heading' => 'Profile information',
+            'description' => 'Update your name and email address',
+            'name_label' => 'Name',
+            'name_placeholder' => 'Full name',
+            'email_label' => 'Email address',
+            'email_placeholder' => 'Email address',
+            'email_unverified' => 'Your email address is unverified.',
+            'resend_verification' => 'Click here to resend the verification email.',
+            'verification_sent' => 'A new verification link has been sent to your email address.',
+        ],
+
+        'password' => [
+            'title' => 'Password settings',
+            'heading' => 'Update password',
+            'description' => 'Ensure your account is using a long, random password to stay secure',
+            'current_label' => 'Current password',
+            'current_placeholder' => 'Current password',
+            'new_label' => 'New password',
+            'new_placeholder' => 'New password',
+            'confirm_label' => 'Confirm password',
+            'confirm_placeholder' => 'Confirm password',
+            'save_button' => 'Save password',
+        ],
+
+        'two_factor' => [
+            'title' => 'Two-Factor Authentication',
+            'heading' => 'Two-Factor Authentication',
+            'description' => 'Manage your two-factor authentication settings',
+            'enabled' => 'Enabled',
+            'disabled' => 'Disabled',
+            'enabled_description' => 'With two-factor authentication enabled, you will be prompted for a secure, random pin during login, which you can retrieve from the TOTP-supported application on your phone.',
+            'disabled_description' => 'When you enable two-factor authentication, you will be prompted for a secure pin during login. This pin can be retrieved from a TOTP-supported application on your phone.',
+            'enable_button' => 'Enable 2FA',
+            'disable_button' => 'Disable 2FA',
+            'continue_setup' => 'Continue Setup',
+            'recovery_codes_title' => '2FA Recovery Codes',
+            'recovery_codes_description' => 'Recovery codes let you regain access if you lose your 2FA device. Store them in a secure password manager.',
+            'view_codes' => 'View Recovery Codes',
+            'hide_codes' => 'Hide Recovery Codes',
+            'regenerate_codes' => 'Regenerate Codes',
+            'recovery_info' => 'Each recovery code can be used once to access your account and will be removed after use. If you need more, click :bold above.',
+            'recovery_info_bold' => 'Regenerate Codes',
+            'modal_enabled_title' => 'Two-Factor Authentication Enabled',
+            'modal_enabled_description' => 'Two-factor authentication is now enabled. Scan the QR code or enter the setup key in your authenticator app.',
+            'modal_verify_title' => 'Verify Authentication Code',
+            'modal_verify_description' => 'Enter the 6-digit code from your authenticator app',
+            'modal_enable_title' => 'Enable Two-Factor Authentication',
+            'modal_enable_description' => 'To finish enabling two-factor authentication, scan the QR code or enter the setup key in your authenticator app',
+            'manual_code' => 'or, enter the code manually',
+        ],
+
+        'appearance' => [
+            'title' => 'Appearance settings',
+            'heading' => 'Appearance settings',
+            'description' => "Update your account's appearance settings",
+            'light' => 'Light',
+            'dark' => 'Dark',
+            'system' => 'System',
+        ],
+
+        'locale' => [
+            'heading' => 'Language',
+            'description' => 'Choose your preferred language',
+        ],
+
+        'delete_account' => [
+            'heading' => 'Delete account',
+            'description' => 'Delete your account and all of its resources',
+            'warning' => 'Please proceed with caution, this cannot be undone.',
+            'button' => 'Delete account',
+            'confirm_title' => 'Are you sure you want to delete your account?',
+            'confirm_description' => 'Once your account is deleted, all of its resources and data will also be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.',
+        ],
+    ],
+];
