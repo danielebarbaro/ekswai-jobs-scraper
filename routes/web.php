@@ -4,6 +4,7 @@ use App\Infrastructure\Http\Controllers\CompanySubscriptionController;
 use App\Infrastructure\Http\Controllers\DashboardController;
 use App\Infrastructure\Http\Controllers\JobPostingStatusController;
 use App\Infrastructure\Http\Controllers\LandingController;
+use App\Infrastructure\Http\Middleware\RedirectAdmin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -12,7 +13,7 @@ Route::get('/{locale}', [LandingController::class, 'show'])
     ->name('landing')
     ->where('locale', 'en|it');
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth', 'verified', RedirectAdmin::class])->group(function () {
     Route::get('dashboard', DashboardController::class)->name('dashboard');
 
     Route::get('companies', [CompanySubscriptionController::class, 'index'])->name('companies.index');
