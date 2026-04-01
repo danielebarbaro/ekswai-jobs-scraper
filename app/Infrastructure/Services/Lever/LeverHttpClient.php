@@ -40,7 +40,7 @@ class LeverHttpClient implements JobBoardClient
 
             $data = $response->json();
 
-            if (! is_array($data) || $data === []) {
+            if (! is_array($data) || $data === [] || ! array_is_list($data)) {
                 return collect();
             }
 
@@ -76,11 +76,11 @@ class LeverHttpClient implements JobBoardClient
 
             $data = $response->json();
 
-            if (! is_array($data) || $data === []) {
+            if (! is_array($data) || $data === [] || ! array_is_list($data)) {
                 return null;
             }
 
-            return ucfirst($slug);
+            return str($slug)->replace('-', ' ')->title()->toString();
         } catch (\Throwable) {
             return null;
         }
