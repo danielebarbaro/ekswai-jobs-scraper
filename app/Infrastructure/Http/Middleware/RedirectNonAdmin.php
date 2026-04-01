@@ -6,15 +6,14 @@ namespace App\Infrastructure\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use Symfony\Component\HttpFoundation\Response;
 
-class RedirectAdmin
+class RedirectNonAdmin
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if ($request->user()?->is_admin) {
-            return Inertia::location('/admin');
+        if ($request->user() && ! $request->user()->is_admin) {
+            return redirect('/dashboard');
         }
 
         return $next($request);
