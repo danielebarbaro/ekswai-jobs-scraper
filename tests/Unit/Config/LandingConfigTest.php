@@ -15,5 +15,5 @@ it('has umami disabled by default', function () {
 });
 
 it('has default repo url', function () {
-    expect(config('landing.repo_url'))->toBe('https://github.com/plincode/ekswai-jobs-scraper');
+    expect(config('landing.repo_url'))->toBe('https://github.com/danielebarbaro/ekswai-jobs-scraper');
 });
