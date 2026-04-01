@@ -17,6 +17,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('companies', [CompanySubscriptionController::class, 'index'])->name('companies.index');
     Route::post('companies/follow', [CompanySubscriptionController::class, 'follow'])->name('companies.follow');
+    Route::post('companies/load-defaults', [CompanySubscriptionController::class, 'loadDefaults'])->name('companies.load-defaults');
     Route::delete('companies/{company}/unfollow', [CompanySubscriptionController::class, 'unfollow'])->name('companies.unfollow');
     Route::patch('companies/{company}/notifications', [CompanySubscriptionController::class, 'toggleNotifications'])->name('companies.notifications');
 

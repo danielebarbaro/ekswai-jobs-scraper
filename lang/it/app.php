@@ -53,7 +53,8 @@ return [
         'unfollow' => 'Non seguire',
         'enable_notifications' => 'Attiva notifiche',
         'disable_notifications' => 'Disattiva notifiche',
-        'empty' => 'Nessuna azienda ancora. Aggiungine una sopra per iniziare a monitorare le offerte.',
+        'empty' => 'Nessuna azienda ancora. Aggiungine una sopra o carica il set demo per iniziare.',
+        'load_defaults' => 'Carica aziende demo',
         'jobs_count' => ':count offerte',
     ],
 

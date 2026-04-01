@@ -4,7 +4,7 @@ import { useTranslation } from '@/hooks/use-translation';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, useForm, router } from '@inertiajs/react';
-import { Bell, BellOff, Building2, Plus, Trash2 } from 'lucide-react';
+import { Bell, BellOff, Building2, Download, Plus, Trash2 } from 'lucide-react';
 
 interface CompanySubscription {
     id: string;
@@ -46,6 +46,10 @@ export default function Companies({ companies }: CompaniesProps) {
         router.patch(`/companies/${companyId}/notifications`, {}, { preserveScroll: true });
     };
 
+    const handleLoadDefaults = () => {
+        router.post('/companies/load-defaults', {}, { preserveScroll: true });
+    };
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={t('companies.title')} />
@@ -67,6 +71,10 @@ export default function Companies({ companies }: CompaniesProps) {
                         <Plus className="mr-1 size-4" />
                         {t('companies.follow')}
                     </Button>
+                    <Button type="button" variant="outline" onClick={handleLoadDefaults}>
+                        <Download className="mr-1 size-4" />
+                        {t('companies.load_defaults')}
+                    </Button>
                 </form>
                 {form.errors.slug && (
                     <p className="mt-2 text-sm text-red-600 dark:text-red-400">{form.errors.slug}</p>
@@ -77,6 +85,10 @@ export default function Companies({ companies }: CompaniesProps) {
                     <div className="mt-12 text-center text-muted-foreground">
                         <Building2 className="mx-auto size-12 opacity-30" />
                         <p className="mt-4">{t('companies.empty')}</p>
+                        <Button variant="outline" className="mt-4" onClick={handleLoadDefaults}>
+                            <Download className="mr-1 size-4" />
+                            {t('companies.load_defaults')}
+                        </Button>
                     </div>
                 ) : (
                     <div className="mt-6 space-y-3">
