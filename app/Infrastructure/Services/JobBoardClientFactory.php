@@ -6,6 +6,7 @@ namespace App\Infrastructure\Services;
 
 use App\Domain\Company\JobBoardProvider;
 use App\Infrastructure\Services\Contracts\JobBoardClient;
+use App\Infrastructure\Services\Lever\LeverHttpClient;
 use App\Infrastructure\Services\Workable\WorkableHttpClient;
 
 class JobBoardClientFactory
@@ -14,6 +15,7 @@ class JobBoardClientFactory
     {
         return match ($provider) {
             JobBoardProvider::Workable => app(WorkableHttpClient::class),
+            JobBoardProvider::Lever => app(LeverHttpClient::class),
         };
     }
 }
