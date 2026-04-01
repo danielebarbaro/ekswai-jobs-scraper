@@ -28,6 +28,7 @@ interface LandingTranslations {
     extensibility: {
         heading: string;
         description: string;
+        steps: Record<string, string>;
         cta: string;
     };
     cta_final: {
@@ -317,6 +318,16 @@ export default function Landing({ locale, alternateLocale, translations: t, conf
                         <p className="mt-4 text-lg text-stone-600 dark:text-stone-400">
                             {t.extensibility.description}
                         </p>
+                        <ol className="mx-auto mt-8 max-w-md space-y-3 text-left">
+                            {Object.entries(t.extensibility.steps).map(([key, step]) => (
+                                <li key={key} className="flex items-start gap-3">
+                                    <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-orange-100 text-xs font-semibold text-orange-700 dark:bg-orange-900 dark:text-orange-300">
+                                        {key}
+                                    </span>
+                                    <span className="text-sm text-stone-700 dark:text-stone-300">{step}</span>
+                                </li>
+                            ))}
+                        </ol>
                         <a
                             href={config.repo_url}
                             target="_blank"
