@@ -20,6 +20,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('companies/{company}/notifications', [CompanySubscriptionController::class, 'toggleNotifications'])->name('companies.notifications');
 
     Route::patch('job-postings/{jobPosting}/status', [JobPostingStatusController::class, 'update'])->name('job-postings.status');
+
+    Route::patch('user/locale', function (\Illuminate\Http\Request $request) {
+        $request->validate(['locale' => 'required|in:en,it']);
+        $request->user()->update(['locale' => $request->locale]);
+        return back();
+    })->name('user.locale');
 });
 
 require __DIR__.'/settings.php';
