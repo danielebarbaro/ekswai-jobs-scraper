@@ -7,4 +7,5 @@ namespace App\Domain\Company;
 enum JobBoardProvider: string
 {
     case Workable = 'workable';
+    case Lever = 'lever';
 }
