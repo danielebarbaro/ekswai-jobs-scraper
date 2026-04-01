@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ $user->locale ?? 'en' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New Jobs Found</title>
+    <title>{{ __('emails.title') }}</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
@@ -97,16 +97,19 @@
 </head>
 <body>
     <div class="container">
-        <h1>🎯 New Job Opportunities Found!</h1>
+        <h1>🎯 {{ __('emails.title') }}</h1>
 
         <p class="greeting">
-            Hi {{ $user->name }},
+            {{ __('emails.greeting', ['name' => $user->name]) }}
         </p>
 
         <div class="summary">
-            <strong>{{ $totalJobs }}</strong> new job{{ $totalJobs === 1 ? '' : 's' }}
-            found across <strong>{{ $jobsByCompany->count() }}</strong>
-            compan{{ $jobsByCompany->count() === 1 ? 'y' : 'ies' }} you're tracking.
+            {!! __('emails.summary', [
+                'jobs' => '<strong>' . $totalJobs . '</strong>',
+                'jobs_label' => $totalJobs === 1 ? __('emails.job_singular') : __('emails.job_plural'),
+                'companies' => '<strong>' . $jobsByCompany->count() . '</strong>',
+                'companies_label' => $jobsByCompany->count() === 1 ? __('emails.company_singular') : __('emails.company_plural'),
+            ]) !!}
         </div>
 
         @foreach($jobsByCompany as $item)
@@ -131,7 +134,7 @@
                         </div>
 
                         <a href="{{ $job->url }}" class="apply-link" target="_blank">
-                            View & Apply →
+                            {{ __('emails.view_apply') }} →
                         </a>
                     </div>
                 @endforeach
@@ -140,7 +143,7 @@
 
         <div class="footer">
             <p>
-                You're receiving this email because you're tracking job positions on EksWai Position Scraper.
+                {{ __('emails.footer') }}
             </p>
         </div>
     </div>
