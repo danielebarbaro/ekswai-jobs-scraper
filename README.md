@@ -16,9 +16,7 @@
 
 ## What it does
 
-ekswai lets you follow companies across job boards and track their job postings. You add companies by their provider slug, the system validates them against the provider API and syncs new positions every day. You get email notifications for companies you care about, and you manage your entire application pipeline from one dashboard.
-
-Currently supported: **Workable**. The architecture is provider-agnostic, so adding new job boards is straightforward (see [Adding a provider](#adding-a-provider)).
+ekswai lets you follow companies across job boards and track their job postings. You add companies by their provider slug, the system validates them against the provider and syncs new positions every day. You get email notifications for companies you care about, and you manage your entire application pipeline from one dashboard.
 
 **For users:**
 1. Register and go to My Companies
@@ -27,7 +25,18 @@ Currently supported: **Workable**. The architecture is provider-agnostic, so add
 4. Browse your dashboard: bookmark, mark as submitted, track interviews, dismiss
 
 **For admins:**
-Filament 4 panel to manage companies, job postings, and users.
+Filament 4 panel to manage companies, job postings, users, and scraper configurations.
+
+## Supported Providers
+
+| Provider | Integration | Example URL |
+|----------|-------------|-------------|
+| Workable | REST API | `apply.workable.com/laravel` |
+| Lever | REST API | `jobs.lever.co/scaleway` |
+| Teamtailor | HTML Scraper | `weroad.teamtailor.com/jobs` |
+| Factorial | HTML Scraper | `shippypro.factorialhr.com` |
+
+API providers use JSON endpoints directly. HTML scraper providers use configurable CSS selectors with built in health checks and retry logic (managed via the admin panel).
 
 ## Tech Stack
 
@@ -38,8 +47,9 @@ Filament 4 panel to manage companies, job postings, and users.
 | Database | PostgreSQL (SQLite for tests) |
 | Admin | Filament 4 |
 | Testing | Pest |
-| Static Analysis | PHPStan (Larastan) level 5 |
+| Static Analysis | PHPStan (Larastan) level 6 |
 | Code Style | Laravel Pint |
+| Refactoring | Rector (PHP 8.4, code quality, dead code, early return, type declarations) |
 | CI/CD | GitHub Actions |
 | Local Dev | Laravel Sail (Docker) |
 
@@ -49,35 +59,44 @@ DDD with three layers:
 
 ```
 app/
-├── Domain/              # Models, business logic
-│   ├── Company/         # Company entity (global, shared between users)
-│   │   └── JobBoardProvider.php  # Enum of supported providers
-│   ├── JobPosting/      # Job posting entity with per-user status
-│   ├── Shared/          # BaseModel (UUIDs, guarded)
-│   └── User/            # User with subscriptions and job statuses
-├── Application/         # Use cases
-│   ├── Actions/         # FollowCompany, UnfollowCompany, Sync, Notify
+├── Domain/
+│   ├── Company/         # Company entity, JobBoardProvider enum
+│   ├── JobPosting/      # Job posting with per-user status tracking
+│   ├── ScraperConfig/   # CSS selectors and health check config for HTML scrapers
+│   ├── Shared/          # BaseModel (UUIDs, $guarded = [])
+│   └── User/            # User with company subscriptions and job statuses
+├── Application/
+│   ├── Actions/
+│   │   ├── Company/     # FollowCompany, UnfollowCompany
+│   │   ├── JobPosting/  # SyncCompanyJobPostings, UpdateJobPostingStatus
+│   │   ├── Notification/# NotifyUserOfNewJobs
+│   │   └── Sync/        # RunDailySync (orchestrator)
 │   └── DTOs/            # JobPostingDTO
-└── Infrastructure/      # External adapters
-    ├── Admin/Filament/  # Admin panel resources
+└── Infrastructure/
+    ├── Admin/Filament/  # Admin panel (Companies, Jobs, Users, ScraperConfigs)
     ├── Console/         # Artisan commands (jobs:sync-daily)
-    ├── Mail/            # Email templates
+    ├── Mail/            # NewJobsFoundMail, ScraperHealthAlertMail
     └── Services/
         ├── Contracts/   # JobBoardClient interface
         ├── Workable/    # Workable API client
+        ├── Lever/       # Lever API client
+        ├── Teamtailor/  # Teamtailor HTML scraper
+        ├── Factorial/   # Factorial HTML scraper
+        ├── Scraping/    # BaseHtmlScraper, ScraperHealthChecker, exceptions
         └── JobBoardClientFactory.php
 ```
 
-**Provider pattern:** each job board integration implements the `JobBoardClient` interface, which defines two methods: `fetchJobsForCompany(string $slug)` and `validateSlug(string $slug)`. The `JobBoardProvider` enum lists available providers, and `JobBoardClientFactory` resolves the correct client implementation based on the provider.
+**Provider pattern:** each job board integration implements the `JobBoardClient` interface (`fetchJobsForCompany` and `validateSlug`). The `JobBoardProvider` enum lists available providers, and `JobBoardClientFactory` resolves the correct client. API providers (Workable, Lever) call JSON endpoints directly. HTML scraper providers (Teamtailor, Factorial) extend `BaseHtmlScraper` which handles retry logic, DOM parsing, and validation using CSS selectors from `ScraperConfig`.
 
 **Key relationships:**
-Users subscribe to companies via `company_user` pivot (with email notification toggle). Each user has a per-job status via `job_posting_user` pivot (new, bookmarked, submitted, interview, dismissed). The sync is shared: one API call per company regardless of subscriber count.
+Users subscribe to companies via `company_user` pivot (with email notification toggle). Each user has a per-job status via `job_posting_user` pivot (new, bookmarked, submitted, interview, dismissed). The sync is shared: one API/scrape call per company regardless of subscriber count.
 
 ### Adding a provider
 
 1. Add a new case to `JobBoardProvider` enum (`app/Domain/Company/JobBoardProvider.php`)
-2. Create a class implementing the `JobBoardClient` interface (`app/Infrastructure/Services/Contracts/JobBoardClient.php`)
-3. Register the new class in `JobBoardClientFactory::make()` (`app/Infrastructure/Services/JobBoardClientFactory.php`)
+2. Create a class implementing `JobBoardClient` (`app/Infrastructure/Services/Contracts/JobBoardClient.php`)
+3. Register it in `JobBoardClientFactory::make()` (`app/Infrastructure/Services/JobBoardClientFactory.php`)
+4. For HTML scraper providers: add a `ScraperConfig` entry with CSS selectors in `ScraperConfigSeeder`
 
 ## Quick Start
 
@@ -94,6 +113,8 @@ npm install && npm run build
 
 Open http://localhost and register. Then go to /companies and add a company by selecting a provider and entering its slug.
 
+The seeder creates an admin user (`me@plincode.tech` / `password`) with 6 demo companies across all 4 providers, already synced with real job postings.
+
 ## Commands
 
 ```bash
@@ -103,11 +124,18 @@ Open http://localhost and register. Then go to /companies and add a company by s
 # Run tests
 composer test
 
-# Code style
+# Code style (fix)
 composer lint
 
 # Static analysis
 composer analyse
+
+# Rector refactoring
+composer rector          # Apply changes
+composer rector-dry      # Preview changes
+
+# Run analyse + test together
+composer check
 ```
 
 The sync runs automatically every day at 9:00 AM UTC via Laravel scheduler.
