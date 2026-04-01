@@ -42,7 +42,7 @@ return [
     'preview' => [
         'companies' => [
             'title' => 'Le Mie Aziende',
-            'description' => 'Aggiungi qualsiasi azienda Workable, gestisci le notifiche email',
+            'description' => 'Aggiungi aziende da Workable, Lever, Teamtailor o Factorial',
         ],
         'dashboard' => [
             'title' => 'La Tua Dashboard',
@@ -58,7 +58,7 @@ return [
         ],
         'providers' => [
             'title' => 'Integrazione job board',
-            'description' => 'Attualmente supporta Workable, con altri provider in arrivo. Aggiungi qualsiasi azienda con il suo slug e sincronizziamo automaticamente.',
+            'description' => 'Supporta Workable, Lever, Teamtailor e Factorial. Aggiungi qualsiasi azienda con il suo slug e sincronizziamo automaticamente.',
         ],
         'pipeline' => [
             'title' => 'Pipeline personale',
@@ -72,11 +72,12 @@ return [
 
     'extensibility' => [
         'heading' => 'Progettato per essere estensibile',
-        'description' => 'ekswai ha un\'architettura provider-agnostic. Workable è la prima job board supportata, e aggiungere nuovi provider è semplice. Vuoi vedere la tua job board preferita? I contributi sono benvenuti.',
+        'description' => 'ekswai ha un\'architettura provider-agnostic. Supporta integrazioni API (Workable, Lever) e scraper HTML con selettori configurabili (Teamtailor, Factorial). Vuoi vedere la tua job board preferita? I contributi sono benvenuti.',
         'steps' => [
             '1' => 'Aggiungi un nuovo case all\'enum JobBoardProvider',
             '2' => 'Crea una classe che implementa l\'interfaccia JobBoardClient',
             '3' => 'Registrala nella JobBoardClientFactory',
+            '4' => 'Per gli scraper HTML: aggiungi una ScraperConfig con i selettori CSS',
         ],
         'cta' => 'Contribuisci su GitHub',
     ],
