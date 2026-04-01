@@ -12,6 +12,8 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        $this->call(ScraperConfigSeeder::class);
+
         // Admin user
         $admin = User::firstOrCreate(
             ['email' => 'me@plincode.tech'],

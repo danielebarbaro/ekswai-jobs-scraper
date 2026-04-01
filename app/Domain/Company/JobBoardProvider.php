@@ -8,4 +8,6 @@ enum JobBoardProvider: string
 {
     case Workable = 'workable';
     case Lever = 'lever';
+    case Teamtailor = 'teamtailor';
+    case Factorial = 'factorial';
 }
