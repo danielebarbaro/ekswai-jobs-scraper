@@ -12,7 +12,7 @@ class SetLocale
 {
     public function handle(Request $request, Closure $next): Response
     {
-        $locale = $request->user()?->locale ?? 'en';
+        $locale = $request->user()->locale ?? 'en';
         app()->setLocale($locale);
 
         return $next($request);
