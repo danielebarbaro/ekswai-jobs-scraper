@@ -210,11 +210,15 @@ export default function Landing({ locale, alternateLocale, translations: t, conf
                                     {t.preview.companies.title}
                                 </div>
                                 <div className="space-y-3 p-4">
-                                    {['Laravel', 'Spotify', 'Stripe'].map((name) => (
-                                        <div key={name} className="flex items-center justify-between rounded-lg border border-stone-100 bg-stone-50 px-3 py-2 dark:border-stone-700 dark:bg-stone-900">
+                                    {[
+                                        { name: 'Laravel', slug: 'laravel', provider: 'Workable' },
+                                        { name: 'WeRoad', slug: 'weroad', provider: 'Teamtailor' },
+                                        { name: 'Scaleway', slug: 'scaleway', provider: 'Lever' },
+                                    ].map((company) => (
+                                        <div key={company.name} className="flex items-center justify-between rounded-lg border border-stone-100 bg-stone-50 px-3 py-2 dark:border-stone-700 dark:bg-stone-900">
                                             <div>
-                                                <div className="text-sm font-medium">{name}</div>
-                                                <div className="text-xs text-stone-500">{name.toLowerCase()} · 5 jobs</div>
+                                                <div className="text-sm font-medium">{company.name}</div>
+                                                <div className="text-xs text-stone-500">{company.slug} · {company.provider}</div>
                                             </div>
                                             <Bell className="size-4 text-orange-500" />
                                         </div>
