@@ -12,28 +12,30 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { PasswordInput } from '@/components/ui/password-input';
 import { Label } from '@/components/ui/label';
+import { useTranslation } from '@/hooks/use-translation';
 import { edit } from '@/routes/user-password';
-
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Password settings',
-        href: edit().url,
-    },
-];
 
 export default function Password() {
     const passwordInput = useRef<HTMLInputElement>(null);
     const currentPasswordInput = useRef<HTMLInputElement>(null);
+    const { t } = useTranslation();
+
+    const breadcrumbs: BreadcrumbItem[] = [
+        {
+            title: t('settings.password.title'),
+            href: edit().url,
+        },
+    ];
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Password settings" />
+            <Head title={t('settings.password.title')} />
 
             <SettingsLayout>
                 <div className="space-y-6">
                     <HeadingSmall
-                        title="Update password"
-                        description="Ensure your account is using a long, random password to stay secure"
+                        title={t('settings.password.heading')}
+                        description={t('settings.password.description')}
                     />
 
                     <Form
@@ -62,7 +64,7 @@ export default function Password() {
                             <>
                                 <div className="grid gap-2">
                                     <Label htmlFor="current_password">
-                                        Current password
+                                        {t('settings.password.current_label')}
                                     </Label>
 
                                     <PasswordInput
@@ -71,7 +73,7 @@ export default function Password() {
                                         name="current_password"
                                         className="mt-1 block w-full"
                                         autoComplete="current-password"
-                                        placeholder="Current password"
+                                        placeholder={t('settings.password.current_placeholder')}
                                     />
 
                                     <InputError
@@ -81,7 +83,7 @@ export default function Password() {
 
                                 <div className="grid gap-2">
                                     <Label htmlFor="password">
-                                        New password
+                                        {t('settings.password.new_label')}
                                     </Label>
 
                                     <PasswordInput
@@ -90,7 +92,7 @@ export default function Password() {
                                         name="password"
                                         className="mt-1 block w-full"
                                         autoComplete="new-password"
-                                        placeholder="New password"
+                                        placeholder={t('settings.password.new_placeholder')}
                                     />
 
                                     <InputError message={errors.password} />
@@ -98,7 +100,7 @@ export default function Password() {
 
                                 <div className="grid gap-2">
                                     <Label htmlFor="password_confirmation">
-                                        Confirm password
+                                        {t('settings.password.confirm_label')}
                                     </Label>
 
                                     <PasswordInput
@@ -106,7 +108,7 @@ export default function Password() {
                                         name="password_confirmation"
                                         className="mt-1 block w-full"
                                         autoComplete="new-password"
-                                        placeholder="Confirm password"
+                                        placeholder={t('settings.password.confirm_placeholder')}
                                     />
 
                                     <InputError
@@ -119,7 +121,7 @@ export default function Password() {
                                         disabled={processing}
                                         data-test="update-password-button"
                                     >
-                                        Save password
+                                        {t('settings.password.save_button')}
                                     </Button>
 
                                     <Transition
@@ -130,7 +132,7 @@ export default function Password() {
                                         leaveTo="opacity-0"
                                     >
                                         <p className="text-sm text-neutral-600">
-                                            Saved
+                                            {t('common.saved')}
                                         </p>
                                     </Transition>
                                 </div>
