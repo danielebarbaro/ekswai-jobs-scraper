@@ -5,9 +5,9 @@ declare(strict_types=1);
 return [
     'meta' => [
         'title' => 'ekswai — Track job postings, manage your applications',
-        'description' => 'Follow companies on Workable, get daily notifications for new positions, and manage your application pipeline. Free and open source.',
+        'description' => 'Follow companies across job boards, get daily notifications for new positions, and manage your application pipeline. Free and open source.',
         'og_title' => 'ekswai — Job Tracking Made Simple',
-        'og_description' => 'Follow companies on Workable, get daily notifications, manage your application pipeline.',
+        'og_description' => 'Follow companies across job boards, get daily notifications, manage your application pipeline.',
     ],
 
     'nav' => [
@@ -18,7 +18,7 @@ return [
 
     'hero' => [
         'headline' => 'Track job postings, manage your applications',
-        'subtitle' => 'Follow companies on Workable, get notified about new positions, and track your entire application pipeline in one place.',
+        'subtitle' => 'Follow companies across job boards, get notified about new positions, and track your entire application pipeline in one place.',
         'cta' => 'Get started',
     ],
 
@@ -26,7 +26,7 @@ return [
     'steps' => [
         '1' => [
             'title' => 'Sign up and add companies',
-            'description' => 'Create your free account. Then go to My Companies, enter a Workable slug (like "laravel" from apply.workable.com/laravel), and we validate it instantly.',
+            'description' => 'Create your free account. Then go to My Companies, enter a company slug (e.g. "laravel" from apply.workable.com/laravel for Workable), and we validate it instantly.',
         ],
         '2' => [
             'title' => 'We sync every day',
@@ -56,9 +56,9 @@ return [
             'title' => 'Daily email notifications',
             'description' => 'Get notified about new positions. Toggle notifications per company so you only hear about what matters.',
         ],
-        'workable' => [
-            'title' => 'Workable integration',
-            'description' => 'Add any company by their Workable slug. We validate it against the API and start syncing automatically.',
+        'providers' => [
+            'title' => 'Job board integration',
+            'description' => 'Currently supports Workable, with more providers on the way. Add any company by their provider slug and we start syncing automatically.',
         ],
         'pipeline' => [
             'title' => 'Personal job pipeline',
@@ -73,6 +73,12 @@ return [
     'cta_final' => [
         'headline' => 'Start tracking jobs today',
         'cta' => 'Get started',
+    ],
+
+    'extensibility' => [
+        'heading' => 'Built for extensibility',
+        'description' => 'ekswai is designed with a provider-agnostic architecture. Workable is the first supported job board, and adding new providers is straightforward. Want to see your favorite job board here? Contributions are welcome.',
+        'cta' => 'Contribute on GitHub',
     ],
 
     'footer' => [
