@@ -25,3 +25,21 @@ it('returns LeverHttpClient for Lever provider', function () {
     expect($client)->toBeInstanceOf(LeverHttpClient::class)
         ->and($client)->toBeInstanceOf(JobBoardClient::class);
 });
+
+it('returns TeamtailorScraper for Teamtailor provider', function () {
+    $factory = new JobBoardClientFactory;
+
+    $client = $factory->make(JobBoardProvider::Teamtailor);
+
+    expect($client)->toBeInstanceOf(\App\Infrastructure\Services\Teamtailor\TeamtailorScraper::class)
+        ->and($client)->toBeInstanceOf(JobBoardClient::class);
+});
+
+it('returns FactorialScraper for Factorial provider', function () {
+    $factory = new JobBoardClientFactory;
+
+    $client = $factory->make(JobBoardProvider::Factorial);
+
+    expect($client)->toBeInstanceOf(\App\Infrastructure\Services\Factorial\FactorialScraper::class)
+        ->and($client)->toBeInstanceOf(JobBoardClient::class);
+});
