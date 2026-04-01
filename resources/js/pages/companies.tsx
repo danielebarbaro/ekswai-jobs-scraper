@@ -1,13 +1,10 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useTranslation } from '@/hooks/use-translation';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, useForm, router } from '@inertiajs/react';
 import { Bell, BellOff, Building2, Plus, Trash2 } from 'lucide-react';
-
-const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Companies', href: '/companies' },
-];
 
 interface CompanySubscription {
     id: string;
@@ -24,6 +21,12 @@ interface CompaniesProps {
 }
 
 export default function Companies({ companies }: CompaniesProps) {
+    const { t } = useTranslation();
+
+    const breadcrumbs: BreadcrumbItem[] = [
+        { title: t('companies.title'), href: '/companies' },
+    ];
+
     const form = useForm({ slug: '' });
 
     const handleFollow = (e: React.FormEvent) => {
@@ -35,7 +38,7 @@ export default function Companies({ companies }: CompaniesProps) {
     };
 
     const handleUnfollow = (companyId: string) => {
-        if (!confirm('Are you sure you want to unfollow this company?')) return;
+        if (!confirm(t('companies.unfollow_confirm'))) return;
         router.delete(`/companies/${companyId}/unfollow`, { preserveScroll: true });
     };
 
@@ -45,24 +48,24 @@ export default function Companies({ companies }: CompaniesProps) {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="My Companies" />
+            <Head title={t('companies.title')} />
             <div className="mx-auto w-full max-w-5xl p-6">
-                <h1 className="text-2xl font-semibold">My Companies</h1>
+                <h1 className="text-2xl font-semibold">{t('companies.title')}</h1>
                 <p className="mt-1 text-sm text-muted-foreground">
-                    Add companies to track their job postings.
+                    {t('companies.description')}
                 </p>
 
                 {/* Add company form */}
                 <form onSubmit={handleFollow} className="mt-6 flex gap-3">
                     <Input
-                        placeholder="Enter company slug (e.g. laravel)"
+                        placeholder={t('companies.add_placeholder')}
                         value={form.data.slug}
                         onChange={(e) => form.setData('slug', e.target.value)}
                         className="flex-1"
                     />
                     <Button type="submit" disabled={form.processing || !form.data.slug.trim()}>
                         <Plus className="mr-1 size-4" />
-                        Follow
+                        {t('companies.follow')}
                     </Button>
                 </form>
                 {form.errors.slug && (
@@ -73,7 +76,7 @@ export default function Companies({ companies }: CompaniesProps) {
                 {companies.length === 0 ? (
                     <div className="mt-12 text-center text-muted-foreground">
                         <Building2 className="mx-auto size-12 opacity-30" />
-                        <p className="mt-4">No companies yet. Add one above to start tracking jobs.</p>
+                        <p className="mt-4">{t('companies.empty')}</p>
                     </div>
                 ) : (
                     <div className="mt-6 space-y-3">
@@ -93,7 +96,7 @@ export default function Companies({ companies }: CompaniesProps) {
                                         variant="ghost"
                                         size="icon"
                                         onClick={() => handleToggleNotifications(company.id)}
-                                        title={company.email_notifications ? 'Disable notifications' : 'Enable notifications'}
+                                        title={company.email_notifications ? t('companies.disable_notifications') : t('companies.enable_notifications')}
                                     >
                                         {company.email_notifications ? (
                                             <Bell className="size-4 text-teal-600" />
@@ -105,7 +108,7 @@ export default function Companies({ companies }: CompaniesProps) {
                                         variant="ghost"
                                         size="icon"
                                         onClick={() => handleUnfollow(company.id)}
-                                        title="Unfollow"
+                                        title={t('companies.unfollow')}
                                     >
                                         <Trash2 className="size-4 text-red-500" />
                                     </Button>
