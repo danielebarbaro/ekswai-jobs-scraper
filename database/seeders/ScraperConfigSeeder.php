@@ -15,12 +15,12 @@ class ScraperConfigSeeder extends Seeder
             ['provider' => 'teamtailor'],
             [
                 'selectors' => [
-                    'job_list' => 'ul[data-jobs-list] li a',
-                    'job_title' => 'span.company-link-style',
-                    'job_location' => 'div.mt-1 span',
-                    'job_department' => 'div[data-department]',
+                    'job_list' => 'ul#jobs_list_container li',
+                    'job_title' => 'a.hyphens-auto',
+                    'job_location' => 'span.text-base span:last-child',
+                    'job_department' => 'span.text-base span:first-child',
                 ],
-                'health_check_selector' => 'ul[data-jobs-list]',
+                'health_check_selector' => 'ul#jobs_list_container',
                 'base_url_pattern' => 'https://{slug}.teamtailor.com/jobs',
             ]
         );
