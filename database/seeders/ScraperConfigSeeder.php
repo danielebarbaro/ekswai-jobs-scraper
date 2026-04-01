@@ -31,8 +31,8 @@ class ScraperConfigSeeder extends Seeder
                 'selectors' => [
                     'job_list' => 'li.job-offer-item',
                     'job_title' => 'div.factorial__headingFontFamily',
-                    'job_url' => '[data-job-postings-url]',
-                    'job_location' => 'h3',
+                    'job_department' => 'div.text-gray-350',
+                    'job_url_attr' => 'data-job-postings-url',
                 ],
                 'health_check_selector' => 'li.job-offer-item',
                 'base_url_pattern' => 'https://{slug}.factorialhr.com/',
