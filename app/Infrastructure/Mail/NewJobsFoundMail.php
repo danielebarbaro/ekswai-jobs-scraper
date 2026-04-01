@@ -32,13 +32,10 @@ class NewJobsFoundMail extends Mailable
         $totalJobs = $this->jobsByCompany->sum(fn ($item) => $item['jobs']->count());
         $companiesCount = $this->jobsByCompany->count();
 
-        $subject = sprintf(
-            '%d New Job%s Found Across %d Compan%s',
-            $totalJobs,
-            $totalJobs === 1 ? '' : 's',
-            $companiesCount,
-            $companiesCount === 1 ? 'y' : 'ies'
-        );
+        $jobsLabel = $totalJobs === 1 ? __('emails.job_singular') : __('emails.job_plural');
+        $companiesLabel = $companiesCount === 1 ? __('emails.company_singular') : __('emails.company_plural');
+
+        $subject = sprintf('%d %s — %d %s', $totalJobs, $jobsLabel, $companiesCount, $companiesLabel);
 
         return new Envelope(
             subject: $subject,
