@@ -1,13 +1,10 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { useTranslation } from '@/hooks/use-translation';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, router } from '@inertiajs/react';
 import { Bookmark, Building2, Check, ExternalLink, Eye, EyeOff, MessageSquare, X } from 'lucide-react';
-
-const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: '/dashboard' },
-];
 
 interface JobPostingItem {
     id: string;
@@ -35,15 +32,6 @@ interface DashboardProps {
     filters: { status: string; company: string | null };
 }
 
-const statusTabs = [
-    { value: 'all', label: 'All' },
-    { value: 'new', label: 'New' },
-    { value: 'bookmarked', label: 'Bookmarked' },
-    { value: 'submitted', label: 'Submitted' },
-    { value: 'interview', label: 'Interview' },
-    { value: 'dismissed', label: 'Dismissed' },
-];
-
 const statusColors: Record<string, string> = {
     new: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300',
     bookmarked: 'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300',
@@ -54,6 +42,20 @@ const statusColors: Record<string, string> = {
 
 export default function Dashboard({ jobPostings, companies, filters }: DashboardProps) {
     const [animating, setAnimating] = useState<Record<string, string>>({});
+    const { t } = useTranslation();
+
+    const breadcrumbs: BreadcrumbItem[] = [
+        { title: t('dashboard.title'), href: '/dashboard' },
+    ];
+
+    const statusTabs = [
+        { value: 'all', label: t('dashboard.all') },
+        { value: 'new', label: t('dashboard.new') },
+        { value: 'bookmarked', label: t('dashboard.bookmarked') },
+        { value: 'submitted', label: t('dashboard.submitted') },
+        { value: 'interview', label: t('dashboard.interview') },
+        { value: 'dismissed', label: t('dashboard.dismissed') },
+    ];
 
     const navigate = (params: Record<string, string | null>) => {
         const query: Record<string, string> = {};
@@ -71,7 +73,7 @@ export default function Dashboard({ jobPostings, companies, filters }: Dashboard
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Dashboard" />
+            <Head title={t('dashboard.title')} />
             <div className="mx-auto w-full max-w-5xl p-6">
                 {/* Filters */}
                 <div className="flex flex-wrap items-center gap-3">
@@ -99,7 +101,7 @@ export default function Dashboard({ jobPostings, companies, filters }: Dashboard
                             onChange={(e) => navigate({ company: e.target.value || null })}
                             className="rounded-md border border-input bg-background px-3 py-1.5 text-sm"
                         >
-                            <option value="">All companies</option>
+                            <option value="">{t('dashboard.all_companies')}</option>
                             {companies.map((c) => (
                                 <option key={c.id} value={c.id}>{c.name}</option>
                             ))}
@@ -113,12 +115,12 @@ export default function Dashboard({ jobPostings, companies, filters }: Dashboard
                         <Building2 className="mx-auto size-12 opacity-30" />
                         <p className="mt-4">
                             {companies.length === 0
-                                ? 'Follow some companies to start tracking jobs.'
-                                : 'No job postings match your filters.'}
+                                ? t('dashboard.empty_no_subscriptions')
+                                : t('dashboard.empty_no_results')}
                         </p>
                         {companies.length === 0 && (
                             <Link href="/companies" className="mt-2 inline-block text-sm text-orange-600 hover:underline dark:text-orange-400">
-                                Go to My Companies
+                                {t('dashboard.go_to_companies')}
                             </Link>
                         )}
                     </div>
@@ -154,26 +156,26 @@ export default function Dashboard({ jobPostings, companies, filters }: Dashboard
                                 </div>
                                 <div className="flex shrink-0 items-center gap-1">
                                     {jp.status !== 'bookmarked' && (
-                                        <Button variant="ghost" size="icon" onClick={() => changeStatus(jp.id, 'bookmarked')} title="Bookmark">
+                                        <Button variant="ghost" size="icon" onClick={() => changeStatus(jp.id, 'bookmarked')} title={t('dashboard.bookmark')}>
                                             <Bookmark className={`size-4 text-amber-500 transition-transform duration-200 ${animating[jp.id] === 'bookmarked' ? 'scale-125' : ''}`} />
                                         </Button>
                                     )}
                                     {jp.status !== 'submitted' && (
-                                        <Button variant="ghost" size="icon" onClick={() => changeStatus(jp.id, 'submitted')} title="Mark as submitted">
+                                        <Button variant="ghost" size="icon" onClick={() => changeStatus(jp.id, 'submitted')} title={t('dashboard.mark_submitted')}>
                                             <Check className={`size-4 text-green-600 transition-transform duration-300 ${animating[jp.id] === 'submitted' ? '-translate-y-1' : ''}`} />
                                         </Button>
                                     )}
                                     {jp.status !== 'interview' && (
-                                        <Button variant="ghost" size="icon" onClick={() => changeStatus(jp.id, 'interview')} title="Mark as interview">
+                                        <Button variant="ghost" size="icon" onClick={() => changeStatus(jp.id, 'interview')} title={t('dashboard.mark_interview')}>
                                             <MessageSquare className={`size-4 text-purple-600 transition-transform duration-300 ${animating[jp.id] === 'interview' ? '-translate-y-1' : ''}`} />
                                         </Button>
                                     )}
                                     {jp.status !== 'dismissed' ? (
-                                        <Button variant="ghost" size="icon" onClick={() => changeStatus(jp.id, 'dismissed')} title="Dismiss">
+                                        <Button variant="ghost" size="icon" onClick={() => changeStatus(jp.id, 'dismissed')} title={t('dashboard.dismiss')}>
                                             <EyeOff className={`size-4 text-stone-400 transition-opacity duration-200 ${animating[jp.id] === 'dismissed' ? 'opacity-30' : ''}`} />
                                         </Button>
                                     ) : (
-                                        <Button variant="ghost" size="icon" onClick={() => changeStatus(jp.id, 'new')} title="Restore">
+                                        <Button variant="ghost" size="icon" onClick={() => changeStatus(jp.id, 'new')} title={t('dashboard.restore')}>
                                             <Eye className="size-4 text-orange-500" />
                                         </Button>
                                     )}
