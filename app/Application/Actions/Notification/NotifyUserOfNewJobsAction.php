@@ -37,12 +37,17 @@ class NotifyUserOfNewJobsAction
         ]);
 
         try {
+            $previousLocale = app()->getLocale();
+            app()->setLocale($user->locale ?? 'en');
+
             // Queue the email instead of sending synchronously
             Mail::to($user->email)
                 ->queue(
                     (new NewJobsFoundMail($user, $jobsByCompany))
                         ->onQueue('emails')
                 );
+
+            app()->setLocale($previousLocale);
 
             Log::info('New jobs notification queued successfully', [
                 'user_id' => $user->id,
