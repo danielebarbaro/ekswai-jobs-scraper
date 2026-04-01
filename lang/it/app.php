@@ -1,0 +1,140 @@
+<?php
+
+declare(strict_types=1);
+
+return [
+    'common' => [
+        'save' => 'Salva',
+        'saved' => 'Salvato',
+        'cancel' => 'Annulla',
+        'close' => 'Chiudi',
+        'back' => 'Indietro',
+        'confirm' => 'Conferma',
+        'continue' => 'Continua',
+        'warning' => 'Attenzione',
+        'password' => 'Password',
+    ],
+
+    'nav' => [
+        'dashboard' => 'Dashboard',
+        'companies' => 'Aziende',
+        'settings' => 'Impostazioni',
+        'profile' => 'Profilo',
+        'password' => 'Password',
+        'two_factor' => 'Autenticazione 2FA',
+        'appearance' => 'Aspetto',
+    ],
+
+    'dashboard' => [
+        'title' => 'Dashboard',
+        'all' => 'Tutte',
+        'new' => 'Nuove',
+        'bookmarked' => 'Salvate',
+        'submitted' => 'Inviate',
+        'interview' => 'Colloquio',
+        'dismissed' => 'Scartate',
+        'all_companies' => 'Tutte le aziende',
+        'empty_no_subscriptions' => 'Segui qualche azienda per iniziare a monitorare le offerte.',
+        'empty_no_results' => 'Nessuna offerta corrisponde ai tuoi filtri.',
+        'go_to_companies' => 'Vai a Le Mie Aziende',
+        'bookmark' => 'Salva',
+        'mark_submitted' => 'Segna come inviata',
+        'mark_interview' => 'Segna come colloquio',
+        'dismiss' => 'Scarta',
+        'restore' => 'Ripristina',
+    ],
+
+    'companies' => [
+        'title' => 'Le Mie Aziende',
+        'description' => 'Aggiungi aziende per monitorare le loro offerte di lavoro.',
+        'add_placeholder' => 'Inserisci lo slug aziendale (es. laravel)',
+        'follow' => 'Segui',
+        'unfollow_confirm' => 'Sei sicuro di voler smettere di seguire questa azienda?',
+        'unfollow' => 'Non seguire',
+        'enable_notifications' => 'Attiva notifiche',
+        'disable_notifications' => 'Disattiva notifiche',
+        'empty' => 'Nessuna azienda ancora. Aggiungine una sopra per iniziare a monitorare le offerte.',
+        'jobs_count' => ':count offerte',
+    ],
+
+    'settings' => [
+        'title' => 'Impostazioni',
+        'description' => 'Gestisci il tuo profilo e le impostazioni dell\'account',
+
+        'profile' => [
+            'title' => 'Impostazioni profilo',
+            'heading' => 'Informazioni profilo',
+            'description' => 'Aggiorna il tuo nome e indirizzo email',
+            'name_label' => 'Nome',
+            'name_placeholder' => 'Nome completo',
+            'email_label' => 'Indirizzo email',
+            'email_placeholder' => 'Indirizzo email',
+            'email_unverified' => 'Il tuo indirizzo email non è verificato.',
+            'resend_verification' => 'Clicca qui per inviare nuovamente l\'email di verifica.',
+            'verification_sent' => 'Un nuovo link di verifica è stato inviato al tuo indirizzo email.',
+        ],
+
+        'password' => [
+            'title' => 'Impostazioni password',
+            'heading' => 'Aggiorna password',
+            'description' => 'Assicurati che il tuo account utilizzi una password lunga e casuale per la sicurezza',
+            'current_label' => 'Password attuale',
+            'current_placeholder' => 'Password attuale',
+            'new_label' => 'Nuova password',
+            'new_placeholder' => 'Nuova password',
+            'confirm_label' => 'Conferma password',
+            'confirm_placeholder' => 'Conferma password',
+            'save_button' => 'Salva password',
+        ],
+
+        'two_factor' => [
+            'title' => 'Autenticazione a Due Fattori',
+            'heading' => 'Autenticazione a Due Fattori',
+            'description' => 'Gestisci le impostazioni dell\'autenticazione a due fattori',
+            'enabled' => 'Attiva',
+            'disabled' => 'Disattiva',
+            'enabled_description' => 'Con l\'autenticazione a due fattori attiva, ti verrà chiesto un PIN sicuro e casuale durante il login, che potrai ottenere dall\'applicazione TOTP sul tuo telefono.',
+            'disabled_description' => 'Quando attivi l\'autenticazione a due fattori, ti verrà chiesto un PIN sicuro durante il login. Questo PIN può essere ottenuto da un\'applicazione TOTP sul tuo telefono.',
+            'enable_button' => 'Attiva 2FA',
+            'disable_button' => 'Disattiva 2FA',
+            'continue_setup' => 'Continua configurazione',
+            'recovery_codes_title' => 'Codici di recupero 2FA',
+            'recovery_codes_description' => 'I codici di recupero ti permettono di accedere se perdi il dispositivo 2FA. Conservali in un gestore di password sicuro.',
+            'view_codes' => 'Mostra codici di recupero',
+            'hide_codes' => 'Nascondi codici di recupero',
+            'regenerate_codes' => 'Rigenera codici',
+            'recovery_info' => 'Ogni codice di recupero può essere usato una sola volta per accedere al tuo account e verrà rimosso dopo l\'uso. Se ne servono altri, clicca :bold sopra.',
+            'recovery_info_bold' => 'Rigenera codici',
+            'modal_enabled_title' => 'Autenticazione a Due Fattori Attivata',
+            'modal_enabled_description' => 'L\'autenticazione a due fattori è ora attiva. Scansiona il codice QR o inserisci la chiave di configurazione nella tua app di autenticazione.',
+            'modal_verify_title' => 'Verifica codice di autenticazione',
+            'modal_verify_description' => 'Inserisci il codice a 6 cifre dalla tua app di autenticazione',
+            'modal_enable_title' => 'Attiva autenticazione a due fattori',
+            'modal_enable_description' => 'Per completare l\'attivazione dell\'autenticazione a due fattori, scansiona il codice QR o inserisci la chiave di configurazione nella tua app di autenticazione',
+            'manual_code' => 'oppure, inserisci il codice manualmente',
+        ],
+
+        'appearance' => [
+            'title' => 'Impostazioni aspetto',
+            'heading' => 'Impostazioni aspetto',
+            'description' => 'Aggiorna le impostazioni di aspetto del tuo account',
+            'light' => 'Chiaro',
+            'dark' => 'Scuro',
+            'system' => 'Sistema',
+        ],
+
+        'locale' => [
+            'heading' => 'Lingua',
+            'description' => 'Scegli la tua lingua preferita',
+        ],
+
+        'delete_account' => [
+            'heading' => 'Elimina account',
+            'description' => 'Elimina il tuo account e tutte le sue risorse',
+            'warning' => 'Procedi con cautela, questa azione non può essere annullata.',
+            'button' => 'Elimina account',
+            'confirm_title' => 'Sei sicuro di voler eliminare il tuo account?',
+            'confirm_description' => 'Una volta eliminato il tuo account, tutte le sue risorse e i dati verranno eliminati permanentemente. Inserisci la tua password per confermare l\'eliminazione definitiva del tuo account.',
+        ],
+    ],
+];
