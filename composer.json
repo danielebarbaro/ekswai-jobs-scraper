@@ -21,7 +21,9 @@
         "laravel/horizon": "*",
         "laravel/tinker": "^2.10.1",
         "laravel/wayfinder": "^0.1.9",
-        "resend/resend-laravel": "*"
+        "resend/resend-laravel": "*",
+        "symfony/css-selector": "^8.0",
+        "symfony/dom-crawler": "^8.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

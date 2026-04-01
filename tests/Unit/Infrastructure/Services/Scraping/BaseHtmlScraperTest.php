@@ -3,33 +3,11 @@
 declare(strict_types=1);
 
 use App\Application\DTOs\JobPostingDTO;
-use App\Domain\Company\JobBoardProvider;
 use App\Domain\ScraperConfig\ScraperConfig;
-use App\Infrastructure\Services\Scraping\BaseHtmlScraper;
 use App\Infrastructure\Services\Scraping\Exceptions\DomStructureChangedException;
 use App\Infrastructure\Services\Scraping\Exceptions\ScrapingFailedException;
 use Illuminate\Support\Facades\Http;
-use Symfony\Component\DomCrawler\Crawler;
-
-class FakeHtmlScraper extends BaseHtmlScraper
-{
-    public function getProvider(): JobBoardProvider
-    {
-        return JobBoardProvider::Teamtailor;
-    }
-
-    protected function mapJobElement(Crawler $node): JobPostingDTO
-    {
-        return new JobPostingDTO(
-            externalId: $node->attr('data-id') ?? 'unknown',
-            title: $node->filter('.title')->count() ? $node->filter('.title')->text() : 'Untitled',
-            location: $node->filter('.location')->count() ? $node->filter('.location')->text() : null,
-            url: $node->filter('a')->count() ? $node->filter('a')->attr('href') ?? '' : '',
-            department: null,
-            rawPayload: [],
-        );
-    }
-}
+use Tests\Unit\Infrastructure\Services\Scraping\FakeHtmlScraper;
 
 beforeEach(function () {
     ScraperConfig::factory()->create([
