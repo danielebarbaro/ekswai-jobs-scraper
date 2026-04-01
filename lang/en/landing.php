@@ -92,6 +92,11 @@ return [
         'cta' => 'Contribute on GitHub',
     ],
 
+    'cta_final' => [
+        'headline' => 'Start tracking jobs today',
+        'cta' => 'Get started',
+    ],
+
     'footer' => [
         'opensource_by' => 'An open source project by',
         'plincode' => 'Plincode',
