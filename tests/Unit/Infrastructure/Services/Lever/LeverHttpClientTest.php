@@ -134,3 +134,30 @@ it('returns null for slug validation on connection error', function () {
 
     expect($name)->toBeNull();
 });
+
+it('returns empty collection when api returns non-list json', function () {
+    Http::fake([
+        'api.lever.co/v0/postings/invalid' => Http::response(['ok' => false, 'error' => 'Document not found']),
+    ]);
+
+    $jobs = $this->client->fetchJobsForCompany('invalid');
+
+    expect($jobs)->toBeEmpty();
+});
+
+it('validates a multi-word slug and returns formatted company name', function () {
+    Http::fake([
+        'api.lever.co/v0/postings/acme-corp' => Http::response([
+            [
+                'id' => 'abc-123',
+                'text' => 'Engineer',
+                'categories' => [],
+                'hostedUrl' => 'https://jobs.lever.co/acme-corp/abc-123',
+            ],
+        ]),
+    ]);
+
+    $name = $this->client->validateSlug('acme-corp');
+
+    expect($name)->toBe('Acme Corp');
+});
