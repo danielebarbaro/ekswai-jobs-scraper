@@ -8,6 +8,8 @@ use App\Application\Actions\JobPosting\SyncCompanyJobPostingsAction;
 use App\Application\Actions\Notification\NotifyUserOfNewJobsAction;
 use App\Domain\Company\Company;
 use App\Domain\User\User;
+use App\Infrastructure\Services\Scraping\Exceptions\ScrapingFailedException;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
 class RunDailySyncAction
@@ -31,6 +33,7 @@ class RunDailySyncAction
 
             return [
                 'companies_synced' => 0,
+                'companies_failed' => 0,
                 'new_jobs_found' => 0,
                 'users_notified' => 0,
             ];
@@ -38,11 +41,13 @@ class RunDailySyncAction
 
         $stats = [
             'companies_synced' => 0,
+            'companies_failed' => 0,
             'new_jobs_found' => 0,
             'users_notified' => 0,
         ];
 
         $jobsByUser = collect();
+        $failuresByUser = collect();
 
         foreach ($companies as $company) {
             try {
@@ -73,6 +78,33 @@ class RunDailySyncAction
                         ]);
                     }
                 }
+            } catch (ScrapingFailedException $e) {
+                $stats['companies_failed']++;
+
+                Log::error('Failed to scrape company', [
+                    'company_id' => $company->id,
+                    'error' => $e->getMessage(),
+                ]);
+
+                $notifiableUsers = $company->subscribers()
+                    ->wherePivot('email_notifications', true)
+                    ->get();
+
+                foreach ($notifiableUsers as $user) {
+                    /** @var User $user */
+                    $userId = $user->id;
+
+                    if (! $failuresByUser->has($userId)) {
+                        $failuresByUser->put($userId, [
+                            'user' => $user,
+                            'failures' => collect(),
+                        ]);
+                    }
+
+                    $failuresByUser->get($userId)['failures']->push([
+                        'company_name' => $company->name,
+                    ]);
+                }
             } catch (\Throwable $e) {
                 Log::error('Failed to sync company', [
                     'company_id' => $company->id,
@@ -85,7 +117,10 @@ class RunDailySyncAction
             try {
                 /** @var User $user */
                 $user = $data['user'];
-                $this->notifyUserAction->execute($user, $data['jobs']);
+                $failures = isset($failuresByUser[$userId])
+                    ? $failuresByUser[$userId]['failures']
+                    : new Collection;
+                $this->notifyUserAction->execute($user, $data['jobs'], $failures);
                 $stats['users_notified']++;
             } catch (\Throwable $e) {
                 Log::error('Failed to notify user', [

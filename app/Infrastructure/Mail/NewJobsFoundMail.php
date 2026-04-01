@@ -21,10 +21,12 @@ class NewJobsFoundMail extends Mailable
      * Create a new message instance.
      *
      * @param  Collection  $jobsByCompany  Collection of ['company' => Company, 'jobs' => Collection<JobPosting>]
+     * @param  Collection  $failures  Collection of ['company_name' => string]
      */
     public function __construct(
         public User $user,
-        public Collection $jobsByCompany
+        public Collection $jobsByCompany,
+        public Collection $failures = new Collection
     ) {}
 
     public function envelope(): Envelope
@@ -50,6 +52,7 @@ class NewJobsFoundMail extends Mailable
                 'user' => $this->user,
                 'jobsByCompany' => $this->jobsByCompany,
                 'totalJobs' => $this->jobsByCompany->sum(fn ($item) => $item['jobs']->count()),
+                'failures' => $this->failures,
             ],
         );
     }

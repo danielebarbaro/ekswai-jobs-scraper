@@ -141,6 +141,21 @@
             </div>
         @endforeach
 
+        @if(isset($failures) && $failures->isNotEmpty())
+            <div style="background-color: #fef2f2; padding: 15px; border-radius: 4px; margin-top: 25px; border-left: 3px solid #dc2626;">
+                <p style="font-weight: 600; color: #dc2626; margin-top: 0;">
+                    Unable to update some companies
+                </p>
+                <p style="font-size: 14px; color: #666; margin-bottom: 0;">
+                    We couldn't fetch the latest jobs from:
+                    @foreach($failures as $failure)
+                        <strong>{{ $failure['company_name'] }}</strong>{{ $loop->last ? '.' : ', ' }}
+                    @endforeach
+                    This is usually temporary. If it persists, the team has been notified.
+                </p>
+            </div>
+        @endif
+
         <div class="footer">
             <p>
                 {{ __('emails.footer') }}

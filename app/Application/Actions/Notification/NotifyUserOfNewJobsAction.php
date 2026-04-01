@@ -16,8 +16,9 @@ class NotifyUserOfNewJobsAction
      * Send email notification to user about new job postings.
      *
      * @param  Collection  $jobsByCompany  Collection of ['company' => Company, 'jobs' => Collection<JobPosting>]
+     * @param  Collection  $failures  Collection of ['company_name' => string]
      */
-    public function execute(User $user, Collection $jobsByCompany): void
+    public function execute(User $user, Collection $jobsByCompany, Collection $failures = new Collection): void
     {
         if ($jobsByCompany->isEmpty()) {
             Log::info('No new jobs to notify user about', [
@@ -34,6 +35,7 @@ class NotifyUserOfNewJobsAction
             'user_email' => $user->email,
             'companies_count' => $jobsByCompany->count(),
             'total_new_jobs' => $totalJobs,
+            'failures_count' => $failures->count(),
         ]);
 
         try {
@@ -43,7 +45,7 @@ class NotifyUserOfNewJobsAction
             // Queue the email instead of sending synchronously
             Mail::to($user->email)
                 ->queue(
-                    (new NewJobsFoundMail($user, $jobsByCompany))
+                    (new NewJobsFoundMail($user, $jobsByCompany, $failures))
                         ->onQueue('emails')
                 );
 
