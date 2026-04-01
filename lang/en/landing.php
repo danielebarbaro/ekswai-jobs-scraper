@@ -86,6 +86,12 @@ return [
         'cta' => 'Get started',
     ],
 
+    'extensibility' => [
+        'heading' => 'Built for extensibility',
+        'description' => 'ekswai is designed with a provider-agnostic architecture. Workable is the first supported job board, and adding new providers is straightforward. Want to see your favorite job board here? Contributions are welcome.',
+        'cta' => 'Contribute on GitHub',
+    ],
+
     'footer' => [
         'opensource_by' => 'An open source project by',
         'plincode' => 'Plincode',
