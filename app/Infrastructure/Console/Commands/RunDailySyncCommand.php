@@ -12,7 +12,7 @@ class RunDailySyncCommand extends Command
     protected $signature = 'jobs:sync-daily
                           {--company-id= : Sync only a specific company by ID}';
 
-    protected $description = 'Sync job postings from Workable for all active companies and notify users of new positions';
+    protected $description = 'Sync job postings from all active providers and notify users of new positions';
 
     public function __construct(
         private readonly RunDailySyncAction $runDailySyncAction

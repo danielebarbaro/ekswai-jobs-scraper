@@ -67,11 +67,7 @@ abstract class BaseHtmlScraper implements JobBoardClient
             }
         }
 
-        throw $lastException ?? new ScrapingFailedException(
-            provider: $this->getProvider(),
-            slug: $slug,
-            attemptsMade: $maxAttempts,
-        );
+        throw $lastException;
     }
 
     public function validateSlug(string $slug): ?string
