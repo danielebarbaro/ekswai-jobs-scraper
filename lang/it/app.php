@@ -23,6 +23,7 @@ return [
         'password' => 'Password',
         'two_factor' => 'Autenticazione 2FA',
         'appearance' => 'Aspetto',
+        'filters' => 'Filtri',
     ],
 
     'dashboard' => [
@@ -122,6 +123,30 @@ return [
             'light' => 'Chiaro',
             'dark' => 'Scuro',
             'system' => 'Sistema',
+        ],
+
+        'filters' => [
+            'title' => 'Impostazioni filtri',
+            'global_heading' => 'Filtri globali',
+            'global_description' => 'Imposta i filtri predefiniti applicati a tutte le offerte di lavoro',
+            'title_include_label' => 'Parole chiave da includere',
+            'title_include_description' => 'Mostra solo le offerte il cui titolo contiene almeno una di queste parole chiave',
+            'title_exclude_label' => 'Parole chiave da escludere',
+            'title_exclude_description' => 'Nascondi le offerte il cui titolo contiene una di queste parole chiave',
+            'countries_label' => 'Paesi',
+            'countries_description' => 'Mostra solo le offerte dai paesi selezionati (lascia vuoto per tutti)',
+            'remote_only_label' => 'Solo remoto',
+            'remote_only_description' => 'Mostra solo le posizioni remote',
+            'departments_label' => 'Reparti',
+            'departments_description' => 'Mostra solo le offerte nei reparti selezionati (lascia vuoto per tutti)',
+            'tag_placeholder' => 'Scrivi e premi Invio',
+            'save_global' => 'Salva filtri globali',
+            'company_overrides_heading' => 'Filtri per azienda',
+            'company_overrides_description' => 'Sovrascrivi i filtri globali per aziende specifiche',
+            'add_override' => 'Aggiungi filtro per',
+            'delete_override' => 'Rimuovi filtro',
+            'delete_override_confirm' => 'Sei sicuro di voler rimuovere questo filtro aziendale?',
+            'no_companies' => 'Segui prima qualche azienda per creare filtri personalizzati.',
         ],
 
         'locale' => [

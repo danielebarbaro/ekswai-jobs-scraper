@@ -40,6 +40,11 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
             href: editAppearance(),
             icon: null,
         },
+        {
+            title: t('nav.filters'),
+            href: '/settings/filters',
+            icon: null,
+        },
     ];
 
     const currentPath = window.location.pathname;

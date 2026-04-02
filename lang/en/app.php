@@ -23,6 +23,7 @@ return [
         'password' => 'Password',
         'two_factor' => 'Two-Factor Auth',
         'appearance' => 'Appearance',
+        'filters' => 'Filters',
     ],
 
     'dashboard' => [
@@ -122,6 +123,30 @@ return [
             'light' => 'Light',
             'dark' => 'Dark',
             'system' => 'System',
+        ],
+
+        'filters' => [
+            'title' => 'Filter settings',
+            'global_heading' => 'Global filters',
+            'global_description' => 'Set default filters applied to all job postings',
+            'title_include_label' => 'Include keywords',
+            'title_include_description' => 'Only show jobs whose title contains at least one of these keywords',
+            'title_exclude_label' => 'Exclude keywords',
+            'title_exclude_description' => 'Hide jobs whose title contains any of these keywords',
+            'countries_label' => 'Countries',
+            'countries_description' => 'Only show jobs from selected countries (leave empty for all)',
+            'remote_only_label' => 'Remote only',
+            'remote_only_description' => 'Only show remote positions',
+            'departments_label' => 'Departments',
+            'departments_description' => 'Only show jobs in selected departments (leave empty for all)',
+            'tag_placeholder' => 'Type and press Enter',
+            'save_global' => 'Save global filters',
+            'company_overrides_heading' => 'Company overrides',
+            'company_overrides_description' => 'Override global filters for specific companies',
+            'add_override' => 'Add override for',
+            'delete_override' => 'Remove override',
+            'delete_override_confirm' => 'Are you sure you want to remove this company override?',
+            'no_companies' => 'Follow some companies first to create overrides.',
         ],
 
         'locale' => [
