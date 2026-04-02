@@ -12,6 +12,7 @@ use App\Domain\Company\Company;
 use App\Domain\Company\JobBoardProvider;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -31,6 +32,7 @@ class CompanySubscriptionController extends Controller
                 'is_active' => $company->is_active,
                 'job_postings_count' => $company->job_postings_count,
                 'email_notifications' => (bool) $company->pivot->email_notifications,
+                'last_synced_at' => $company->last_synced_at?->diffForHumans(),
             ]);
 
         return Inertia::render('companies', [
@@ -93,6 +95,14 @@ class CompanySubscriptionController extends Controller
         if (! $user->subscribedCompanies()->where('company_id', $company->id)->exists()) {
             abort(404);
         }
+
+        $key = "company-sync:{$user->id}:{$company->id}";
+
+        if (RateLimiter::tooManyAttempts($key, 2)) {
+            return back()->with('error', 'You can only sync this company twice per day.');
+        }
+
+        RateLimiter::hit($key, 86400);
 
         $newJobs = $syncAction->execute($company);
 

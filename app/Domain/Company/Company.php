@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 /**
  * @property JobBoardProvider $provider
  * @property string $provider_slug
+ * @property \Illuminate\Support\Carbon|null $last_synced_at
  */
 class Company extends BaseModel
 {
@@ -31,6 +32,7 @@ class Company extends BaseModel
         return [
             'is_active' => 'boolean',
             'provider' => JobBoardProvider::class,
+            'last_synced_at' => 'datetime',
         ];
     }
 

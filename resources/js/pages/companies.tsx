@@ -14,6 +14,7 @@ interface CompanySubscription {
     is_active: boolean;
     job_postings_count: number;
     email_notifications: boolean;
+    last_synced_at: string | null;
 }
 
 interface CompaniesProps {
@@ -104,7 +105,7 @@ export default function Companies({ companies }: CompaniesProps) {
                                 <div className="min-w-0 flex-1">
                                     <h3 className="font-medium">{company.name}</h3>
                                     <p className="text-sm text-muted-foreground">
-                                        {company.provider_slug} · {company.job_postings_count} jobs
+                                        {company.provider_slug} · {company.job_postings_count} jobs · Last sync: {company.last_synced_at ?? 'Never synced'}
                                     </p>
                                 </div>
                                 <div className="flex items-center gap-2">
