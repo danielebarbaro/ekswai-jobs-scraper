@@ -12,6 +12,7 @@ class ListCompanies extends ListRecords
 {
     protected static string $resource = CompanyResource::class;
 
+    #[\Override]
     protected function getHeaderActions(): array
     {
         return [

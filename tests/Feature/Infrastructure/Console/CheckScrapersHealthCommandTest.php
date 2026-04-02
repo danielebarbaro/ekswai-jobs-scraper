@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use App\Infrastructure\Services\Scraping\ScraperHealthChecker;
 
-it('outputs pass results when all providers pass', function () {
+it('outputs pass results when all providers pass', function (): void {
     $mock = Mockery::mock(ScraperHealthChecker::class);
     $mock->shouldReceive('checkAll')
         ->once()
@@ -18,7 +18,7 @@ it('outputs pass results when all providers pass', function () {
         ->assertSuccessful();
 });
 
-it('outputs failure result when provider fails', function () {
+it('outputs failure result when provider fails', function (): void {
     $mock = Mockery::mock(ScraperHealthChecker::class);
     $mock->shouldReceive('checkAll')
         ->once()
@@ -32,7 +32,7 @@ it('outputs failure result when provider fails', function () {
         ->assertFailed();
 });
 
-it('handles empty results when no providers to check', function () {
+it('handles empty results when no providers to check', function (): void {
     $mock = Mockery::mock(ScraperHealthChecker::class);
     $mock->shouldReceive('checkAll')
         ->once()

@@ -10,7 +10,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('scraper_configs', function (Blueprint $table) {
+        Schema::create('scraper_configs', function (Blueprint $table): void {
             $table->uuid('id')->primary();
             $table->string('provider')->unique();
             $table->json('selectors');

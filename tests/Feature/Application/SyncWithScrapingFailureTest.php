@@ -14,12 +14,12 @@ use App\Infrastructure\Services\JobBoardClientFactory;
 use App\Infrastructure\Services\Scraping\Exceptions\DomStructureChangedException;
 use Illuminate\Support\Facades\Mail;
 
-beforeEach(function () {
+beforeEach(function (): void {
     Mail::fake();
     $this->user = User::factory()->create();
 });
 
-it('collects scraping failures and includes them in user email', function () {
+it('collects scraping failures and includes them in user email', function (): void {
     $workableCompany = Company::factory()->create([
         'provider' => 'workable',
         'provider_slug' => 'good-co',
@@ -60,13 +60,11 @@ it('collects scraping failures and includes them in user email', function () {
     expect($stats['companies_synced'])->toBe(1)
         ->and($stats['companies_failed'])->toBe(1);
 
-    Mail::assertQueued(NewJobsFoundMail::class, function ($mail) use ($ttCompany) {
-        return $mail->failures->isNotEmpty()
-            && $mail->failures->first()['company_name'] === $ttCompany->name;
-    });
+    Mail::assertQueued(NewJobsFoundMail::class, fn ($mail) => $mail->failures->isNotEmpty()
+        && $mail->failures->first()['company_name'] === $ttCompany->name);
 });
 
-it('does not send email when only failures and no new jobs', function () {
+it('does not send email when only failures and no new jobs', function (): void {
     ScraperConfig::factory()->create(['provider' => 'teamtailor']);
     $company = Company::factory()->teamtailor()->create(['provider_slug' => 'broken-co']);
     $company->subscribers()->attach($this->user->id, ['email_notifications' => true]);

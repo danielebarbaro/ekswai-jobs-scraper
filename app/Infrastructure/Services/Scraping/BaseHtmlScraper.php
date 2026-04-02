@@ -17,7 +17,7 @@ use Symfony\Component\DomCrawler\Crawler;
 
 abstract class BaseHtmlScraper implements JobBoardClient
 {
-    private const TIMEOUT_SECONDS = 30;
+    private const int TIMEOUT_SECONDS = 30;
 
     abstract public function getProvider(): JobBoardProvider;
 
@@ -40,11 +40,9 @@ abstract class BaseHtmlScraper implements JobBoardClient
                 $jobListSelector = $config->selectors['job_list'];
 
                 return collect($crawler->filter($jobListSelector)->each(
-                    fn (Crawler $node) => $this->mapJobElement($node)
+                    fn (Crawler $node): JobPostingDTO => $this->mapJobElement($node)
                 ));
-            } catch (DomStructureChangedException $e) {
-                $lastException = $e;
-            } catch (ScrapingFailedException $e) {
+            } catch (DomStructureChangedException|ScrapingFailedException $e) {
                 $lastException = $e;
             } catch (\Throwable $e) {
                 $lastException = new ScrapingFailedException(

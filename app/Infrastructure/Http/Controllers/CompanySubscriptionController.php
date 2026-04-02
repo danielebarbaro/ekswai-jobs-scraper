@@ -33,7 +33,7 @@ class CompanySubscriptionController extends Controller
             ->withCount('jobPostings')
             ->orderBy('name')
             ->get()
-            ->map(function (Company $company) use ($user) {
+            ->map(function (Company $company) use ($user): array {
                 $key = "company-sync:{$user->id}:{$company->id}";
                 $rateLimitExhausted = RateLimiter::tooManyAttempts($key, self::MAX_SYNCS_PER_DAY);
                 $tooRecent = $company->last_synced_at && $company->last_synced_at->diffInMinutes(now()) < self::MIN_SYNC_INTERVAL_MINUTES;
@@ -68,9 +68,9 @@ class CompanySubscriptionController extends Controller
         $countries = Continent::with(['countries' => fn ($q) => $q->where('type', 'S')->orderBy('name')])
             ->orderBy('name')
             ->get()
-            ->map(fn (Continent $continent) => [
+            ->map(fn (Continent $continent): array => [
                 'name' => $continent->name,
-                'countries' => $continent->countries->map(fn (Country $country) => [
+                'countries' => $continent->countries->map(fn (Country $country): array => [
                     'id' => $country->id,
                     'name' => $country->name,
                 ]),
@@ -158,7 +158,7 @@ class CompanySubscriptionController extends Controller
         $newJobs = $syncAction->execute($company);
 
         if ($newJobs->isNotEmpty()) {
-            $pivotData = $newJobs->mapWithKeys(fn ($jp) => [
+            $pivotData = $newJobs->mapWithKeys(fn ($jp): array => [
                 $jp->id => ['status' => 'new'],
             ])->toArray();
 

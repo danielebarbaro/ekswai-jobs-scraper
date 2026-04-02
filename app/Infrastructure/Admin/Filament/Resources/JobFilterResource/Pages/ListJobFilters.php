@@ -12,6 +12,7 @@ class ListJobFilters extends ListRecords
 {
     protected static string $resource = JobFilterResource::class;
 
+    #[\Override]
     protected function getHeaderActions(): array
     {
         return [

@@ -12,6 +12,7 @@ class EditCompany extends EditRecord
 {
     protected static string $resource = CompanyResource::class;
 
+    #[\Override]
     protected function getHeaderActions(): array
     {
         return [

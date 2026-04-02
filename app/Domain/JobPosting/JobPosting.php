@@ -8,6 +8,7 @@ use App\Domain\Company\Company;
 use App\Domain\Shared\BaseModel;
 use App\Domain\User\User;
 use Database\Factories\JobPostingFactory;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -22,6 +23,7 @@ class JobPosting extends BaseModel
         return JobPostingFactory::new();
     }
 
+    #[\Override]
     protected function casts(): array
     {
         return [
@@ -48,7 +50,8 @@ class JobPosting extends BaseModel
         $this->update(['last_seen_at' => now()]);
     }
 
-    public function scopeNew($query, string $since = '24 hours')
+    #[Scope]
+    protected function new($query, string $since = '24 hours')
     {
         return $query->where('first_seen_at', '>=', now()->sub($since));
     }

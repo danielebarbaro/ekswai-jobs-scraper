@@ -24,12 +24,13 @@ class JobPostingsTrendChart extends ChartWidget
         return 'line';
     }
 
+    #[\Override]
     protected function getData(): array
     {
         $start = now()->subDays(29)->startOfDay();
         $end = now()->endOfDay();
 
-        $counts = JobPosting::where('first_seen_at', '>=', $start)
+        $counts = JobPosting::query()->where('first_seen_at', '>=', $start)
             ->selectRaw('DATE(first_seen_at) as date, COUNT(*) as count')
             ->groupByRaw('DATE(first_seen_at)')
             ->pluck('count', 'date')

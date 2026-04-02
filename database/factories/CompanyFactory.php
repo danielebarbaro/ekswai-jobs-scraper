@@ -23,28 +23,28 @@ class CompanyFactory extends Factory
 
     public function inactive(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn (array $attributes): array => [
             'is_active' => false,
         ]);
     }
 
     public function active(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn (array $attributes): array => [
             'is_active' => true,
         ]);
     }
 
     public function teamtailor(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn (array $attributes): array => [
             'provider' => 'teamtailor',
         ]);
     }
 
     public function factorial(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn (array $attributes): array => [
             'provider' => 'factorial',
         ]);
     }

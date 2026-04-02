@@ -6,7 +6,7 @@ use App\Domain\Company\Company;
 use App\Domain\JobPosting\JobPosting;
 use App\Domain\User\User;
 
-beforeEach(function () {
+beforeEach(function (): void {
     $this->user = User::factory()->create();
     $this->actingAs($this->user);
 
@@ -16,7 +16,7 @@ beforeEach(function () {
     $this->user->jobPostingStatuses()->attach($this->jobPosting->id, ['status' => 'new']);
 });
 
-it('can change job posting status to bookmarked', function () {
+it('can change job posting status to bookmarked', function (): void {
     $this->patch(route('job-postings.status', $this->jobPosting), ['status' => 'bookmarked'])
         ->assertRedirect();
 
@@ -24,7 +24,7 @@ it('can change job posting status to bookmarked', function () {
     expect($pivot->status)->toBe('bookmarked');
 });
 
-it('can change job posting status to submitted', function () {
+it('can change job posting status to submitted', function (): void {
     $this->patch(route('job-postings.status', $this->jobPosting), ['status' => 'submitted'])
         ->assertRedirect();
 
@@ -32,7 +32,7 @@ it('can change job posting status to submitted', function () {
     expect($pivot->status)->toBe('submitted');
 });
 
-it('can change job posting status to interview', function () {
+it('can change job posting status to interview', function (): void {
     $this->patch(route('job-postings.status', $this->jobPosting), ['status' => 'interview'])
         ->assertRedirect();
 
@@ -40,7 +40,7 @@ it('can change job posting status to interview', function () {
     expect($pivot->status)->toBe('interview');
 });
 
-it('can dismiss a job posting', function () {
+it('can dismiss a job posting', function (): void {
     $this->patch(route('job-postings.status', $this->jobPosting), ['status' => 'dismissed'])
         ->assertRedirect();
 
@@ -48,12 +48,12 @@ it('can dismiss a job posting', function () {
     expect($pivot->status)->toBe('dismissed');
 });
 
-it('rejects invalid status', function () {
+it('rejects invalid status', function (): void {
     $this->patch(route('job-postings.status', $this->jobPosting), ['status' => 'invalid'])
         ->assertSessionHasErrors('status');
 });
 
-it('requires authentication', function () {
+it('requires authentication', function (): void {
     auth()->logout();
 
     $this->patch(route('job-postings.status', $this->jobPosting), ['status' => 'bookmarked'])

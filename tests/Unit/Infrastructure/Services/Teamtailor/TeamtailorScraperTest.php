@@ -7,7 +7,7 @@ use App\Domain\ScraperConfig\ScraperConfig;
 use App\Infrastructure\Services\Teamtailor\TeamtailorScraper;
 use Illuminate\Support\Facades\Http;
 
-beforeEach(function () {
+beforeEach(function (): void {
     $this->config = ScraperConfig::factory()->create([
         'provider' => 'teamtailor',
         'retry_delay_seconds' => 0,
@@ -17,11 +17,11 @@ beforeEach(function () {
     $this->fixture = file_get_contents(base_path('tests/Fixtures/teamtailor-weroad-jobs.html'));
 });
 
-it('returns the correct provider', function () {
+it('returns the correct provider', function (): void {
     expect($this->scraper->getProvider())->toBe(JobBoardProvider::Teamtailor);
 });
 
-it('parses jobs from real teamtailor html', function () {
+it('parses jobs from real teamtailor html', function (): void {
     Http::fake(['https://weroad.teamtailor.com/jobs' => Http::response($this->fixture, 200)]);
 
     $jobs = $this->scraper->fetchJobsForCompany('weroad');
@@ -32,7 +32,7 @@ it('parses jobs from real teamtailor html', function () {
         ->and($jobs->first()->url)->toBeString()->toContain('teamtailor.com');
 });
 
-it('extracts numeric external id from url', function () {
+it('extracts numeric external id from url', function (): void {
     Http::fake(['https://weroad.teamtailor.com/jobs' => Http::response($this->fixture, 200)]);
 
     $jobs = $this->scraper->fetchJobsForCompany('weroad');
@@ -41,7 +41,7 @@ it('extracts numeric external id from url', function () {
     expect($jobs->first()->externalId)->toMatch('/^\d+$/');
 });
 
-it('extracts department and location', function () {
+it('extracts department and location', function (): void {
     Http::fake(['https://weroad.teamtailor.com/jobs' => Http::response($this->fixture, 200)]);
 
     $jobs = $this->scraper->fetchJobsForCompany('weroad');

@@ -22,6 +22,7 @@ class HandleInertiaRequests extends Middleware
      *
      * @see https://inertiajs.com/asset-versioning
      */
+    #[\Override]
     public function version(Request $request): ?string
     {
         return parent::version($request);
@@ -34,6 +35,7 @@ class HandleInertiaRequests extends Middleware
      *
      * @return array<string, mixed>
      */
+    #[\Override]
     public function share(Request $request): array
     {
         [$message, $author] = str(Inspiring::quotes()->random())->explode('-');
@@ -41,16 +43,16 @@ class HandleInertiaRequests extends Middleware
         return [
             ...parent::share($request),
             'name' => config('app.name'),
-            'quote' => ['message' => trim($message), 'author' => trim($author)],
+            'quote' => ['message' => trim((string) $message), 'author' => trim((string) $author)],
             'auth' => [
                 'user' => $request->user() ? array_merge(
                     $request->user()->toArray(),
-                    ['avatar' => 'https://www.gravatar.com/avatar/'.md5(strtolower(trim($request->user()->email))).'?d=mp&s=80']
+                    ['avatar' => 'https://www.gravatar.com/avatar/'.md5(strtolower(trim((string) $request->user()->email))).'?d=mp&s=80']
                 ) : null,
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
             'locale' => app()->getLocale(),
-            'translations' => fn () => __('app'),
+            'translations' => fn (): string|array => __('app'),
         ];
     }
 }

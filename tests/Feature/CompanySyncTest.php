@@ -8,7 +8,7 @@ use App\Domain\User\User;
 use App\Infrastructure\Services\Contracts\JobBoardClient;
 use App\Infrastructure\Services\JobBoardClientFactory;
 
-beforeEach(function () {
+beforeEach(function (): void {
     $this->user = User::factory()->create();
     $this->actingAs($this->user);
     $this->company = Company::factory()->create();
@@ -25,14 +25,14 @@ beforeEach(function () {
     $this->app->instance(JobBoardClientFactory::class, $mockFactory);
 });
 
-it('syncs a company and updates last_synced_at', function () {
+it('syncs a company and updates last_synced_at', function (): void {
     $this->post(route('companies.sync', $this->company))
         ->assertRedirect();
 
     expect($this->company->fresh()->last_synced_at)->not->toBeNull();
 });
 
-it('blocks sync after 2 attempts per day', function () {
+it('blocks sync after 2 attempts per day', function (): void {
     $this->post(route('companies.sync', $this->company))->assertRedirect();
     $this->post(route('companies.sync', $this->company))->assertRedirect();
 
@@ -41,7 +41,7 @@ it('blocks sync after 2 attempts per day', function () {
         ->assertSessionHas('error');
 });
 
-it('prevents syncing unsubscribed company', function () {
+it('prevents syncing unsubscribed company', function (): void {
     $other = Company::factory()->create();
 
     $this->post(route('companies.sync', $other))

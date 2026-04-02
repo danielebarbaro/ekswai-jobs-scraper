@@ -11,7 +11,7 @@ use Inertia\Response;
 
 class LandingController extends Controller
 {
-    private const SUPPORTED_LOCALES = ['en', 'it'];
+    private const array SUPPORTED_LOCALES = ['en', 'it'];
 
     public function redirect(Request $request): RedirectResponse
     {

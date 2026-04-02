@@ -6,7 +6,7 @@ use App\Domain\User\User;
 use App\Infrastructure\Http\Responses\TwoFactorLoginResponse;
 use Illuminate\Http\Request;
 
-it('redirects admin to admin panel', function () {
+it('redirects admin to admin panel', function (): void {
     $user = User::factory()->create(['is_admin' => true]);
 
     $request = Request::create('/two-factor-challenge', 'POST');
@@ -18,7 +18,7 @@ it('redirects admin to admin panel', function () {
         ->and($response->getTargetUrl())->toContain('/admin');
 });
 
-it('redirects regular user to dashboard', function () {
+it('redirects regular user to dashboard', function (): void {
     $user = User::factory()->create(['is_admin' => false]);
 
     $request = Request::create('/two-factor-challenge', 'POST');
@@ -30,7 +30,7 @@ it('redirects regular user to dashboard', function () {
         ->and($response->getTargetUrl())->toContain('/dashboard');
 });
 
-it('returns json response when request wants json', function () {
+it('returns json response when request wants json', function (): void {
     $user = User::factory()->create(['is_admin' => false]);
 
     $request = Request::create('/two-factor-challenge', 'POST', [], [], [], [

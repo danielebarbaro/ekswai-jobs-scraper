@@ -7,11 +7,11 @@ use App\Infrastructure\Services\Workable\WorkableHttpClient;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
 
-beforeEach(function () {
+beforeEach(function (): void {
     $this->client = new WorkableHttpClient;
 });
 
-it('fetches jobs for a valid company slug', function () {
+it('fetches jobs for a valid company slug', function (): void {
     Http::fake([
         'apply.workable.com/api/v1/widget/accounts/testco' => Http::response([
             'jobs' => [
@@ -46,7 +46,7 @@ it('fetches jobs for a valid company slug', function () {
         ->and($jobs->first()->department)->toBe('Engineering');
 });
 
-it('returns empty collection for empty jobs array', function () {
+it('returns empty collection for empty jobs array', function (): void {
     Http::fake([
         'apply.workable.com/api/v1/widget/accounts/testco' => Http::response(['jobs' => []]),
     ]);
@@ -56,7 +56,7 @@ it('returns empty collection for empty jobs array', function () {
     expect($jobs)->toBeEmpty();
 });
 
-it('returns empty collection on failed http response', function () {
+it('returns empty collection on failed http response', function (): void {
     Http::fake([
         'apply.workable.com/api/v1/widget/accounts/broken' => Http::response('Server Error', 500),
     ]);
@@ -66,7 +66,7 @@ it('returns empty collection on failed http response', function () {
     expect($jobs)->toBeEmpty();
 });
 
-it('returns empty collection on connection error', function () {
+it('returns empty collection on connection error', function (): void {
     Http::fake([
         'apply.workable.com/api/v1/widget/accounts/timeout' => fn () => throw new ConnectionException('Connection timed out'),
     ]);
@@ -76,7 +76,7 @@ it('returns empty collection on connection error', function () {
     expect($jobs)->toBeEmpty();
 });
 
-it('returns empty collection when jobs key is missing', function () {
+it('returns empty collection when jobs key is missing', function (): void {
     Http::fake([
         'apply.workable.com/api/v1/widget/accounts/invalid' => Http::response(['error' => 'not found']),
     ]);
@@ -86,7 +86,7 @@ it('returns empty collection when jobs key is missing', function () {
     expect($jobs)->toBeEmpty();
 });
 
-it('handles location with only city', function () {
+it('handles location with only city', function (): void {
     Http::fake([
         'apply.workable.com/api/v1/widget/accounts/testco' => Http::response([
             'jobs' => [
@@ -105,7 +105,7 @@ it('handles location with only city', function () {
     expect($jobs->first()->location)->toBe('Berlin');
 });
 
-it('handles location with only country', function () {
+it('handles location with only country', function (): void {
     Http::fake([
         'apply.workable.com/api/v1/widget/accounts/testco' => Http::response([
             'jobs' => [
@@ -124,7 +124,7 @@ it('handles location with only country', function () {
     expect($jobs->first()->location)->toBe('Germany');
 });
 
-it('handles missing location fields', function () {
+it('handles missing location fields', function (): void {
     Http::fake([
         'apply.workable.com/api/v1/widget/accounts/testco' => Http::response([
             'jobs' => [
@@ -142,7 +142,7 @@ it('handles missing location fields', function () {
     expect($jobs->first()->location)->toBeNull();
 });
 
-it('uses shortlink when url is missing', function () {
+it('uses shortlink when url is missing', function (): void {
     Http::fake([
         'apply.workable.com/api/v1/widget/accounts/testco' => Http::response([
             'jobs' => [
@@ -160,7 +160,7 @@ it('uses shortlink when url is missing', function () {
     expect($jobs->first()->url)->toBe('https://wkbl.co/ABC123');
 });
 
-it('validates a valid slug and returns company name', function () {
+it('validates a valid slug and returns company name', function (): void {
     Http::fake([
         'apply.workable.com/api/v1/widget/accounts/testco' => Http::response([
             'name' => 'TestCo Inc',
@@ -173,7 +173,7 @@ it('validates a valid slug and returns company name', function () {
     expect($name)->toBe('TestCo Inc');
 });
 
-it('returns null for invalid slug validation', function () {
+it('returns null for invalid slug validation', function (): void {
     Http::fake([
         'apply.workable.com/api/v1/widget/accounts/nonexistent' => Http::response('Not Found', 404),
     ]);
@@ -183,7 +183,7 @@ it('returns null for invalid slug validation', function () {
     expect($name)->toBeNull();
 });
 
-it('returns null for slug validation on connection error', function () {
+it('returns null for slug validation on connection error', function (): void {
     Http::fake([
         'apply.workable.com/api/v1/widget/accounts/timeout' => fn () => throw new ConnectionException('Connection timed out'),
     ]);
@@ -193,7 +193,7 @@ it('returns null for slug validation on connection error', function () {
     expect($name)->toBeNull();
 });
 
-it('returns null when validate slug response is missing name', function () {
+it('returns null when validate slug response is missing name', function (): void {
     Http::fake([
         'apply.workable.com/api/v1/widget/accounts/testco' => Http::response(['jobs' => []]),
     ]);

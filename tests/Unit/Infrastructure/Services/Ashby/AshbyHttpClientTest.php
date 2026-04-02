@@ -7,11 +7,11 @@ use App\Infrastructure\Services\Ashby\AshbyHttpClient;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
 
-beforeEach(function () {
+beforeEach(function (): void {
     $this->client = new AshbyHttpClient;
 });
 
-it('fetches jobs for a valid company slug', function () {
+it('fetches jobs for a valid company slug', function (): void {
     Http::fake([
         'api.ashbyhq.com/posting-api/job-board/testco' => Http::response([
             'jobs' => [
@@ -46,7 +46,7 @@ it('fetches jobs for a valid company slug', function () {
         ->and($jobs->first()->department)->toBe('Engineering');
 });
 
-it('returns empty collection for empty jobs array', function () {
+it('returns empty collection for empty jobs array', function (): void {
     Http::fake([
         'api.ashbyhq.com/posting-api/job-board/testco' => Http::response(['jobs' => []]),
     ]);
@@ -56,7 +56,7 @@ it('returns empty collection for empty jobs array', function () {
     expect($jobs)->toBeEmpty();
 });
 
-it('returns empty collection on failed http response', function () {
+it('returns empty collection on failed http response', function (): void {
     Http::fake([
         'api.ashbyhq.com/posting-api/job-board/broken' => Http::response('Server Error', 500),
     ]);
@@ -66,7 +66,7 @@ it('returns empty collection on failed http response', function () {
     expect($jobs)->toBeEmpty();
 });
 
-it('returns empty collection on connection error', function () {
+it('returns empty collection on connection error', function (): void {
     Http::fake([
         'api.ashbyhq.com/posting-api/job-board/timeout' => fn () => throw new ConnectionException('Connection timed out'),
     ]);
@@ -76,7 +76,7 @@ it('returns empty collection on connection error', function () {
     expect($jobs)->toBeEmpty();
 });
 
-it('returns empty collection when jobs key is missing', function () {
+it('returns empty collection when jobs key is missing', function (): void {
     Http::fake([
         'api.ashbyhq.com/posting-api/job-board/invalid' => Http::response(['error' => 'not found']),
     ]);
@@ -86,7 +86,7 @@ it('returns empty collection when jobs key is missing', function () {
     expect($jobs)->toBeEmpty();
 });
 
-it('appends remote to location when isRemote is true and location exists', function () {
+it('appends remote to location when isRemote is true and location exists', function (): void {
     Http::fake([
         'api.ashbyhq.com/posting-api/job-board/testco' => Http::response([
             'jobs' => [
@@ -106,7 +106,7 @@ it('appends remote to location when isRemote is true and location exists', funct
     expect($jobs->first()->location)->toBe('Berlin (Remote)');
 });
 
-it('sets location to remote when isRemote is true and no location', function () {
+it('sets location to remote when isRemote is true and no location', function (): void {
     Http::fake([
         'api.ashbyhq.com/posting-api/job-board/testco' => Http::response([
             'jobs' => [
@@ -125,7 +125,7 @@ it('sets location to remote when isRemote is true and no location', function () 
     expect($jobs->first()->location)->toBe('Remote');
 });
 
-it('validates a valid slug and returns company name', function () {
+it('validates a valid slug and returns company name', function (): void {
     Http::fake([
         'api.ashbyhq.com/posting-api/job-board/testco' => Http::response([
             'jobBoard' => ['title' => 'TestCo Inc'],
@@ -138,7 +138,7 @@ it('validates a valid slug and returns company name', function () {
     expect($name)->toBe('TestCo Inc');
 });
 
-it('returns null for invalid slug validation', function () {
+it('returns null for invalid slug validation', function (): void {
     Http::fake([
         'api.ashbyhq.com/posting-api/job-board/nonexistent' => Http::response('Not Found', 404),
     ]);
@@ -148,7 +148,7 @@ it('returns null for invalid slug validation', function () {
     expect($name)->toBeNull();
 });
 
-it('returns null for slug validation on connection error', function () {
+it('returns null for slug validation on connection error', function (): void {
     Http::fake([
         'api.ashbyhq.com/posting-api/job-board/timeout' => fn () => throw new ConnectionException('Connection timed out'),
     ]);
@@ -158,7 +158,7 @@ it('returns null for slug validation on connection error', function () {
     expect($name)->toBeNull();
 });
 
-it('returns null when validate slug response is missing jobBoard title', function () {
+it('returns null when validate slug response is missing jobBoard title', function (): void {
     Http::fake([
         'api.ashbyhq.com/posting-api/job-board/testco' => Http::response(['jobs' => []]),
     ]);
@@ -168,7 +168,7 @@ it('returns null when validate slug response is missing jobBoard title', functio
     expect($name)->toBeNull();
 });
 
-it('stores raw payload in dto', function () {
+it('stores raw payload in dto', function (): void {
     Http::fake([
         'api.ashbyhq.com/posting-api/job-board/testco' => Http::response([
             'jobs' => [

@@ -128,7 +128,7 @@ class ScraperHealthChecker
         foreach ($admins as $admin) {
             Mail::to($admin->email)
                 ->queue(
-                    (new ScraperHealthAlertMail($failures))->onQueue('emails')
+                    new ScraperHealthAlertMail($failures)->onQueue('emails')
                 );
         }
     }

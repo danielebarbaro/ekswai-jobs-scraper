@@ -10,13 +10,13 @@ use App\Infrastructure\Services\Scraping\ScraperHealthChecker;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 
-beforeEach(function () {
+beforeEach(function (): void {
     Mail::fake();
     $this->admin = User::factory()->create(['is_admin' => true]);
     $this->user = User::factory()->create(['is_admin' => false]);
 });
 
-it('marks health check as passed when selector is found', function () {
+it('marks health check as passed when selector is found', function (): void {
     $config = ScraperConfig::factory()->create(['provider' => 'teamtailor']);
     Company::factory()->teamtailor()->create(['provider_slug' => 'test-co']);
 
@@ -33,7 +33,7 @@ it('marks health check as passed when selector is found', function () {
     Mail::assertNothingSent();
 });
 
-it('marks health check as failed and sends alert when selector not found', function () {
+it('marks health check as failed and sends alert when selector not found', function (): void {
     $config = ScraperConfig::factory()->create(['provider' => 'teamtailor']);
     Company::factory()->teamtailor()->create(['provider_slug' => 'test-co']);
 
@@ -46,12 +46,10 @@ it('marks health check as failed and sends alert when selector not found', funct
     $config->refresh();
     expect($config->last_health_check_passed)->toBeFalse();
 
-    Mail::assertQueued(ScraperHealthAlertMail::class, function ($mail) {
-        return $mail->hasTo($this->admin->email);
-    });
+    Mail::assertQueued(ScraperHealthAlertMail::class, fn ($mail) => $mail->hasTo($this->admin->email));
 });
 
-it('does not send alert to non-admin users', function () {
+it('does not send alert to non-admin users', function (): void {
     ScraperConfig::factory()->create(['provider' => 'teamtailor']);
     Company::factory()->teamtailor()->create(['provider_slug' => 'test-co']);
 
@@ -61,12 +59,10 @@ it('does not send alert to non-admin users', function () {
     $checker = app(ScraperHealthChecker::class);
     $checker->checkAll();
 
-    Mail::assertNotQueued(ScraperHealthAlertMail::class, function ($mail) {
-        return $mail->hasTo($this->user->email);
-    });
+    Mail::assertNotQueued(ScraperHealthAlertMail::class, fn ($mail) => $mail->hasTo($this->user->email));
 });
 
-it('skips providers with no active companies', function () {
+it('skips providers with no active companies', function (): void {
     ScraperConfig::factory()->create(['provider' => 'teamtailor']);
     // No company with teamtailor provider
 
@@ -77,7 +73,7 @@ it('skips providers with no active companies', function () {
     Http::assertNothingSent();
 });
 
-it('skips inactive scraper configs', function () {
+it('skips inactive scraper configs', function (): void {
     ScraperConfig::factory()->inactive()->create(['provider' => 'teamtailor']);
     Company::factory()->teamtailor()->create(['provider_slug' => 'test-co']);
 
@@ -88,7 +84,7 @@ it('skips inactive scraper configs', function () {
     Http::assertNothingSent();
 });
 
-it('handles http errors gracefully and marks as failed', function () {
+it('handles http errors gracefully and marks as failed', function (): void {
     $config = ScraperConfig::factory()->create([
         'provider' => 'teamtailor',
         'retry_attempts' => 0,

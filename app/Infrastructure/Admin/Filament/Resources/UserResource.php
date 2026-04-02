@@ -20,6 +20,7 @@ class UserResource extends Resource
 
     protected static ?int $navigationSort = 1;
 
+    #[\Override]
     public static function form(Schema $schema): Schema
     {
         return $schema
@@ -38,14 +39,15 @@ class UserResource extends Resource
                             ->label('Email Verified At'),
                         Forms\Components\TextInput::make('password')
                             ->password()
-                            ->required(fn ($record) => $record === null)
-                            ->dehydrated(fn ($state) => filled($state))
+                            ->required(fn ($record): bool => $record === null)
+                            ->dehydrated(fn ($state): bool => filled($state))
                             ->maxLength(255),
                     ])
                     ->columns(2),
             ]);
     }
 
+    #[\Override]
     public static function table(Table $table): Table
     {
         return $table
@@ -86,6 +88,7 @@ class UserResource extends Resource
             ]);
     }
 
+    #[\Override]
     public static function getRelations(): array
     {
         return [
@@ -93,6 +96,7 @@ class UserResource extends Resource
         ];
     }
 
+    #[\Override]
     public static function getPages(): array
     {
         return [

@@ -9,7 +9,7 @@ use App\Infrastructure\Services\Scraping\Exceptions\ScrapingFailedException;
 use Illuminate\Support\Facades\Http;
 use Tests\Unit\Infrastructure\Services\Scraping\FakeHtmlScraper;
 
-beforeEach(function () {
+beforeEach(function (): void {
     ScraperConfig::factory()->create([
         'provider' => 'teamtailor',
         'retry_delay_seconds' => 0,
@@ -21,7 +21,7 @@ beforeEach(function () {
     ]);
 });
 
-it('fetches and parses jobs from valid html', function () {
+it('fetches and parses jobs from valid html', function (): void {
     $html = <<<'HTML'
     <html><body>
         <div class="job-item" data-id="job-1">
@@ -54,7 +54,7 @@ it('fetches and parses jobs from valid html', function () {
     expect($jobs[1]->location)->toBe('Berlin');
 });
 
-it('throws DomStructureChangedException when health check selector not found', function () {
+it('throws DomStructureChangedException when health check selector not found', function (): void {
     $html = '<html><body><p>No jobs here</p></body></html>';
 
     Http::fake([
@@ -65,7 +65,7 @@ it('throws DomStructureChangedException when health check selector not found', f
     $scraper->fetchJobsForCompany('acme');
 })->throws(DomStructureChangedException::class);
 
-it('throws ScrapingFailedException after retries on http error', function () {
+it('throws ScrapingFailedException after retries on http error', function (): void {
     Http::fake([
         'https://acme.example.com/jobs' => Http::response('Server Error', 500),
     ]);
@@ -74,7 +74,7 @@ it('throws ScrapingFailedException after retries on http error', function () {
     $scraper->fetchJobsForCompany('acme');
 })->throws(ScrapingFailedException::class);
 
-it('retries the configured number of times before failing', function () {
+it('retries the configured number of times before failing', function (): void {
     Http::fake([
         'https://acme.example.com/jobs' => Http::response('Server Error', 500),
     ]);
@@ -90,7 +90,7 @@ it('retries the configured number of times before failing', function () {
     Http::assertSentCount(3); // 1 initial + 2 retries
 });
 
-it('returns collection when job elements found but page is valid', function () {
+it('returns collection when job elements found but page is valid', function (): void {
     $html = <<<'HTML'
     <html><body>
         <div class="job-item" data-id="job-1">
@@ -111,7 +111,7 @@ it('returns collection when job elements found but page is valid', function () {
     expect($jobs[0]->title)->toBe('Solo Role');
 });
 
-it('validates slug by checking page loads with health check selector', function () {
+it('validates slug by checking page loads with health check selector', function (): void {
     $html = '<html><body><div class="job-item">Job</div></body></html>';
 
     Http::fake([
@@ -124,7 +124,7 @@ it('validates slug by checking page loads with health check selector', function 
     expect($result)->toBe('valid-co');
 });
 
-it('returns null for invalid slug', function () {
+it('returns null for invalid slug', function (): void {
     Http::fake([
         'https://invalid-co.example.com/jobs' => Http::response('Not Found', 404),
     ]);
@@ -135,7 +135,7 @@ it('returns null for invalid slug', function () {
     expect($result)->toBeNull();
 });
 
-it('builds url from base pattern and slug', function () {
+it('builds url from base pattern and slug', function (): void {
     $html = '<html><body><div class="job-item" data-id="1"><span class="title">Job</span><a href="/j">Link</a></div></body></html>';
 
     Http::fake([
@@ -145,7 +145,5 @@ it('builds url from base pattern and slug', function () {
     $scraper = new FakeHtmlScraper;
     $scraper->fetchJobsForCompany('my-company');
 
-    Http::assertSent(function ($request) {
-        return $request->url() === 'https://my-company.example.com/jobs';
-    });
+    Http::assertSent(fn ($request) => $request->url() === 'https://my-company.example.com/jobs');
 });

@@ -6,7 +6,7 @@ use App\Domain\Company\Company;
 use App\Domain\JobPosting\JobPosting;
 use App\Domain\User\User;
 
-it('has subscribed companies relationship', function () {
+it('has subscribed companies relationship', function (): void {
     $user = User::factory()->create();
     $company = Company::factory()->create();
 
@@ -16,7 +16,7 @@ it('has subscribed companies relationship', function () {
         ->and($user->subscribedCompanies->first()->id)->toBe($company->id);
 });
 
-it('has job posting statuses relationship', function () {
+it('has job posting statuses relationship', function (): void {
     $user = User::factory()->create();
     $company = Company::factory()->create();
     $jobPosting = JobPosting::factory()->create(['company_id' => $company->id]);
@@ -27,7 +27,7 @@ it('has job posting statuses relationship', function () {
         ->and($user->jobPostingStatuses->first()->pivot->status)->toBe('bookmarked');
 });
 
-it('can check email notification preference for a company', function () {
+it('can check email notification preference for a company', function (): void {
     $user = User::factory()->create();
     $company = Company::factory()->create();
 

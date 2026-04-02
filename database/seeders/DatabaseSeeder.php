@@ -14,15 +14,12 @@ class DatabaseSeeder extends Seeder
         $this->call(ScraperConfigSeeder::class);
 
         // Admin user
-        User::firstOrCreate(
-            ['email' => 'me@plincode.tech'],
-            [
-                'name' => 'Daniele Barbaro',
-                'password' => 'password',
-                'email_verified_at' => now(),
-                'is_admin' => true,
-            ]
-        );
+        User::query()->firstOrCreate(['email' => 'me@plincode.tech'], [
+            'name' => 'Daniele Barbaro',
+            'password' => 'password',
+            'email_verified_at' => now(),
+            'is_admin' => true,
+        ]);
 
         $this->call(DemoSeeder::class);
     }

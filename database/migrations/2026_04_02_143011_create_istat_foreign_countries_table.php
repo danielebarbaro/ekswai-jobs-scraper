@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('continents', function (Blueprint $table) {
+        Schema::create('continents', function (Blueprint $table): void {
             $table->uuid('id')->primary();
             $table->string('name');
             $table->string('istat_code', 10)->unique();
@@ -16,7 +16,7 @@ return new class extends Migration
             $table->softDeletes();
         });
 
-        Schema::create('areas', function (Blueprint $table) {
+        Schema::create('areas', function (Blueprint $table): void {
             $table->uuid('id')->primary();
             $table->foreignUuid('continent_id')->constrained('continents')->onDelete('cascade');
             $table->string('name');
@@ -25,7 +25,7 @@ return new class extends Migration
             $table->softDeletes();
         });
 
-        Schema::create('countries', function (Blueprint $table) {
+        Schema::create('countries', function (Blueprint $table): void {
             $table->uuid('id')->primary();
             $table->foreignUuid('continent_id')->constrained('continents')->onDelete('cascade');
             $table->foreignUuid('area_id')->constrained('areas')->onDelete('cascade');
@@ -44,7 +44,7 @@ return new class extends Migration
             $table->index(['iso_alpha3']);
         });
 
-        Schema::table('countries', function (Blueprint $table) {
+        Schema::table('countries', function (Blueprint $table): void {
             $table->foreign('parent_country_id')->references('id')->on('countries')->onDelete('set null');
         });
     }

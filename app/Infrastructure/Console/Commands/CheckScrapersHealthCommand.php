@@ -36,8 +36,8 @@ class CheckScrapersHealthCommand extends Command
 
         $this->table(
             ['Provider', 'Status'],
-            $results->map(fn ($r) => [
-                ucfirst($r['provider']),
+            $results->map(fn ($r): array => [
+                ucfirst((string) $r['provider']),
                 $r['passed'] ? 'PASS' : 'FAIL: '.($r['error'] ?? 'Unknown'),
             ])->toArray()
         );

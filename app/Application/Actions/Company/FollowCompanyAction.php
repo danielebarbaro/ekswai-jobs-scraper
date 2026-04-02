@@ -40,7 +40,7 @@ class FollowCompanyAction
 
         $slug = $input;
 
-        $existingCompany = Company::where('provider', $provider)
+        $existingCompany = Company::query()->where('provider', $provider)
             ->where('provider_slug', $slug)
             ->first();
 
@@ -59,10 +59,7 @@ class FollowCompanyAction
             ]);
         }
 
-        $company = Company::firstOrCreate(
-            ['provider' => $provider, 'provider_slug' => $slug],
-            ['name' => $companyName, 'is_active' => true]
-        );
+        $company = Company::query()->firstOrCreate(['provider' => $provider, 'provider_slug' => $slug], ['name' => $companyName, 'is_active' => true]);
 
         $user->subscribedCompanies()->attach($company->id, ['email_notifications' => true]);
 
@@ -73,7 +70,7 @@ class FollowCompanyAction
         $existingJobIds = $company->jobPostings()->pluck('id');
 
         if ($existingJobIds->isNotEmpty()) {
-            $pivotData = $existingJobIds->mapWithKeys(fn ($id) => [
+            $pivotData = $existingJobIds->mapWithKeys(fn ($id): array => [
                 $id => ['status' => 'new'],
             ])->toArray();
 

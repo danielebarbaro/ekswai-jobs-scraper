@@ -43,34 +43,34 @@ class JobFilterService
         if (! empty($filter->title_include)) {
             $keywords = $filter->title_include;
             $filtered = $filtered->filter(
-                fn (JobPostingDTO $job) => $this->matchesAnyKeyword($job->title, $keywords)
+                fn (JobPostingDTO $job): bool => $this->matchesAnyKeyword($job->title, $keywords)
             );
         }
 
         if (! empty($filter->title_exclude)) {
             $keywords = $filter->title_exclude;
             $filtered = $filtered->reject(
-                fn (JobPostingDTO $job) => $this->matchesAnyKeyword($job->title, $keywords)
+                fn (JobPostingDTO $job): bool => $this->matchesAnyKeyword($job->title, $keywords)
             );
         }
 
         if (! empty($filter->country_ids)) {
             $countryPatterns = $this->resolveCountryPatterns($filter->country_ids);
             $filtered = $filtered->filter(
-                fn (JobPostingDTO $job) => $this->matchesCountry($job, $countryPatterns)
+                fn (JobPostingDTO $job): bool => $this->matchesCountry($job, $countryPatterns)
             );
         }
 
         if ($filter->remote_only) {
             $filtered = $filtered->filter(
-                fn (JobPostingDTO $job) => $this->isRemote($job)
+                fn (JobPostingDTO $job): bool => $this->isRemote($job)
             );
         }
 
         if (! empty($filter->department_include)) {
-            $departments = array_map('mb_strtolower', $filter->department_include);
+            $departments = array_map(mb_strtolower(...), $filter->department_include);
             $filtered = $filtered->filter(
-                fn (JobPostingDTO $job) => $job->department === null
+                fn (JobPostingDTO $job): bool => $job->department === null
                     || in_array(mb_strtolower($job->department), $departments, true)
             );
         }
@@ -88,7 +88,7 @@ class JobFilterService
         }
 
         if (! empty($filter->title_include)) {
-            $query->where(function (Builder $q) use ($filter) {
+            $query->where(function (Builder $q) use ($filter): void {
                 foreach ($filter->title_include as $keyword) {
                     $q->orWhereRaw('LOWER(title) LIKE ?', ['%'.mb_strtolower($keyword).'%']);
                 }
@@ -103,7 +103,7 @@ class JobFilterService
 
         if (! empty($filter->country_ids)) {
             $countryPatterns = $this->resolveCountryPatterns($filter->country_ids);
-            $query->where(function (Builder $q) use ($countryPatterns) {
+            $query->where(function (Builder $q) use ($countryPatterns): void {
                 $q->whereNull('location');
                 foreach ($countryPatterns as $pattern) {
                     $q->orWhereRaw('LOWER(location) LIKE ?', ['%'.mb_strtolower($pattern).'%']);
@@ -112,7 +112,7 @@ class JobFilterService
         }
 
         if ($filter->remote_only) {
-            $query->where(function (Builder $q) {
+            $query->where(function (Builder $q): void {
                 $q->whereRaw('LOWER(location) LIKE ?', ['%remote%'])
                     ->orWhere('raw_payload->isRemote', true)
                     ->orWhere('raw_payload->is_remote', true);
@@ -120,7 +120,7 @@ class JobFilterService
         }
 
         if (! empty($filter->department_include)) {
-            $query->where(function (Builder $q) use ($filter) {
+            $query->where(function (Builder $q) use ($filter): void {
                 $q->whereNull('department');
                 foreach ($filter->department_include as $dept) {
                     $q->orWhereRaw('LOWER(department) = ?', [mb_strtolower($dept)]);
@@ -138,13 +138,7 @@ class JobFilterService
     {
         $lowerText = mb_strtolower($text);
 
-        foreach ($keywords as $keyword) {
-            if (str_contains($lowerText, mb_strtolower($keyword))) {
-                return true;
-            }
-        }
-
-        return false;
+        return array_any($keywords, fn ($keyword): bool => str_contains($lowerText, mb_strtolower((string) $keyword)));
     }
 
     /**
@@ -159,8 +153,8 @@ class JobFilterService
         return Cache::remember(
             'job_filter_countries_'.md5(implode(',', $sorted)),
             now()->addHour(),
-            function () use ($sorted) {
-                $countries = Country::whereIn('id', $sorted)->get();
+            function () use ($sorted): array {
+                $countries = Country::query()->whereIn('id', $sorted)->get();
                 $patterns = [];
 
                 foreach ($countries as $country) {

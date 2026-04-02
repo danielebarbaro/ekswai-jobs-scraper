@@ -35,7 +35,7 @@ class DashboardController extends Controller
 
         if ($companyId) {
             $query->where('company_id', $companyId);
-            $company = Company::find($companyId);
+            $company = Company::query()->find($companyId);
             if ($company) {
                 $filter = $this->jobFilterService->getEffectiveFilter($user, $company);
                 $this->jobFilterService->applyToQuery($query, $filter);
@@ -45,7 +45,7 @@ class DashboardController extends Controller
             $this->jobFilterService->applyToQuery($query, $filter);
         }
 
-        $jobPostings = $query->paginate(20)->through(fn ($jp) => [
+        $jobPostings = $query->paginate(20)->through(fn ($jp): array => [
             'id' => $jp->id,
             'title' => $jp->title,
             'location' => $jp->location,
@@ -62,7 +62,7 @@ class DashboardController extends Controller
         $companies = $user->subscribedCompanies()
             ->orderBy('name')
             ->get()
-            ->map(fn ($c) => ['id' => $c->id, 'name' => $c->name]);
+            ->map(fn ($c): array => ['id' => $c->id, 'name' => $c->name]);
 
         return Inertia::render('dashboard', [
             'jobPostings' => $jobPostings,

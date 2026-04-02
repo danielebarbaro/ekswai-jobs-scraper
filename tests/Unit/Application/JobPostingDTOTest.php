@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use App\Application\DTOs\JobPostingDTO;
 
-it('converts to array with correct keys', function () {
+it('converts to array with correct keys', function (): void {
     $dto = new JobPostingDTO(
         externalId: 'abc-123',
         title: 'Software Engineer',
@@ -24,7 +24,7 @@ it('converts to array with correct keys', function () {
     ]);
 });
 
-it('handles nullable fields', function () {
+it('handles nullable fields', function (): void {
     $dto = new JobPostingDTO(
         externalId: 'abc-123',
         title: 'Designer',

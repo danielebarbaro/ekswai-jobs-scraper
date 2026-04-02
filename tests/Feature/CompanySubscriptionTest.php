@@ -7,12 +7,12 @@ use App\Domain\JobPosting\JobPosting;
 use App\Domain\User\User;
 use Illuminate\Support\Facades\Http;
 
-beforeEach(function () {
+beforeEach(function (): void {
     $this->user = User::factory()->create();
     $this->actingAs($this->user);
 });
 
-it('shows the companies page', function () {
+it('shows the companies page', function (): void {
     $company = Company::factory()->create();
     $this->user->subscribedCompanies()->attach($company->id, ['email_notifications' => true]);
 
@@ -24,7 +24,7 @@ it('shows the companies page', function () {
         );
 });
 
-it('can follow a company', function () {
+it('can follow a company', function (): void {
     Http::fake([
         'apply.workable.com/api/v1/widget/accounts/laravel' => Http::response([
             'name' => 'Laravel',
@@ -39,7 +39,7 @@ it('can follow a company', function () {
         ->and($this->user->subscribedCompanies->first()->provider_slug)->toBe('laravel');
 });
 
-it('can follow a company by URL without provider', function () {
+it('can follow a company by URL without provider', function (): void {
     Http::fake([
         'apply.workable.com/api/v1/widget/accounts/laravel' => Http::response([
             'name' => 'Laravel',
@@ -54,12 +54,12 @@ it('can follow a company by URL without provider', function () {
         ->and($this->user->subscribedCompanies->first()->provider_slug)->toBe('laravel');
 });
 
-it('returns validation error for slug without provider', function () {
+it('returns validation error for slug without provider', function (): void {
     $this->post(route('companies.follow'), ['slug' => 'nonexistent'])
         ->assertSessionHasErrors('slug');
 });
 
-it('returns validation error for invalid slug', function () {
+it('returns validation error for invalid slug', function (): void {
     Http::fake([
         'apply.workable.com/api/v1/widget/accounts/nonexistent' => Http::response([], 404),
     ]);
@@ -68,7 +68,7 @@ it('returns validation error for invalid slug', function () {
         ->assertSessionHasErrors('slug');
 });
 
-it('returns validation error when already following', function () {
+it('returns validation error when already following', function (): void {
     $company = Company::factory()->create(['provider_slug' => 'already']);
     $this->user->subscribedCompanies()->attach($company->id);
 
@@ -76,7 +76,7 @@ it('returns validation error when already following', function () {
         ->assertSessionHasErrors('slug');
 });
 
-it('can unfollow a company', function () {
+it('can unfollow a company', function (): void {
     $company = Company::factory()->create();
     $this->user->subscribedCompanies()->attach($company->id);
 
@@ -86,7 +86,7 @@ it('can unfollow a company', function () {
     expect($this->user->fresh()->subscribedCompanies)->toHaveCount(0);
 });
 
-it('removes job_posting_user records when unfollowing', function () {
+it('removes job_posting_user records when unfollowing', function (): void {
     $company = Company::factory()->create();
     $this->user->subscribedCompanies()->attach($company->id);
     $jp = JobPosting::factory()->create(['company_id' => $company->id]);
@@ -97,7 +97,7 @@ it('removes job_posting_user records when unfollowing', function () {
     expect($this->user->fresh()->jobPostingStatuses)->toHaveCount(0);
 });
 
-it('can toggle email notifications', function () {
+it('can toggle email notifications', function (): void {
     $company = Company::factory()->create();
     $this->user->subscribedCompanies()->attach($company->id, ['email_notifications' => true]);
 
@@ -107,7 +107,7 @@ it('can toggle email notifications', function () {
     expect((bool) $pivot->email_notifications)->toBeFalse();
 });
 
-it('requires authentication for all routes', function () {
+it('requires authentication for all routes', function (): void {
     auth()->logout();
 
     $this->get(route('companies.index'))->assertRedirect('/login');

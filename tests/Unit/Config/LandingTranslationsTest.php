@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-it('has english translations with all required keys', function () {
+it('has english translations with all required keys', function (): void {
     app()->setLocale('en');
 
     expect(__('landing.meta.title'))->toBeString()->not->toContain('landing.');
@@ -24,7 +24,7 @@ it('has english translations with all required keys', function () {
     expect(__('landing.footer.opensource_by'))->toBeString()->not->toContain('landing.');
 });
 
-it('has italian translations with all required keys', function () {
+it('has italian translations with all required keys', function (): void {
     app()->setLocale('it');
 
     expect(__('landing.meta.title'))->toBeString()->not->toContain('landing.');
@@ -46,7 +46,7 @@ it('has italian translations with all required keys', function () {
     expect(__('landing.footer.opensource_by'))->toBeString()->not->toContain('landing.');
 });
 
-it('has different content for each locale', function () {
+it('has different content for each locale', function (): void {
     app()->setLocale('en');
     $enTitle = __('landing.hero.headline');
 

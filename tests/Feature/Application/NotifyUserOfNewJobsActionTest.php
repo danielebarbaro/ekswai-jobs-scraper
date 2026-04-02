@@ -9,12 +9,12 @@ use App\Domain\User\User;
 use App\Infrastructure\Mail\NewJobsFoundMail;
 use Illuminate\Support\Facades\Mail;
 
-beforeEach(function () {
+beforeEach(function (): void {
     Mail::fake();
     $this->action = app(NotifyUserOfNewJobsAction::class);
 });
 
-it('queues email when there are new jobs', function () {
+it('queues email when there are new jobs', function (): void {
     $user = User::factory()->create();
     $company = Company::factory()->create();
     $job = JobPosting::factory()->create(['company_id' => $company->id]);
@@ -25,12 +25,10 @@ it('queues email when there are new jobs', function () {
 
     $this->action->execute($user, $jobsByCompany);
 
-    Mail::assertQueued(NewJobsFoundMail::class, function ($mail) use ($user) {
-        return $mail->hasTo($user->email);
-    });
+    Mail::assertQueued(NewJobsFoundMail::class, fn ($mail) => $mail->hasTo($user->email));
 });
 
-it('does not queue email when jobs collection is empty', function () {
+it('does not queue email when jobs collection is empty', function (): void {
     $user = User::factory()->create();
 
     $this->action->execute($user, collect());
@@ -38,7 +36,7 @@ it('does not queue email when jobs collection is empty', function () {
     Mail::assertNothingQueued();
 });
 
-it('includes failures in the email', function () {
+it('includes failures in the email', function (): void {
     $user = User::factory()->create();
     $company = Company::factory()->create();
     $job = JobPosting::factory()->create(['company_id' => $company->id]);
@@ -51,7 +49,5 @@ it('includes failures in the email', function () {
 
     $this->action->execute($user, $jobsByCompany, $failures);
 
-    Mail::assertQueued(NewJobsFoundMail::class, function (NewJobsFoundMail $mail) {
-        return $mail->failures->count() === 1;
-    });
+    Mail::assertQueued(NewJobsFoundMail::class, fn (NewJobsFoundMail $mail) => $mail->failures->count() === 1);
 });

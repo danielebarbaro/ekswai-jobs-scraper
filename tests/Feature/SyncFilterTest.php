@@ -12,11 +12,11 @@ use App\Infrastructure\Services\Contracts\JobBoardClient;
 use App\Infrastructure\Services\JobBoardClientFactory;
 use Illuminate\Support\Facades\Mail;
 
-beforeEach(function () {
+beforeEach(function (): void {
     Mail::fake();
 });
 
-it('filters notification jobs based on user global filter', function () {
+it('filters notification jobs based on user global filter', function (): void {
     $user = User::factory()->create();
     $company = Company::factory()->create();
     $user->subscribedCompanies()->attach($company->id, ['email_notifications' => true]);
@@ -39,14 +39,14 @@ it('filters notification jobs based on user global filter', function () {
 
     app(RunDailySyncAction::class)->execute();
 
-    Mail::assertQueued(NewJobsFoundMail::class, function (NewJobsFoundMail $mail) {
+    Mail::assertQueued(NewJobsFoundMail::class, function (NewJobsFoundMail $mail): bool {
         $totalJobs = $mail->jobsByCompany->sum(fn ($item) => $item['jobs']->count());
 
         return $totalJobs === 1;
     });
 });
 
-it('sends all jobs when user has no filter', function () {
+it('sends all jobs when user has no filter', function (): void {
     $user = User::factory()->create();
     $company = Company::factory()->create();
     $user->subscribedCompanies()->attach($company->id, ['email_notifications' => true]);
@@ -64,14 +64,14 @@ it('sends all jobs when user has no filter', function () {
 
     app(RunDailySyncAction::class)->execute();
 
-    Mail::assertQueued(NewJobsFoundMail::class, function (NewJobsFoundMail $mail) {
+    Mail::assertQueued(NewJobsFoundMail::class, function (NewJobsFoundMail $mail): bool {
         $totalJobs = $mail->jobsByCompany->sum(fn ($item) => $item['jobs']->count());
 
         return $totalJobs === 2;
     });
 });
 
-it('skips notification entirely when all jobs are filtered out', function () {
+it('skips notification entirely when all jobs are filtered out', function (): void {
     $user = User::factory()->create();
     $company = Company::factory()->create();
     $user->subscribedCompanies()->attach($company->id, ['email_notifications' => true]);

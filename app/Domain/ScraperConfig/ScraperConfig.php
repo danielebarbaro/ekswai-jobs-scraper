@@ -33,6 +33,7 @@ class ScraperConfig extends BaseModel
         return ScraperConfigFactory::new();
     }
 
+    #[\Override]
     protected function casts(): array
     {
         return [

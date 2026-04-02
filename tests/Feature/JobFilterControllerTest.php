@@ -6,12 +6,12 @@ use App\Domain\Company\Company;
 use App\Domain\JobFilter\JobFilter;
 use App\Domain\User\User;
 
-beforeEach(function () {
+beforeEach(function (): void {
     $this->user = User::factory()->create();
     $this->actingAs($this->user);
 });
 
-it('returns current user filters on the index page', function () {
+it('returns current user filters on the index page', function (): void {
     $globalFilter = JobFilter::factory()->global()->create(['user_id' => $this->user->id]);
     $company = Company::factory()->create();
     $this->user->subscribedCompanies()->attach($company->id);
@@ -27,7 +27,7 @@ it('returns current user filters on the index page', function () {
         );
 });
 
-it('creates a global filter', function () {
+it('creates a global filter', function (): void {
     $this->post(route('job-filters.store'), [
         'company_id' => null,
         'title_include' => ['engineer'],
@@ -41,7 +41,7 @@ it('creates a global filter', function () {
         ->and($filter->remote_only)->toBeTrue();
 });
 
-it('creates a company-specific filter', function () {
+it('creates a company-specific filter', function (): void {
     $company = Company::factory()->create();
 
     $this->post(route('job-filters.store'), [
@@ -53,7 +53,7 @@ it('creates a company-specific filter', function () {
     expect($this->user->jobFilters()->forCompany($company->id)->count())->toBe(1);
 });
 
-it('updates an existing filter', function () {
+it('updates an existing filter', function (): void {
     $filter = JobFilter::factory()->global()->create([
         'user_id' => $this->user->id,
         'title_include' => ['old'],
@@ -67,16 +67,16 @@ it('updates an existing filter', function () {
     expect($filter->fresh()->title_include)->toBe(['new']);
 });
 
-it('deletes a filter', function () {
+it('deletes a filter', function (): void {
     $filter = JobFilter::factory()->global()->create(['user_id' => $this->user->id]);
 
     $this->delete(route('job-filters.destroy', $filter))
         ->assertRedirect();
 
-    expect(JobFilter::find($filter->id))->toBeNull();
+    expect(JobFilter::query()->find($filter->id))->toBeNull();
 });
 
-it('prevents creating a duplicate global filter', function () {
+it('prevents creating a duplicate global filter', function (): void {
     JobFilter::factory()->global()->create(['user_id' => $this->user->id]);
 
     $this->post(route('job-filters.store'), [
@@ -85,7 +85,7 @@ it('prevents creating a duplicate global filter', function () {
     ])->assertSessionHasErrors('company_id');
 });
 
-it('prevents creating a duplicate company filter', function () {
+it('prevents creating a duplicate company filter', function (): void {
     $company = Company::factory()->create();
     JobFilter::factory()->forCompany($company->id)->create(['user_id' => $this->user->id]);
 
@@ -95,7 +95,7 @@ it('prevents creating a duplicate company filter', function () {
     ])->assertSessionHasErrors('company_id');
 });
 
-it('prevents accessing another user filter', function () {
+it('prevents accessing another user filter', function (): void {
     $otherUser = User::factory()->create();
     $filter = JobFilter::factory()->global()->create(['user_id' => $otherUser->id]);
 
