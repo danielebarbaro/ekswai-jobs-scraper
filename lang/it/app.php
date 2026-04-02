@@ -50,6 +50,8 @@ return [
         'title' => 'Le Mie Aziende',
         'description' => 'Aggiungi aziende per monitorare le loro offerte di lavoro.',
         'add_placeholder' => 'Inserisci lo slug aziendale (es. laravel)',
+        'url_placeholder' => 'Incolla URL (es. https://jobs.lever.co/scaleway) o inserisci lo slug',
+        'auto_detect' => 'Rileva provider',
         'follow' => 'Segui',
         'unfollow_confirm' => 'Sei sicuro di voler smettere di seguire questa azienda?',
         'unfollow' => 'Non seguire',

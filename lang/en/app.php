@@ -50,6 +50,8 @@ return [
         'title' => 'My Companies',
         'description' => 'Add companies to track their job postings.',
         'add_placeholder' => 'Enter company slug (e.g. laravel)',
+        'url_placeholder' => 'Paste URL (e.g. https://jobs.lever.co/scaleway) or enter slug',
+        'auto_detect' => 'Auto-detect provider',
         'follow' => 'Follow',
         'unfollow_confirm' => 'Are you sure you want to unfollow this company?',
         'unfollow' => 'Unfollow',

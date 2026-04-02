@@ -87,10 +87,13 @@ class CompanySubscriptionController extends Controller
     public function follow(Request $request, FollowCompanyAction $action): RedirectResponse
     {
         $request->validate([
-            'slug' => ['required', 'string', 'max:255'],
+            'slug' => ['required', 'string', 'max:500'],
+            'provider' => ['nullable', 'string'],
         ]);
 
-        $provider = JobBoardProvider::from($request->input('provider', 'workable'));
+        $provider = $request->input('provider')
+            ? JobBoardProvider::tryFrom($request->input('provider'))
+            : null;
 
         $action->execute($request->user(), $request->input('slug'), $provider);
 

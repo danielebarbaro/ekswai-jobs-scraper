@@ -50,13 +50,23 @@ export default function Companies({ companies, companyFilters, departments, coun
         { title: t('companies.title'), href: '/companies' },
     ];
 
-    const form = useForm({ slug: '' });
+    const providers = [
+        { value: '', label: t('companies.auto_detect') },
+        { value: 'workable', label: 'Workable' },
+        { value: 'lever', label: 'Lever' },
+        { value: 'ashby', label: 'Ashby' },
+        { value: 'greenhouse', label: 'Greenhouse' },
+        { value: 'teamtailor', label: 'Teamtailor' },
+        { value: 'factorial', label: 'Factorial' },
+    ];
+
+    const form = useForm({ slug: '', provider: '' });
 
     const handleFollow = (e: React.FormEvent) => {
         e.preventDefault();
         form.post('/companies/follow', {
             preserveScroll: true,
-            onSuccess: () => form.reset('slug'),
+            onSuccess: () => form.reset('slug', 'provider'),
         });
     };
 
@@ -122,11 +132,22 @@ export default function Companies({ companies, companyFilters, departments, coun
                 {/* Add company form */}
                 <form onSubmit={handleFollow} className="mt-6 flex gap-3">
                     <Input
-                        placeholder={t('companies.add_placeholder')}
+                        placeholder={t('companies.url_placeholder')}
                         value={form.data.slug}
                         onChange={(e) => form.setData('slug', e.target.value)}
                         className="flex-1"
                     />
+                    <select
+                        value={form.data.provider}
+                        onChange={(e) => form.setData('provider', e.target.value)}
+                        className="rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                    >
+                        {providers.map((p) => (
+                            <option key={p.value} value={p.value}>
+                                {p.label}
+                            </option>
+                        ))}
+                    </select>
                     <Button type="submit" disabled={form.processing || !form.data.slug.trim()}>
                         <Plus className="mr-1 size-4" />
                         {t('companies.follow')}
@@ -136,8 +157,8 @@ export default function Companies({ companies, companyFilters, departments, coun
                         {t('companies.load_defaults')}
                     </Button>
                 </form>
-                {form.errors.slug && (
-                    <p className="mt-2 text-sm text-red-600 dark:text-red-400">{form.errors.slug}</p>
+                {(form.errors.slug || form.errors.provider) && (
+                    <p className="mt-2 text-sm text-red-600 dark:text-red-400">{form.errors.slug || form.errors.provider}</p>
                 )}
 
                 {/* Companies list */}
