@@ -128,7 +128,7 @@ return [
         'filters' => [
             'title' => 'Impostazioni filtri',
             'global_heading' => 'Filtri globali',
-            'global_description' => 'Imposta i filtri predefiniti applicati a tutte le offerte di lavoro',
+            'global_description' => 'Imposta i filtri predefiniti applicati a tutte le offerte di lavoro. Tutti i criteri devono corrispondere (AND). Per ogni criterio, basta che un valore corrisponda (OR).',
             'title_include_label' => 'Parole chiave da includere',
             'title_include_description' => 'Mostra solo le offerte il cui titolo contiene almeno una di queste parole chiave',
             'title_exclude_label' => 'Parole chiave da escludere',

@@ -128,7 +128,7 @@ return [
         'filters' => [
             'title' => 'Filter settings',
             'global_heading' => 'Global filters',
-            'global_description' => 'Set default filters applied to all job postings',
+            'global_description' => 'Set default filters applied to all job postings. All criteria must match (AND). Within each criterion, any value can match (OR).',
             'title_include_label' => 'Include keywords',
             'title_include_description' => 'Only show jobs whose title contains at least one of these keywords',
             'title_exclude_label' => 'Exclude keywords',
