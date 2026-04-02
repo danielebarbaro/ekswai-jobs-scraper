@@ -2,6 +2,7 @@
 
 use App\Infrastructure\Http\Controllers\CompanySubscriptionController;
 use App\Infrastructure\Http\Controllers\DashboardController;
+use App\Infrastructure\Http\Controllers\JobFilterController;
 use App\Infrastructure\Http\Controllers\JobPostingStatusController;
 use App\Infrastructure\Http\Controllers\LandingController;
 use App\Infrastructure\Http\Middleware\RedirectAdmin;
@@ -23,6 +24,11 @@ Route::middleware(['auth', 'verified', RedirectAdmin::class])->group(function ()
     Route::patch('companies/{company}/notifications', [CompanySubscriptionController::class, 'toggleNotifications'])->name('companies.notifications');
 
     Route::patch('job-postings/{jobPosting}/status', [JobPostingStatusController::class, 'update'])->name('job-postings.status');
+
+    Route::get('settings/filters', [JobFilterController::class, 'index'])->name('job-filters.index');
+    Route::post('settings/filters', [JobFilterController::class, 'store'])->name('job-filters.store');
+    Route::put('settings/filters/{jobFilter}', [JobFilterController::class, 'update'])->name('job-filters.update');
+    Route::delete('settings/filters/{jobFilter}', [JobFilterController::class, 'destroy'])->name('job-filters.destroy');
 
     Route::patch('user/locale', function (Request $request) {
         $request->validate(['locale' => 'required|in:en,it']);
