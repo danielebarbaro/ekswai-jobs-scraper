@@ -48,6 +48,7 @@ API providers use JSON endpoints directly. HTML scraper providers use configurab
 | Frontend | React 19, Inertia.js, TypeScript, Tailwind CSS 4 |
 | Database | PostgreSQL (SQLite for tests) |
 | Admin | Filament 4 |
+| Country Data | [laravel-istat-foreign-countries](https://github.com/plin-code/laravel-istat-foreign-countries) |
 | Testing | Pest |
 | Static Analysis | PHPStan (Larastan) level 6 |
 | Code Style | Laravel Pint |
@@ -66,6 +67,7 @@ app/
 │   ├── JobPosting/      # Job posting with per-user status tracking
 │   ├── ScraperConfig/   # CSS selectors and health check config for HTML scrapers
 │   ├── Shared/          # BaseModel (UUIDs, $guarded = [])
+│   ├── JobFilter/       # Per-user job posting filters (global + per-company overrides)
 │   └── User/            # User with company subscriptions and job statuses
 ├── Application/
 │   ├── Actions/
@@ -73,7 +75,8 @@ app/
 │   │   ├── JobPosting/  # SyncCompanyJobPostings, UpdateJobPostingStatus
 │   │   ├── Notification/# NotifyUserOfNewJobs
 │   │   └── Sync/        # RunDailySync (orchestrator)
-│   └── DTOs/            # JobPostingDTO
+│   ├── DTOs/            # JobPostingDTO
+│   └── Services/        # JobFilterService (filter resolution and application)
 └── Infrastructure/
     ├── Admin/Filament/  # Admin panel (Companies, Jobs, Users, ScraperConfigs)
     ├── Console/         # Artisan commands (jobs:sync-daily)
@@ -92,8 +95,11 @@ app/
 
 **Provider pattern:** each job board integration implements the `JobBoardClient` interface (`fetchJobsForCompany` and `validateSlug`). The `JobBoardProvider` enum lists available providers, and `JobBoardClientFactory` resolves the correct client. API providers (Workable, Lever, Ashby, Greenhouse) call JSON endpoints directly. HTML scraper providers (Teamtailor, Factorial) extend `BaseHtmlScraper` which handles retry logic, DOM parsing, and validation using CSS selectors from `ScraperConfig`.
 
+**Job Filters:**
+Users can define filters to control which job postings appear in their dashboard and email notifications. Filters support title keywords (include/exclude), country (powered by [laravel-istat-foreign-countries](https://github.com/plin-code/laravel-istat-foreign-countries) for ISO country matching), remote only, and department. Filters are global by default, with optional per-company overrides. All criteria combine with AND logic, values within each criterion combine with OR. Filter data is stored in the `job_filters` table and managed through the Filters page (global) or the company filter dialog (per-company overrides).
+
 **Key relationships:**
-Users subscribe to companies via `company_user` pivot (with email notification toggle). Each user has a per-job status via `job_posting_user` pivot (new, bookmarked, submitted, interview, dismissed). The sync is shared: one API/scrape call per company regardless of subscriber count.
+Users subscribe to companies via `company_user` pivot (with email notification toggle). Each user has a per-job status via `job_posting_user` pivot (new, bookmarked, submitted, interview, dismissed). Users can have one global job filter and optional per-company overrides via the `job_filters` table. The sync is shared: one API/scrape call per company regardless of subscriber count.
 
 ### Adding a provider
 
@@ -112,6 +118,7 @@ cp .env.example .env
 php artisan key:generate
 ./vendor/bin/sail up -d
 ./vendor/bin/sail artisan migrate --seed
+./vendor/bin/sail artisan foreign-countries:import
 npm install && npm run build
 ```
 
@@ -124,6 +131,13 @@ The seeder creates an admin user (`me@plincode.tech` / `password`) with demo com
 ```bash
 # Sync job postings from all active companies
 ./vendor/bin/sail artisan jobs:sync-daily
+
+# Add a company from CLI
+./vendor/bin/sail artisan companies:add ashby jimdo.com
+./vendor/bin/sail artisan companies:add greenhouse carta
+
+# Import ISTAT country data (required for country filters)
+./vendor/bin/sail artisan foreign-countries:import
 
 # Run tests
 composer test
