@@ -21,6 +21,7 @@
         "laravel/horizon": "*",
         "laravel/tinker": "^2.10.1",
         "laravel/wayfinder": "^0.1.9",
+        "plin-code/laravel-istat-foreign-countries": "^1.1",
         "resend/resend-laravel": "*",
         "symfony/css-selector": "^8.0",
         "symfony/dom-crawler": "^8.0"
