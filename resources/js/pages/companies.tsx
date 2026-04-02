@@ -113,7 +113,7 @@ export default function Companies({ companies, companyFilters, departments, coun
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={t('companies.title')} />
-            <div className="mx-auto w-full max-w-5xl p-6">
+            <div className="w-full p-6">
                 <h1 className="text-2xl font-semibold">{t('companies.title')}</h1>
                 <p className="mt-1 text-sm text-muted-foreground">
                     {t('companies.description')}

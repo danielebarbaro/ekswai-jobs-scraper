@@ -74,7 +74,7 @@ export default function Dashboard({ jobPostings, companies, filters }: Dashboard
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={t('dashboard.title')} />
-            <div className="mx-auto w-full max-w-5xl p-6">
+            <div className="w-full p-6">
                 <h1 className="text-2xl font-semibold">{t('dashboard.title')}</h1>
                 <p className="mt-1 text-sm text-muted-foreground">
                     {t('dashboard.description')}
