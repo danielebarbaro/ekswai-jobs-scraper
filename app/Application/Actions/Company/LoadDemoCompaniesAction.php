@@ -4,19 +4,28 @@ declare(strict_types=1);
 
 namespace App\Application\Actions\Company;
 
+use App\Application\Actions\JobPosting\SyncCompanyJobPostingsAction;
 use App\Domain\Company\Company;
 use App\Domain\User\User;
+use Illuminate\Support\Facades\Log;
 
 class LoadDemoCompaniesAction
 {
-    /** @var array<int, array{provider: string, slug: string}> */
+    public function __construct(
+        private readonly SyncCompanyJobPostingsAction $syncAction
+    ) {}
+
+    /** @var array<int, array{provider: string, slug: string, name: string}> */
     private const array DEMO_COMPANIES = [
-        ['provider' => 'workable', 'slug' => 'laravel'],
-        ['provider' => 'workable', 'slug' => 'gelato'],
-        ['provider' => 'lever', 'slug' => 'scaleway'],
-        ['provider' => 'lever', 'slug' => 'coinspaid'],
-        ['provider' => 'teamtailor', 'slug' => 'weroad'],
-        ['provider' => 'factorial', 'slug' => 'shippypro'],
+        ['provider' => 'workable', 'slug' => 'laravel', 'name' => 'Laravel'],
+        ['provider' => 'workable', 'slug' => 'gelato', 'name' => 'Gelato'],
+        ['provider' => 'lever', 'slug' => 'scaleway', 'name' => 'Scaleway'],
+        ['provider' => 'lever', 'slug' => 'coinspaid', 'name' => 'CoinsPaid'],
+        ['provider' => 'teamtailor', 'slug' => 'weroad', 'name' => 'WeRoad'],
+        ['provider' => 'factorial', 'slug' => 'shippypro', 'name' => 'ShippyPro'],
+        ['provider' => 'ashby', 'slug' => 'jimdo.com', 'name' => 'Jimdo'],
+        ['provider' => 'greenhouse', 'slug' => 'carta', 'name' => 'Carta'],
+        ['provider' => 'greenhouse', 'slug' => 'scalapaysrl', 'name' => 'Scalapay'],
     ];
 
     public function execute(User $user): int
@@ -24,13 +33,13 @@ class LoadDemoCompaniesAction
         $subscribed = 0;
 
         foreach (self::DEMO_COMPANIES as $data) {
-            $company = Company::where('provider', $data['provider'])
-                ->where('provider_slug', $data['slug'])
-                ->first();
-
-            if (! $company) {
-                continue;
-            }
+            $company = Company::firstOrCreate(
+                ['provider' => $data['provider'], 'provider_slug' => $data['slug']],
+                [
+                    'name' => $data['name'],
+                    'is_active' => true,
+                ]
+            );
 
             if ($user->subscribedCompanies()->where('company_id', $company->id)->exists()) {
                 continue;
@@ -38,14 +47,20 @@ class LoadDemoCompaniesAction
 
             $user->subscribedCompanies()->attach($company->id, ['email_notifications' => true]);
 
-            $existingJobIds = $company->jobPostings()->pluck('id');
+            try {
+                $newJobs = $this->syncAction->execute($company);
 
-            if ($existingJobIds->isNotEmpty()) {
-                $pivotData = $existingJobIds->mapWithKeys(fn ($id) => [
-                    $id => ['status' => 'new'],
-                ])->toArray();
+                if ($newJobs->isNotEmpty()) {
+                    $pivotData = $newJobs->mapWithKeys(fn ($jp) => [
+                        $jp->id => ['status' => 'new'],
+                    ])->toArray();
 
-                $user->jobPostingStatuses()->syncWithoutDetaching($pivotData);
+                    $user->jobPostingStatuses()->syncWithoutDetaching($pivotData);
+                }
+            } catch (\Throwable $e) {
+                Log::warning("LoadDemoCompanies sync failed for {$company->name}", [
+                    'error' => $e->getMessage(),
+                ]);
             }
 
             $subscribed++;

@@ -4,12 +4,18 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Http\Controllers;
 
+use App\Application\Services\JobFilterService;
+use App\Domain\Company\Company;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class DashboardController extends Controller
 {
+    public function __construct(
+        private readonly JobFilterService $jobFilterService,
+    ) {}
+
     public function __invoke(Request $request): Response
     {
         $user = $request->user();
@@ -29,6 +35,14 @@ class DashboardController extends Controller
 
         if ($companyId) {
             $query->where('company_id', $companyId);
+            $company = Company::find($companyId);
+            if ($company) {
+                $filter = $this->jobFilterService->getEffectiveFilter($user, $company);
+                $this->jobFilterService->applyToQuery($query, $filter);
+            }
+        } else {
+            $filter = $user->globalJobFilter;
+            $this->jobFilterService->applyToQuery($query, $filter);
         }
 
         $jobPostings = $query->paginate(20)->through(fn ($jp) => [
