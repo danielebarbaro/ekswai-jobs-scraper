@@ -4547,16 +4547,16 @@
         },
         {
             "name": "plin-code/laravel-istat-foreign-countries",
-            "version": "1.1.1",
+            "version": "v1.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/plin-code/laravel-istat-foreign-countries.git",
-                "reference": "ac1cf48a6a8a994ae3f6c88c809dcbc029d33699"
+                "reference": "5809e1d676eaa6ab39b6503e56c903372b016956"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/plin-code/laravel-istat-foreign-countries/zipball/ac1cf48a6a8a994ae3f6c88c809dcbc029d33699",
-                "reference": "ac1cf48a6a8a994ae3f6c88c809dcbc029d33699",
+                "url": "https://api.github.com/repos/plin-code/laravel-istat-foreign-countries/zipball/5809e1d676eaa6ab39b6503e56c903372b016956",
+                "reference": "5809e1d676eaa6ab39b6503e56c903372b016956",
                 "shasum": ""
             },
             "require": {
@@ -4619,7 +4619,7 @@
             ],
             "support": {
                 "issues": "https://github.com/plin-code/laravel-istat-foreign-countries/issues",
-                "source": "https://github.com/plin-code/laravel-istat-foreign-countries/tree/1.1.1"
+                "source": "https://github.com/plin-code/laravel-istat-foreign-countries/tree/v1.1.2"
             },
             "funding": [
                 {
@@ -4627,7 +4627,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-11-26T16:40:16+00:00"
+            "time": "2026-04-02T14:56:01+00:00"
         },
         {
             "name": "pragmarx/google2fa",
