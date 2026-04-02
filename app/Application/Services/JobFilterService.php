@@ -18,21 +18,14 @@ class JobFilterService
 {
     public function getEffectiveFilter(User $user, Company $company): ?JobFilter
     {
-        $companyFilter = JobFilter::query()
+        return JobFilter::query()
             ->where('user_id', $user->id)
-            ->where('company_id', $company->id)
+            ->where(fn (Builder $q) => $q
+                ->where('company_id', $company->id)
+                ->orWhereNull('company_id')
+            )
+            ->orderByRaw('company_id IS NULL ASC')
             ->first();
-
-        if ($companyFilter instanceof JobFilter) {
-            return $companyFilter;
-        }
-
-        $globalFilter = JobFilter::query()
-            ->where('user_id', $user->id)
-            ->whereNull('company_id')
-            ->first();
-
-        return $globalFilter instanceof JobFilter ? $globalFilter : null;
     }
 
     /**
@@ -138,6 +131,9 @@ class JobFilterService
         return $query;
     }
 
+    /**
+     * @param  array<string>  $keywords
+     */
     private function matchesAnyKeyword(string $text, array $keywords): bool
     {
         $lowerText = mb_strtolower($text);
@@ -157,11 +153,14 @@ class JobFilterService
      */
     private function resolveCountryPatterns(array $countryIds): array
     {
+        $sorted = $countryIds;
+        sort($sorted);
+
         return Cache::remember(
-            'job_filter_countries_'.md5(implode(',', $countryIds)),
+            'job_filter_countries_'.md5(implode(',', $sorted)),
             now()->addHour(),
-            function () use ($countryIds) {
-                $countries = Country::whereIn('id', $countryIds)->get();
+            function () use ($sorted) {
+                $countries = Country::whereIn('id', $sorted)->get();
                 $patterns = [];
 
                 foreach ($countries as $country) {
@@ -174,6 +173,9 @@ class JobFilterService
         );
     }
 
+    /**
+     * @param  array<string>  $countryPatterns
+     */
     private function matchesCountry(JobPostingDTO $job, array $countryPatterns): bool
     {
         if ($job->location === null) {

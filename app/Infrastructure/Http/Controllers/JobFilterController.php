@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Http\Controllers;
 
-use App\Domain\Company\Company;
 use App\Domain\JobFilter\JobFilter;
 use App\Domain\JobPosting\JobPosting;
+use App\Infrastructure\Http\Requests\StoreJobFilterRequest;
+use App\Infrastructure\Http\Requests\UpdateJobFilterRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 use PlinCode\IstatForeignCountries\Models\ForeignCountries\Continent;
@@ -21,10 +21,7 @@ class JobFilterController extends Controller
     {
         $user = $request->user();
 
-        $globalFilter = JobFilter::query()
-            ->where('user_id', $user->id)
-            ->global()
-            ->first();
+        $globalFilter = $user->globalJobFilter;
 
         $companyFilters = $user->jobFilters()
             ->whereNotNull('company_id')
@@ -33,16 +30,10 @@ class JobFilterController extends Controller
 
         $companies = $user->subscribedCompanies()
             ->orderBy('name')
-            ->get()
-            ->map(fn (Company $company) => [
-                'id' => $company->id,
-                'name' => $company->name,
-            ]);
-
-        $subscribedCompanyIds = $user->subscribedCompanies()->pluck('companies.id');
+            ->get(['companies.id', 'companies.name']);
 
         $departments = JobPosting::query()
-            ->whereIn('company_id', $subscribedCompanyIds)
+            ->whereIn('company_id', $user->subscribedCompanies()->pluck('companies.id'))
             ->whereNotNull('department')
             ->distinct()
             ->orderBy('department')
@@ -68,39 +59,23 @@ class JobFilterController extends Controller
         ]);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(StoreJobFilterRequest $request): RedirectResponse
     {
         $user = $request->user();
-
-        $validated = $request->validate([
-            'company_id' => [
-                'nullable',
-                'uuid',
-                Rule::exists('companies', 'id'),
-            ],
-            'title_include' => ['nullable', 'array'],
-            'title_include.*' => ['string', 'max:100'],
-            'title_exclude' => ['nullable', 'array'],
-            'title_exclude.*' => ['string', 'max:100'],
-            'country_ids' => ['nullable', 'array'],
-            'country_ids.*' => ['uuid'],
-            'remote_only' => ['boolean'],
-            'department_include' => ['nullable', 'array'],
-            'department_include.*' => ['string', 'max:100'],
-        ]);
-
+        $validated = $request->validated();
         $companyId = $validated['company_id'] ?? null;
 
-        $existsQuery = JobFilter::query()
-            ->where('user_id', $user->id);
+        $query = $user->jobFilters();
 
-        if ($companyId === null) {
-            $existsQuery->whereNull('company_id');
+        if ($companyId !== null) {
+            $query->where('company_id', $companyId);
         } else {
-            $existsQuery->where('company_id', $companyId);
+            $query->whereNull('company_id');
         }
 
-        if ($existsQuery->exists()) {
+        $exists = $query->exists();
+
+        if ($exists) {
             $scope = $companyId === null ? 'global' : 'company';
 
             return back()->withErrors(['company_id' => "A {$scope} filter already exists."]);
@@ -111,39 +86,16 @@ class JobFilterController extends Controller
         return back()->with('success', 'Filter created.');
     }
 
-    public function update(Request $request, JobFilter $jobFilter): RedirectResponse
+    public function update(UpdateJobFilterRequest $request, JobFilter $jobFilter): RedirectResponse
     {
-        if ($jobFilter->user_id !== $request->user()->id) {
-            abort(403);
-        }
-
-        $validated = $request->validate([
-            'company_id' => [
-                'nullable',
-                'uuid',
-                Rule::exists('companies', 'id'),
-            ],
-            'title_include' => ['nullable', 'array'],
-            'title_include.*' => ['string', 'max:100'],
-            'title_exclude' => ['nullable', 'array'],
-            'title_exclude.*' => ['string', 'max:100'],
-            'country_ids' => ['nullable', 'array'],
-            'country_ids.*' => ['uuid'],
-            'remote_only' => ['boolean'],
-            'department_include' => ['nullable', 'array'],
-            'department_include.*' => ['string', 'max:100'],
-        ]);
-
-        $jobFilter->update($validated);
+        $jobFilter->update($request->validated());
 
         return back()->with('success', 'Filter updated.');
     }
 
     public function destroy(Request $request, JobFilter $jobFilter): RedirectResponse
     {
-        if ($jobFilter->user_id !== $request->user()->id) {
-            abort(403);
-        }
+        $this->authorize('delete', $jobFilter);
 
         $jobFilter->delete();
 
