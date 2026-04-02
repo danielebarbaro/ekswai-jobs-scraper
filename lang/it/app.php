@@ -28,6 +28,7 @@ return [
 
     'dashboard' => [
         'title' => 'Dashboard',
+        'description' => 'Monitora le offerte di lavoro dalle aziende che segui.',
         'all' => 'Tutte',
         'new' => 'Nuove',
         'bookmarked' => 'Salvate',

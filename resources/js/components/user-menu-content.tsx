@@ -43,7 +43,7 @@ export function UserMenuContent({ user }: UserMenuContentProps) {
             <DropdownMenuSeparator />
             <div className="flex items-center gap-1 px-2 py-1.5">
                 <Palette className="mr-1 size-4 text-muted-foreground" />
-                <span className="mr-1 text-sm text-muted-foreground">Theme</span>
+                <span className="mr-auto text-sm text-muted-foreground">Theme</span>
                 {themes.map(({ value, icon: Icon }) => (
                     <button
                         key={value}

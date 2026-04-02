@@ -28,6 +28,7 @@ return [
 
     'dashboard' => [
         'title' => 'Dashboard',
+        'description' => 'Track job postings from your subscribed companies.',
         'all' => 'All',
         'new' => 'New',
         'bookmarked' => 'Bookmarked',
