@@ -1,5 +1,9 @@
 <?php
 
+use PlinCode\IstatForeignCountries\Models\ForeignCountries\Area;
+use PlinCode\IstatForeignCountries\Models\ForeignCountries\Continent;
+use PlinCode\IstatForeignCountries\Models\ForeignCountries\Country;
+
 return [
 
     /*
@@ -40,9 +44,9 @@ return [
     */
 
     'models' => [
-        'continent' => \PlinCode\IstatForeignCountries\Models\ForeignCountries\Continent::class,
-        'area' => \PlinCode\IstatForeignCountries\Models\ForeignCountries\Area::class,
-        'country' => \PlinCode\IstatForeignCountries\Models\ForeignCountries\Country::class,
+        'continent' => Continent::class,
+        'area' => Area::class,
+        'country' => Country::class,
     ],
 
     /*
