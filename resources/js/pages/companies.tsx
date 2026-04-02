@@ -24,6 +24,7 @@ interface CompanySubscription {
     job_postings_count: number;
     email_notifications: boolean;
     last_synced_at: string | null;
+    can_sync: boolean;
 }
 
 interface CompanyFilter extends JobFilter {
@@ -177,10 +178,10 @@ export default function Companies({ companies, companyFilters, departments, coun
                                             variant="ghost"
                                             size="icon"
                                             onClick={() => handleSync(company.id)}
-                                            disabled={syncingCompanyId !== null}
-                                            title="Sync jobs"
+                                            disabled={!company.can_sync || syncingCompanyId !== null}
+                                            title={company.can_sync ? 'Sync jobs' : 'Sync unavailable (max 2/day, 1h interval)'}
                                         >
-                                            <RefreshCw className={`size-4 ${syncingCompanyId === company.id ? 'animate-spin' : ''}`} />
+                                            <RefreshCw className={`size-4 ${syncingCompanyId === company.id ? 'animate-spin' : ''} ${!company.can_sync ? 'opacity-30' : ''}`} />
                                         </Button>
                                         <Button
                                             variant="ghost"

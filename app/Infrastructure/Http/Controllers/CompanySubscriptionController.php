@@ -21,22 +21,35 @@ use PlinCode\IstatForeignCountries\Models\ForeignCountries\Country;
 
 class CompanySubscriptionController extends Controller
 {
+    private const int MAX_SYNCS_PER_DAY = 2;
+
+    private const int MIN_SYNC_INTERVAL_MINUTES = 60;
+
     public function index(Request $request): Response
     {
-        $companies = $request->user()->subscribedCompanies()
+        $user = $request->user();
+
+        $companies = $user->subscribedCompanies()
             ->withCount('jobPostings')
             ->orderBy('name')
             ->get()
-            ->map(fn (Company $company) => [
-                'id' => $company->id,
-                'name' => $company->name,
-                'provider' => $company->provider->value,
-                'provider_slug' => $company->provider_slug,
-                'is_active' => $company->is_active,
-                'job_postings_count' => $company->job_postings_count,
-                'email_notifications' => (bool) $company->pivot->email_notifications,
-                'last_synced_at' => $company->last_synced_at?->diffForHumans(),
-            ]);
+            ->map(function (Company $company) use ($user) {
+                $key = "company-sync:{$user->id}:{$company->id}";
+                $rateLimitExhausted = RateLimiter::tooManyAttempts($key, self::MAX_SYNCS_PER_DAY);
+                $tooRecent = $company->last_synced_at && $company->last_synced_at->diffInMinutes(now()) < self::MIN_SYNC_INTERVAL_MINUTES;
+
+                return [
+                    'id' => $company->id,
+                    'name' => $company->name,
+                    'provider' => $company->provider->value,
+                    'provider_slug' => $company->provider_slug,
+                    'is_active' => $company->is_active,
+                    'job_postings_count' => $company->job_postings_count,
+                    'email_notifications' => (bool) $company->pivot->email_notifications,
+                    'last_synced_at' => $company->last_synced_at?->diffForHumans(),
+                    'can_sync' => ! $rateLimitExhausted && ! $tooRecent,
+                ];
+            });
 
         $companyFilters = $request->user()->jobFilters()
             ->whereNotNull('company_id')
@@ -127,9 +140,13 @@ class CompanySubscriptionController extends Controller
             abort(404);
         }
 
+        if ($company->last_synced_at && $company->last_synced_at->diffInMinutes(now()) < self::MIN_SYNC_INTERVAL_MINUTES) {
+            return back()->with('error', 'Please wait at least 1 hour between syncs.');
+        }
+
         $key = "company-sync:{$user->id}:{$company->id}";
 
-        if (RateLimiter::tooManyAttempts($key, 2)) {
+        if (RateLimiter::tooManyAttempts($key, self::MAX_SYNCS_PER_DAY)) {
             return back()->with('error', 'You can only sync this company twice per day.');
         }
 
