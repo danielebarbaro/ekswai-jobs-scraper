@@ -145,5 +145,5 @@ it('builds url from base pattern and slug', function (): void {
     $scraper = new FakeHtmlScraper;
     $scraper->fetchJobsForCompany('my-company');
 
-    Http::assertSent(fn ($request) => $request->url() === 'https://my-company.example.com/jobs');
+    Http::assertSent(fn ($request): bool => $request->url() === 'https://my-company.example.com/jobs');
 });
