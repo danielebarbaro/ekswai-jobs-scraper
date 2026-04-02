@@ -85,6 +85,16 @@ it('prevents creating a duplicate global filter', function () {
     ])->assertSessionHasErrors('company_id');
 });
 
+it('prevents creating a duplicate company filter', function () {
+    $company = Company::factory()->create();
+    JobFilter::factory()->forCompany($company->id)->create(['user_id' => $this->user->id]);
+
+    $this->post(route('job-filters.store'), [
+        'company_id' => $company->id,
+        'remote_only' => false,
+    ])->assertSessionHasErrors('company_id');
+});
+
 it('prevents accessing another user filter', function () {
     $otherUser = User::factory()->create();
     $filter = JobFilter::factory()->global()->create(['user_id' => $otherUser->id]);
