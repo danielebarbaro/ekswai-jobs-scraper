@@ -7,6 +7,7 @@ namespace App\Infrastructure\Services\Greenhouse;
 use App\Application\DTOs\JobPostingDTO;
 use App\Infrastructure\Services\Contracts\JobBoardClient;
 use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -14,6 +15,8 @@ use Illuminate\Support\Facades\Log;
 class GreenhouseHttpClient implements JobBoardClient
 {
     private const string API_BASE_URL = 'https://boards-api.greenhouse.io/v1/boards';
+
+    private const string API_BASE_URL_EU = 'https://boards-api.eu.greenhouse.io/v1/boards';
 
     private const int TIMEOUT_SECONDS = 30;
 
@@ -23,10 +26,7 @@ class GreenhouseHttpClient implements JobBoardClient
     public function fetchJobsForCompany(string $slug): Collection
     {
         try {
-            $url = sprintf('%s/%s/jobs', self::API_BASE_URL, $slug);
-
-            $response = Http::timeout(self::TIMEOUT_SECONDS)
-                ->get($url);
+            $response = $this->requestWithEuFallback($slug, self::TIMEOUT_SECONDS);
 
             if (! $response->successful()) {
                 Log::warning('Greenhouse API request failed', [
@@ -71,9 +71,7 @@ class GreenhouseHttpClient implements JobBoardClient
     public function validateSlug(string $slug): ?string
     {
         try {
-            $url = sprintf('%s/%s/jobs', self::API_BASE_URL, $slug);
-
-            $response = Http::timeout(15)->get($url);
+            $response = $this->requestWithEuFallback($slug, 15);
 
             if (! $response->successful() || ! isset($response->json()['jobs'])) {
                 return null;
@@ -89,6 +87,20 @@ class GreenhouseHttpClient implements JobBoardClient
         } catch (\Throwable) {
             return null;
         }
+    }
+
+    private function requestWithEuFallback(string $slug, int $timeout): Response
+    {
+        $url = sprintf('%s/%s/jobs', self::API_BASE_URL, $slug);
+        $response = Http::timeout($timeout)->get($url);
+
+        if ($response->successful()) {
+            return $response;
+        }
+
+        $euUrl = sprintf('%s/%s/jobs', self::API_BASE_URL_EU, $slug);
+
+        return Http::timeout($timeout)->get($euUrl);
     }
 
     private function mapToDTO(array $data): JobPostingDTO
