@@ -29,7 +29,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->foreignUuid('continent_id')->constrained('continents')->onDelete('cascade');
             $table->foreignUuid('area_id')->constrained('areas')->onDelete('cascade');
-            $table->foreignUuid('parent_country_id')->nullable()->constrained('countries')->onDelete('set null');
+            $table->uuid('parent_country_id')->nullable();
             $table->string('type', 1); // S = State, T = Territory
             $table->string('name');
             $table->string('istat_code', 10)->unique();
@@ -42,6 +42,10 @@ return new class extends Migration
             $table->index(['type']);
             $table->index(['iso_alpha2']);
             $table->index(['iso_alpha3']);
+        });
+
+        Schema::table('countries', function (Blueprint $table) {
+            $table->foreign('parent_country_id')->references('id')->on('countries')->onDelete('set null');
         });
     }
 
