@@ -7,6 +7,7 @@ namespace App\Infrastructure\Http\Controllers;
 use App\Application\Actions\Company\FollowCompanyAction;
 use App\Application\Actions\Company\LoadDemoCompaniesAction;
 use App\Application\Actions\Company\UnfollowCompanyAction;
+use App\Application\Actions\JobPosting\SyncCompanyJobPostingsAction;
 use App\Domain\Company\Company;
 use App\Domain\Company\JobBoardProvider;
 use Illuminate\Http\RedirectResponse;
@@ -83,5 +84,26 @@ class CompanySubscriptionController extends Controller
         ]);
 
         return back()->with('success', 'Notification preference updated.');
+    }
+
+    public function sync(Request $request, Company $company, SyncCompanyJobPostingsAction $syncAction): RedirectResponse
+    {
+        $user = $request->user();
+
+        if (! $user->subscribedCompanies()->where('company_id', $company->id)->exists()) {
+            abort(404);
+        }
+
+        $newJobs = $syncAction->execute($company);
+
+        if ($newJobs->isNotEmpty()) {
+            $pivotData = $newJobs->mapWithKeys(fn ($jp) => [
+                $jp->id => ['status' => 'new'],
+            ])->toArray();
+
+            $user->jobPostingStatuses()->syncWithoutDetaching($pivotData);
+        }
+
+        return back()->with('success', "{$newJobs->count()} new jobs synced for {$company->name}.");
     }
 }

@@ -4,7 +4,7 @@ import { useTranslation } from '@/hooks/use-translation';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, useForm, router } from '@inertiajs/react';
-import { Bell, BellOff, Building2, Download, Plus, Trash2 } from 'lucide-react';
+import { Bell, BellOff, Building2, Download, Plus, RefreshCw, Trash2 } from 'lucide-react';
 
 interface CompanySubscription {
     id: string;
@@ -40,6 +40,10 @@ export default function Companies({ companies }: CompaniesProps) {
     const handleUnfollow = (companyId: string) => {
         if (!confirm(t('companies.unfollow_confirm'))) return;
         router.delete(`/companies/${companyId}/unfollow`, { preserveScroll: true });
+    };
+
+    const handleSync = (companyId: string) => {
+        router.post(`/companies/${companyId}/sync`, {}, { preserveScroll: true });
     };
 
     const handleToggleNotifications = (companyId: string) => {
@@ -104,6 +108,14 @@ export default function Companies({ companies }: CompaniesProps) {
                                     </p>
                                 </div>
                                 <div className="flex items-center gap-2">
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        onClick={() => handleSync(company.id)}
+                                        title="Sync jobs"
+                                    >
+                                        <RefreshCw className="size-4" />
+                                    </Button>
                                     <Button
                                         variant="ghost"
                                         size="icon"

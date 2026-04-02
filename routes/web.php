@@ -22,6 +22,7 @@ Route::middleware(['auth', 'verified', RedirectAdmin::class])->group(function ()
     Route::post('companies/load-defaults', [CompanySubscriptionController::class, 'loadDefaults'])->name('companies.load-defaults');
     Route::delete('companies/{company}/unfollow', [CompanySubscriptionController::class, 'unfollow'])->name('companies.unfollow');
     Route::patch('companies/{company}/notifications', [CompanySubscriptionController::class, 'toggleNotifications'])->name('companies.notifications');
+    Route::post('companies/{company}/sync', [CompanySubscriptionController::class, 'sync'])->name('companies.sync');
 
     Route::patch('job-postings/{jobPosting}/status', [JobPostingStatusController::class, 'update'])->name('job-postings.status');
 
