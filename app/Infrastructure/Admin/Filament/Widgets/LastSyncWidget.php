@@ -14,10 +14,11 @@ class LastSyncWidget extends BaseWidget
 
     protected int|array|null $columns = 2;
 
+    #[\Override]
     protected function getStats(): array
     {
-        $lastSync = JobPosting::max('last_seen_at');
-        $jobsSyncedToday = JobPosting::where('last_seen_at', '>=', now()->startOfDay())->count();
+        $lastSync = JobPosting::query()->max('last_seen_at');
+        $jobsSyncedToday = JobPosting::query()->where('last_seen_at', '>=', now()->startOfDay())->count();
 
         $lastSyncLabel = $lastSync
             ? now()->parse($lastSync)->diffForHumans()

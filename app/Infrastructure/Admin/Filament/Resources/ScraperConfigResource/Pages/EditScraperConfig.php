@@ -12,6 +12,7 @@ class EditScraperConfig extends EditRecord
 {
     protected static string $resource = ScraperConfigResource::class;
 
+    #[\Override]
     protected function getHeaderActions(): array
     {
         return [

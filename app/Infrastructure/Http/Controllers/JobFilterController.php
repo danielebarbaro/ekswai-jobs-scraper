@@ -42,9 +42,9 @@ class JobFilterController extends Controller
         $countries = Continent::with(['countries' => fn ($q) => $q->where('type', 'S')->orderBy('name')])
             ->orderBy('name')
             ->get()
-            ->map(fn (Continent $continent) => [
+            ->map(fn (Continent $continent): array => [
                 'name' => $continent->name,
-                'countries' => $continent->countries->map(fn (Country $country) => [
+                'countries' => $continent->countries->map(fn (Country $country): array => [
                     'id' => $country->id,
                     'name' => $country->name,
                 ]),

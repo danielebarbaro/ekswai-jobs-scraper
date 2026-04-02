@@ -27,31 +27,31 @@ class JobFilterFactory extends Factory
 
     public function global(): static
     {
-        return $this->state(fn () => ['company_id' => null]);
+        return $this->state(fn (): array => ['company_id' => null]);
     }
 
     public function forCompany(string $companyId): static
     {
-        return $this->state(fn () => ['company_id' => $companyId]);
+        return $this->state(fn (): array => ['company_id' => $companyId]);
     }
 
     public function remoteOnly(): static
     {
-        return $this->state(fn () => ['remote_only' => true]);
+        return $this->state(fn (): array => ['remote_only' => true]);
     }
 
     public function withTitleInclude(array $keywords): static
     {
-        return $this->state(fn () => ['title_include' => $keywords]);
+        return $this->state(fn (): array => ['title_include' => $keywords]);
     }
 
     public function withTitleExclude(array $keywords): static
     {
-        return $this->state(fn () => ['title_exclude' => $keywords]);
+        return $this->state(fn (): array => ['title_exclude' => $keywords]);
     }
 
     public function withDepartments(array $departments): static
     {
-        return $this->state(fn () => ['department_include' => $departments]);
+        return $this->state(fn (): array => ['department_include' => $departments]);
     }
 }

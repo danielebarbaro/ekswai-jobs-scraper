@@ -33,7 +33,7 @@ class ScraperConfigFactory extends Factory
 
     public function factorial(): static
     {
-        return $this->state(fn () => [
+        return $this->state(fn (): array => [
             'provider' => 'factorial',
             'selectors' => [
                 'job_list' => 'li.job-offer-item',
@@ -48,7 +48,7 @@ class ScraperConfigFactory extends Factory
 
     public function inactive(): static
     {
-        return $this->state(fn () => [
+        return $this->state(fn (): array => [
             'is_active' => false,
         ]);
     }

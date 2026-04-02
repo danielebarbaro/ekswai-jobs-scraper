@@ -8,6 +8,7 @@ use App\Domain\Company\Company;
 use App\Domain\Shared\BaseModel;
 use App\Domain\User\User;
 use Database\Factories\JobFilterFactory;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -31,6 +32,7 @@ class JobFilter extends BaseModel
         return JobFilterFactory::new();
     }
 
+    #[\Override]
     protected function casts(): array
     {
         return [
@@ -52,12 +54,14 @@ class JobFilter extends BaseModel
         return $this->belongsTo(Company::class);
     }
 
-    public function scopeGlobal(Builder $query): Builder
+    #[Scope]
+    protected function global(Builder $query): Builder
     {
         return $query->whereNull('company_id');
     }
 
-    public function scopeForCompany(Builder $query, string $companyId): Builder
+    #[Scope]
+    protected function forCompany(Builder $query, string $companyId): Builder
     {
         return $query->where('company_id', $companyId);
     }

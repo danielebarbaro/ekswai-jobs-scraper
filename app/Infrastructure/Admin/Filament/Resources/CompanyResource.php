@@ -19,16 +19,19 @@ class CompanyResource extends Resource
 {
     protected static ?string $model = Company::class;
 
+    #[\Override]
     public static function getNavigationIcon(): string
     {
         return 'heroicon-o-building-office';
     }
 
+    #[\Override]
     public static function getNavigationSort(): int
     {
         return 2;
     }
 
+    #[\Override]
     public static function form(Schema $schema): Schema
     {
         return $schema
@@ -41,7 +44,7 @@ class CompanyResource extends Resource
                         Forms\Components\Select::make('provider')
                             ->options(
                                 collect(JobBoardProvider::cases())
-                                    ->mapWithKeys(fn (JobBoardProvider $p) => [$p->value => ucfirst($p->value)])
+                                    ->mapWithKeys(fn (JobBoardProvider $p): array => [$p->value => ucfirst($p->value)])
                                     ->toArray()
                             )
                             ->default(JobBoardProvider::Workable->value)
@@ -50,7 +53,7 @@ class CompanyResource extends Resource
                             ->required()
                             ->maxLength(255)
                             ->helperText('The provider account identifier (e.g., "company-name")')
-                            ->unique(modifyRuleUsing: fn ($rule, $get) => $rule->where('provider', $get('provider')), ignoreRecord: true),
+                            ->unique(ignoreRecord: true, modifyRuleUsing: fn ($rule, $get) => $rule->where('provider', $get('provider'))),
                         Forms\Components\Toggle::make('is_active')
                             ->required()
                             ->default(true)
@@ -60,6 +63,7 @@ class CompanyResource extends Resource
             ]);
     }
 
+    #[\Override]
     public static function table(Table $table): Table
     {
         return $table
@@ -101,9 +105,9 @@ class CompanyResource extends Resource
             ->actions([
                 Actions\EditAction::make(),
                 Actions\Action::make('toggle')
-                    ->label(fn (Company $record) => $record->is_active ? 'Deactivate' : 'Activate')
-                    ->icon(fn (Company $record) => $record->is_active ? 'heroicon-o-pause-circle' : 'heroicon-o-play-circle')
-                    ->color(fn (Company $record) => $record->is_active ? 'warning' : 'success')
+                    ->label(fn (Company $record): string => $record->is_active ? 'Deactivate' : 'Activate')
+                    ->icon(fn (Company $record): string => $record->is_active ? 'heroicon-o-pause-circle' : 'heroicon-o-play-circle')
+                    ->color(fn (Company $record): string => $record->is_active ? 'warning' : 'success')
                     ->requiresConfirmation()
                     ->action(fn (Company $record) => $record->toggleActivation()),
                 Actions\DeleteAction::make(),
@@ -116,11 +120,13 @@ class CompanyResource extends Resource
             ->defaultSort('created_at', 'desc');
     }
 
+    #[\Override]
     public static function getRelations(): array
     {
         return [];
     }
 
+    #[\Override]
     public static function getPages(): array
     {
         return [

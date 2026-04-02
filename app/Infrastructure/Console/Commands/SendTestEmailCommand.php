@@ -19,7 +19,7 @@ class SendTestEmailCommand extends Command
 
         $this->info("Sending test email to {$email}...");
 
-        Mail::raw('This is a test email from ekswai. If you received this, your mail configuration is working correctly.', function ($message) use ($email) {
+        Mail::raw('This is a test email from ekswai. If you received this, your mail configuration is working correctly.', function ($message) use ($email): void {
             $message->to($email)
                 ->subject('ekswai test email');
         });

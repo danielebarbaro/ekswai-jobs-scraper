@@ -11,7 +11,7 @@ use App\Infrastructure\Services\Lever\LeverHttpClient;
 use App\Infrastructure\Services\Teamtailor\TeamtailorScraper;
 use App\Infrastructure\Services\Workable\WorkableHttpClient;
 
-it('returns WorkableHttpClient for Workable provider', function () {
+it('returns WorkableHttpClient for Workable provider', function (): void {
     $factory = new JobBoardClientFactory;
 
     $client = $factory->make(JobBoardProvider::Workable);
@@ -20,7 +20,7 @@ it('returns WorkableHttpClient for Workable provider', function () {
         ->and($client)->toBeInstanceOf(JobBoardClient::class);
 });
 
-it('returns LeverHttpClient for Lever provider', function () {
+it('returns LeverHttpClient for Lever provider', function (): void {
     $factory = new JobBoardClientFactory;
 
     $client = $factory->make(JobBoardProvider::Lever);
@@ -29,7 +29,7 @@ it('returns LeverHttpClient for Lever provider', function () {
         ->and($client)->toBeInstanceOf(JobBoardClient::class);
 });
 
-it('returns TeamtailorScraper for Teamtailor provider', function () {
+it('returns TeamtailorScraper for Teamtailor provider', function (): void {
     $factory = new JobBoardClientFactory;
 
     $client = $factory->make(JobBoardProvider::Teamtailor);
@@ -38,7 +38,7 @@ it('returns TeamtailorScraper for Teamtailor provider', function () {
         ->and($client)->toBeInstanceOf(JobBoardClient::class);
 });
 
-it('returns FactorialScraper for Factorial provider', function () {
+it('returns FactorialScraper for Factorial provider', function (): void {
     $factory = new JobBoardClientFactory;
 
     $client = $factory->make(JobBoardProvider::Factorial);
@@ -47,7 +47,7 @@ it('returns FactorialScraper for Factorial provider', function () {
         ->and($client)->toBeInstanceOf(JobBoardClient::class);
 });
 
-it('returns GreenhouseHttpClient for Greenhouse provider', function () {
+it('returns GreenhouseHttpClient for Greenhouse provider', function (): void {
     $factory = new JobBoardClientFactory;
 
     $client = $factory->make(JobBoardProvider::Greenhouse);

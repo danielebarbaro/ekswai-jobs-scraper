@@ -20,6 +20,7 @@ class JobPostingResource extends Resource
 
     protected static ?int $navigationSort = 3;
 
+    #[\Override]
     public static function form(Schema $schema): Schema
     {
         return $schema
@@ -54,12 +55,13 @@ class JobPostingResource extends Resource
                             ->rows(10)
                             ->columnSpanFull()
                             ->formatStateUsing(fn ($state) => is_array($state) ? json_encode($state, JSON_PRETTY_PRINT) : $state)
-                            ->dehydrateStateUsing(fn ($state) => json_decode($state, true)),
+                            ->dehydrateStateUsing(fn ($state): mixed => json_decode((string) $state, true)),
                     ])
                     ->columns(2),
             ]);
     }
 
+    #[\Override]
     public static function table(Table $table): Table
     {
         return $table
@@ -105,11 +107,9 @@ class JobPostingResource extends Resource
                         Forms\Components\DatePicker::make('first_seen_until')
                             ->label('First seen until'),
                     ])
-                    ->query(function ($query, array $data) {
-                        return $query
-                            ->when($data['first_seen_from'], fn ($q, $date) => $q->whereDate('first_seen_at', '>=', $date))
-                            ->when($data['first_seen_until'], fn ($q, $date) => $q->whereDate('first_seen_at', '<=', $date));
-                    }),
+                    ->query(fn ($query, array $data) => $query
+                        ->when($data['first_seen_from'], fn ($q, $date) => $q->whereDate('first_seen_at', '>=', $date))
+                        ->when($data['first_seen_until'], fn ($q, $date) => $q->whereDate('first_seen_at', '<=', $date))),
             ])
             ->actions([
                 Actions\Action::make('view_job')
@@ -122,6 +122,7 @@ class JobPostingResource extends Resource
             ->defaultSort('first_seen_at', 'desc');
     }
 
+    #[\Override]
     public static function getRelations(): array
     {
         return [
@@ -129,11 +130,13 @@ class JobPostingResource extends Resource
         ];
     }
 
+    #[\Override]
     public static function canCreate(): bool
     {
         return false;
     }
 
+    #[\Override]
     public static function getPages(): array
     {
         return [

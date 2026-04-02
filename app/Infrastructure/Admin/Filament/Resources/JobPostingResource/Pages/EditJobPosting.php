@@ -12,6 +12,7 @@ class EditJobPosting extends EditRecord
 {
     protected static string $resource = JobPostingResource::class;
 
+    #[\Override]
     protected function getHeaderActions(): array
     {
         return [

@@ -8,6 +8,7 @@ use App\Domain\JobPosting\JobPosting;
 use App\Domain\Shared\BaseModel;
 use App\Domain\User\User;
 use Database\Factories\CompanyFactory;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -28,6 +29,7 @@ class Company extends BaseModel
         return CompanyFactory::new();
     }
 
+    #[\Override]
     protected function casts(): array
     {
         return [
@@ -64,7 +66,8 @@ class Company extends BaseModel
         $this->update(['is_active' => ! $this->is_active]);
     }
 
-    public function scopeActive($query)
+    #[Scope]
+    protected function active($query)
     {
         return $query->where('is_active', true);
     }

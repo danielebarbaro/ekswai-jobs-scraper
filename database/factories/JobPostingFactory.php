@@ -33,7 +33,7 @@ class JobPostingFactory extends Factory
 
     public function recent(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn (array $attributes): array => [
             'first_seen_at' => now()->subHours(2),
             'last_seen_at' => now(),
         ]);
@@ -41,7 +41,7 @@ class JobPostingFactory extends Factory
 
     public function old(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn (array $attributes): array => [
             'first_seen_at' => now()->subDays(10),
             'last_seen_at' => now()->subDays(5),
         ]);

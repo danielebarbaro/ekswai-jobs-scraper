@@ -6,7 +6,7 @@ use App\Application\Actions\Company\LoadDemoCompaniesAction;
 use App\Application\Actions\JobPosting\SyncCompanyJobPostingsAction;
 use App\Domain\User\User;
 
-it('subscribes user to demo companies', function () {
+it('subscribes user to demo companies', function (): void {
     $syncMock = Mockery::mock(SyncCompanyJobPostingsAction::class);
     $syncMock->shouldReceive('execute')->andReturn(collect());
 
@@ -21,7 +21,7 @@ it('subscribes user to demo companies', function () {
         ->and($user->subscribedCompanies()->count())->toBe(9);
 });
 
-it('skips already subscribed companies', function () {
+it('skips already subscribed companies', function (): void {
     $syncMock = Mockery::mock(SyncCompanyJobPostingsAction::class);
     $syncMock->shouldReceive('execute')->andReturn(collect());
 
@@ -37,7 +37,7 @@ it('skips already subscribed companies', function () {
         ->and($user->subscribedCompanies()->count())->toBe(9);
 });
 
-it('handles sync failure gracefully', function () {
+it('handles sync failure gracefully', function (): void {
     $syncMock = Mockery::mock(SyncCompanyJobPostingsAction::class);
     $syncMock->shouldReceive('execute')->andThrow(new RuntimeException('API down'));
 

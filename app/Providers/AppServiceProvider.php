@@ -15,6 +15,7 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Register any application services.
      */
+    #[\Override]
     public function register(): void
     {
         //
@@ -34,8 +35,6 @@ class AppServiceProvider extends ServiceProvider
             ->uncompromised()
         );
 
-        RateLimiter::for('emails', function () {
-            return Limit::perSecond(1);
-        });
+        RateLimiter::for('emails', fn () => Limit::perSecond(1));
     }
 }

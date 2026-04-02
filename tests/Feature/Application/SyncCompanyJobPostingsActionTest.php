@@ -10,7 +10,7 @@ use App\Domain\User\User;
 use App\Infrastructure\Services\Contracts\JobBoardClient;
 use App\Infrastructure\Services\JobBoardClientFactory;
 
-beforeEach(function () {
+beforeEach(function (): void {
     $this->user = User::factory()->create();
     $this->company = Company::factory()->create([
         'provider_slug' => 'test-company',
@@ -24,7 +24,7 @@ beforeEach(function () {
     $this->action = new SyncCompanyJobPostingsAction($this->factory);
 });
 
-it('creates new job postings from api', function () {
+it('creates new job postings from api', function (): void {
     $jobs = collect([
         new JobPostingDTO(
             externalId: 'job-1',
@@ -53,16 +53,16 @@ it('creates new job postings from api', function () {
     $newJobs = $this->action->execute($this->company);
 
     expect($newJobs)->toHaveCount(2);
-    expect(JobPosting::count())->toBe(2);
+    expect(JobPosting::query()->count())->toBe(2);
 
-    $firstJob = JobPosting::where('external_id', 'job-1')->first();
+    $firstJob = JobPosting::query()->where('external_id', 'job-1')->first();
     expect($firstJob)
         ->title->toBe('Software Engineer')
         ->location->toBe('Remote')
         ->department->toBe('Engineering');
 });
 
-it('creates job_posting_user records for all subscribers', function () {
+it('creates job_posting_user records for all subscribers', function (): void {
     $user2 = User::factory()->create();
     $this->company->subscribers()->attach($user2->id);
 
@@ -85,13 +85,13 @@ it('creates job_posting_user records for all subscribers', function () {
 
     $this->action->execute($this->company);
 
-    $jobPosting = JobPosting::where('external_id', 'job-1')->first();
+    $jobPosting = JobPosting::query()->where('external_id', 'job-1')->first();
 
     expect($jobPosting->userStatuses)->toHaveCount(2);
     expect($jobPosting->userStatuses->pluck('pivot.status')->unique()->toArray())->toBe(['new']);
 });
 
-it('does not create duplicate jobs', function () {
+it('does not create duplicate jobs', function (): void {
     JobPosting::factory()->create([
         'company_id' => $this->company->id,
         'external_id' => 'job-1',
@@ -126,13 +126,13 @@ it('does not create duplicate jobs', function () {
     $newJobs = $this->action->execute($this->company);
 
     expect($newJobs)->toHaveCount(1);
-    expect(JobPosting::count())->toBe(2);
+    expect(JobPosting::query()->count())->toBe(2);
 
-    $existingJob = JobPosting::where('external_id', 'job-1')->first();
+    $existingJob = JobPosting::query()->where('external_id', 'job-1')->first();
     expect($existingJob->last_seen_at)->not->toBeNull();
 });
 
-it('returns empty collection when api returns no jobs', function () {
+it('returns empty collection when api returns no jobs', function (): void {
     $this->jobBoardClient
         ->shouldReceive('fetchJobsForCompany')
         ->with('test-company')
@@ -142,5 +142,5 @@ it('returns empty collection when api returns no jobs', function () {
     $newJobs = $this->action->execute($this->company);
 
     expect($newJobs)->toBeEmpty();
-    expect(JobPosting::count())->toBe(0);
+    expect(JobPosting::query()->count())->toBe(0);
 });

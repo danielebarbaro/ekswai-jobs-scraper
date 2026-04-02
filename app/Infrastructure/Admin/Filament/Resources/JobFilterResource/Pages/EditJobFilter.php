@@ -12,6 +12,7 @@ class EditJobFilter extends EditRecord
 {
     protected static string $resource = JobFilterResource::class;
 
+    #[\Override]
     protected function getHeaderActions(): array
     {
         return [

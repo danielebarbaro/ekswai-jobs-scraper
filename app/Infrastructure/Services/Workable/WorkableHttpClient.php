@@ -49,7 +49,7 @@ class WorkableHttpClient implements JobBoardClient
                 return collect();
             }
 
-            return collect($data['jobs'])->map(fn (array $job) => $this->mapToDTO($job));
+            return collect($data['jobs'])->map(fn (array $job): JobPostingDTO => $this->mapToDTO($job));
         } catch (ConnectionException $e) {
             Log::error('Workable API connection error', [
                 'company_slug' => $slug,

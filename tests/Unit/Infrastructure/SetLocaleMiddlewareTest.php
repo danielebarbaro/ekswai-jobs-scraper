@@ -7,35 +7,35 @@ use App\Infrastructure\Http\Middleware\SetLocale;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
-it('sets locale from authenticated user', function () {
+it('sets locale from authenticated user', function (): void {
     $user = User::factory()->create(['locale' => 'it']);
     $request = Request::create('/dashboard');
     $request->setUserResolver(fn () => $user);
 
     $middleware = new SetLocale;
-    $middleware->handle($request, fn () => new Response);
+    $middleware->handle($request, fn (): Response => new Response);
 
     expect(app()->getLocale())->toBe('it');
 });
 
-it('defaults to en for unauthenticated users', function () {
+it('defaults to en for unauthenticated users', function (): void {
     app()->setLocale('it');
     $request = Request::create('/dashboard');
-    $request->setUserResolver(fn () => null);
+    $request->setUserResolver(fn (): null => null);
 
     $middleware = new SetLocale;
-    $middleware->handle($request, fn () => new Response);
+    $middleware->handle($request, fn (): Response => new Response);
 
     expect(app()->getLocale())->toBe('en');
 });
 
-it('defaults to en when user has no locale', function () {
+it('defaults to en when user has no locale', function (): void {
     $user = User::factory()->create(['locale' => 'en']);
     $request = Request::create('/dashboard');
     $request->setUserResolver(fn () => $user);
 
     $middleware = new SetLocale;
-    $middleware->handle($request, fn () => new Response);
+    $middleware->handle($request, fn (): Response => new Response);
 
     expect(app()->getLocale())->toBe('en');
 });

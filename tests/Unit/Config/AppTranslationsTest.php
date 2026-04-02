@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-it('has english app translations with all required keys', function () {
+it('has english app translations with all required keys', function (): void {
     app()->setLocale('en');
 
     expect(__('app.common.save'))->toBeString()->not->toContain('app.');
@@ -17,7 +17,7 @@ it('has english app translations with all required keys', function () {
     expect(__('app.settings.delete_account.heading'))->toBeString()->not->toContain('app.');
 });
 
-it('has italian app translations with all required keys', function () {
+it('has italian app translations with all required keys', function (): void {
     app()->setLocale('it');
 
     expect(__('app.common.save'))->toBeString()->not->toContain('app.');
@@ -32,7 +32,7 @@ it('has italian app translations with all required keys', function () {
     expect(__('app.settings.delete_account.heading'))->toBeString()->not->toContain('app.');
 });
 
-it('has english email translations', function () {
+it('has english email translations', function (): void {
     app()->setLocale('en');
 
     expect(__('emails.title'))->toBeString()->not->toContain('emails.');
@@ -42,7 +42,7 @@ it('has english email translations', function () {
     expect(__('emails.footer'))->toBeString()->not->toContain('emails.');
 });
 
-it('has italian email translations', function () {
+it('has italian email translations', function (): void {
     app()->setLocale('it');
 
     expect(__('emails.title'))->toBeString()->not->toContain('emails.');
@@ -52,7 +52,7 @@ it('has italian email translations', function () {
     expect(__('emails.footer'))->toBeString()->not->toContain('emails.');
 });
 
-it('has different app translations per locale', function () {
+it('has different app translations per locale', function (): void {
     app()->setLocale('en');
     $enSave = __('app.common.save');
 

@@ -33,13 +33,10 @@ class LoadDemoCompaniesAction
         $subscribed = 0;
 
         foreach (self::DEMO_COMPANIES as $data) {
-            $company = Company::firstOrCreate(
-                ['provider' => $data['provider'], 'provider_slug' => $data['slug']],
-                [
-                    'name' => $data['name'],
-                    'is_active' => true,
-                ]
-            );
+            $company = Company::query()->firstOrCreate(['provider' => $data['provider'], 'provider_slug' => $data['slug']], [
+                'name' => $data['name'],
+                'is_active' => true,
+            ]);
 
             if ($user->subscribedCompanies()->where('company_id', $company->id)->exists()) {
                 continue;
@@ -51,7 +48,7 @@ class LoadDemoCompaniesAction
                 $newJobs = $this->syncAction->execute($company);
 
                 if ($newJobs->isNotEmpty()) {
-                    $pivotData = $newJobs->mapWithKeys(fn ($jp) => [
+                    $pivotData = $newJobs->mapWithKeys(fn ($jp): array => [
                         $jp->id => ['status' => 'new'],
                     ])->toArray();
 

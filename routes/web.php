@@ -6,6 +6,7 @@ use App\Infrastructure\Http\Controllers\JobFilterController;
 use App\Infrastructure\Http\Controllers\JobPostingStatusController;
 use App\Infrastructure\Http\Controllers\LandingController;
 use App\Infrastructure\Http\Middleware\RedirectAdmin;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,7 +15,7 @@ Route::get('/{locale}', [LandingController::class, 'show'])
     ->name('landing')
     ->where('locale', 'en|it');
 
-Route::middleware(['auth', 'verified', RedirectAdmin::class])->group(function () {
+Route::middleware(['auth', 'verified', RedirectAdmin::class])->group(function (): void {
     Route::get('dashboard', DashboardController::class)->name('dashboard');
 
     Route::get('companies', [CompanySubscriptionController::class, 'index'])->name('companies.index');
@@ -31,7 +32,7 @@ Route::middleware(['auth', 'verified', RedirectAdmin::class])->group(function ()
     Route::put('filters/{jobFilter}', [JobFilterController::class, 'update'])->name('job-filters.update');
     Route::delete('filters/{jobFilter}', [JobFilterController::class, 'destroy'])->name('job-filters.destroy');
 
-    Route::patch('user/locale', function (Request $request) {
+    Route::patch('user/locale', function (Request $request): RedirectResponse {
         $request->validate(['locale' => 'required|in:en,it']);
         $request->user()->update(['locale' => $request->locale]);
 

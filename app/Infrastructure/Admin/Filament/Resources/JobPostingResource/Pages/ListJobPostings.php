@@ -11,6 +11,7 @@ class ListJobPostings extends ListRecords
 {
     protected static string $resource = JobPostingResource::class;
 
+    #[\Override]
     protected function getHeaderActions(): array
     {
         return [];

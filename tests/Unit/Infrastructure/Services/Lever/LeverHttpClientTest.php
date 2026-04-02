@@ -7,11 +7,11 @@ use App\Infrastructure\Services\Lever\LeverHttpClient;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
 
-beforeEach(function () {
+beforeEach(function (): void {
     $this->client = new LeverHttpClient;
 });
 
-it('fetches jobs for a valid company slug', function () {
+it('fetches jobs for a valid company slug', function (): void {
     Http::fake([
         'api.lever.co/v0/postings/scaleway' => Http::response([
             [
@@ -46,7 +46,7 @@ it('fetches jobs for a valid company slug', function () {
         ->and($jobs->first()->department)->toBe('Engineering');
 });
 
-it('returns empty collection for empty api response', function () {
+it('returns empty collection for empty api response', function (): void {
     Http::fake([
         'api.lever.co/v0/postings/nonexistent' => Http::response([]),
     ]);
@@ -56,7 +56,7 @@ it('returns empty collection for empty api response', function () {
     expect($jobs)->toBeEmpty();
 });
 
-it('returns empty collection on failed http response', function () {
+it('returns empty collection on failed http response', function (): void {
     Http::fake([
         'api.lever.co/v0/postings/broken' => Http::response('Server Error', 500),
     ]);
@@ -66,7 +66,7 @@ it('returns empty collection on failed http response', function () {
     expect($jobs)->toBeEmpty();
 });
 
-it('returns empty collection on connection error', function () {
+it('returns empty collection on connection error', function (): void {
     Http::fake([
         'api.lever.co/v0/postings/timeout' => fn () => throw new ConnectionException('Connection timed out'),
     ]);
@@ -76,7 +76,7 @@ it('returns empty collection on connection error', function () {
     expect($jobs)->toBeEmpty();
 });
 
-it('maps lever fields to dto correctly including nullable fields', function () {
+it('maps lever fields to dto correctly including nullable fields', function (): void {
     Http::fake([
         'api.lever.co/v0/postings/testco' => Http::response([
             [
@@ -98,7 +98,7 @@ it('maps lever fields to dto correctly including nullable fields', function () {
         ->and($jobs->first()->rawPayload)->toHaveKey('workplaceType', 'remote');
 });
 
-it('validates a valid slug and returns company name', function () {
+it('validates a valid slug and returns company name', function (): void {
     Http::fake([
         'api.lever.co/v0/postings/scaleway' => Http::response([
             [
@@ -115,7 +115,7 @@ it('validates a valid slug and returns company name', function () {
     expect($name)->toBe('Scaleway');
 });
 
-it('returns null for invalid slug validation', function () {
+it('returns null for invalid slug validation', function (): void {
     Http::fake([
         'api.lever.co/v0/postings/nonexistent' => Http::response([]),
     ]);
@@ -125,7 +125,7 @@ it('returns null for invalid slug validation', function () {
     expect($name)->toBeNull();
 });
 
-it('returns null for slug validation on connection error', function () {
+it('returns null for slug validation on connection error', function (): void {
     Http::fake([
         'api.lever.co/v0/postings/timeout' => fn () => throw new ConnectionException('Connection timed out'),
     ]);
@@ -135,7 +135,7 @@ it('returns null for slug validation on connection error', function () {
     expect($name)->toBeNull();
 });
 
-it('returns empty collection when api returns non-list json', function () {
+it('returns empty collection when api returns non-list json', function (): void {
     Http::fake([
         'api.lever.co/v0/postings/invalid' => Http::response(['ok' => false, 'error' => 'Document not found']),
     ]);
@@ -145,7 +145,7 @@ it('returns empty collection when api returns non-list json', function () {
     expect($jobs)->toBeEmpty();
 });
 
-it('validates a multi-word slug and returns formatted company name', function () {
+it('validates a multi-word slug and returns formatted company name', function (): void {
     Http::fake([
         'api.lever.co/v0/postings/acme-corp' => Http::response([
             [
