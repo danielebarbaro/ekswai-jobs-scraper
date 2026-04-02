@@ -26,10 +26,10 @@ Route::middleware(['auth', 'verified', RedirectAdmin::class])->group(function ()
 
     Route::patch('job-postings/{jobPosting}/status', [JobPostingStatusController::class, 'update'])->name('job-postings.status');
 
-    Route::get('settings/filters', [JobFilterController::class, 'index'])->name('job-filters.index');
-    Route::post('settings/filters', [JobFilterController::class, 'store'])->name('job-filters.store');
-    Route::put('settings/filters/{jobFilter}', [JobFilterController::class, 'update'])->name('job-filters.update');
-    Route::delete('settings/filters/{jobFilter}', [JobFilterController::class, 'destroy'])->name('job-filters.destroy');
+    Route::get('filters', [JobFilterController::class, 'index'])->name('job-filters.index');
+    Route::post('filters', [JobFilterController::class, 'store'])->name('job-filters.store');
+    Route::put('filters/{jobFilter}', [JobFilterController::class, 'update'])->name('job-filters.update');
+    Route::delete('filters/{jobFilter}', [JobFilterController::class, 'destroy'])->name('job-filters.destroy');
 
     Route::patch('user/locale', function (Request $request) {
         $request->validate(['locale' => 'required|in:en,it']);

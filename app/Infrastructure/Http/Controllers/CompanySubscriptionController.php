@@ -10,11 +10,14 @@ use App\Application\Actions\Company\UnfollowCompanyAction;
 use App\Application\Actions\JobPosting\SyncCompanyJobPostingsAction;
 use App\Domain\Company\Company;
 use App\Domain\Company\JobBoardProvider;
+use App\Domain\JobPosting\JobPosting;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Inertia\Inertia;
 use Inertia\Response;
+use PlinCode\IstatForeignCountries\Models\ForeignCountries\Continent;
+use PlinCode\IstatForeignCountries\Models\ForeignCountries\Country;
 
 class CompanySubscriptionController extends Controller
 {
@@ -35,8 +38,36 @@ class CompanySubscriptionController extends Controller
                 'last_synced_at' => $company->last_synced_at?->diffForHumans(),
             ]);
 
+        $companyFilters = $request->user()->jobFilters()
+            ->whereNotNull('company_id')
+            ->with('company')
+            ->get();
+
+        $subscribedCompanyIds = $request->user()->subscribedCompanies()->pluck('companies.id');
+
+        $departments = JobPosting::query()
+            ->whereIn('company_id', $subscribedCompanyIds)
+            ->whereNotNull('department')
+            ->distinct()
+            ->orderBy('department')
+            ->pluck('department');
+
+        $countries = Continent::with(['countries' => fn ($q) => $q->where('type', 'S')->orderBy('name')])
+            ->orderBy('name')
+            ->get()
+            ->map(fn (Continent $continent) => [
+                'name' => $continent->name,
+                'countries' => $continent->countries->map(fn (Country $country) => [
+                    'id' => $country->id,
+                    'name' => $country->name,
+                ]),
+            ]);
+
         return Inertia::render('companies', [
             'companies' => $companies,
+            'companyFilters' => $companyFilters,
+            'departments' => $departments,
+            'countries' => $countries,
         ]);
     }
 

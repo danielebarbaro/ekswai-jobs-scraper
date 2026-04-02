@@ -144,6 +144,7 @@ return [
             'company_overrides_heading' => 'Company overrides',
             'company_overrides_description' => 'Override global filters for specific companies',
             'add_override' => 'Add override for',
+            'create_override' => 'Create custom filter',
             'delete_override' => 'Remove override',
             'delete_override_confirm' => 'Are you sure you want to remove this company override?',
             'no_companies' => 'Follow some companies first to create overrides.',

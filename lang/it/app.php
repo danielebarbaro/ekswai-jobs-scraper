@@ -144,6 +144,7 @@ return [
             'company_overrides_heading' => 'Filtri per azienda',
             'company_overrides_description' => 'Sovrascrivi i filtri globali per aziende specifiche',
             'add_override' => 'Aggiungi filtro per',
+            'create_override' => 'Crea filtro personalizzato',
             'delete_override' => 'Rimuovi filtro',
             'delete_override_confirm' => 'Sei sicuro di voler rimuovere questo filtro aziendale?',
             'no_companies' => 'Segui prima qualche azienda per creare filtri personalizzati.',

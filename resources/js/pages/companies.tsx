@@ -1,10 +1,19 @@
 import { Button } from '@/components/ui/button';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { useTranslation } from '@/hooks/use-translation';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, useForm, router } from '@inertiajs/react';
-import { Bell, BellOff, Building2, Download, Plus, RefreshCw, Trash2 } from 'lucide-react';
+import { Bell, BellOff, Building2, Download, Filter, Plus, RefreshCw, Trash2 } from 'lucide-react';
+import { useState } from 'react';
+import { type ContinentGroup, type JobFilter, FilterForm, emptyFilter } from './filters';
 
 interface CompanySubscription {
     id: string;
@@ -17,12 +26,23 @@ interface CompanySubscription {
     last_synced_at: string | null;
 }
 
-interface CompaniesProps {
-    companies: CompanySubscription[];
+interface CompanyFilter extends JobFilter {
+    company: {
+        id: string;
+        name: string;
+    } | null;
 }
 
-export default function Companies({ companies }: CompaniesProps) {
+interface CompaniesProps {
+    companies: CompanySubscription[];
+    companyFilters: CompanyFilter[];
+    departments: string[];
+    countries: ContinentGroup[];
+}
+
+export default function Companies({ companies, companyFilters, departments, countries }: CompaniesProps) {
     const { t } = useTranslation();
+    const [filterDialogCompany, setFilterDialogCompany] = useState<CompanySubscription | null>(null);
 
     const breadcrumbs: BreadcrumbItem[] = [
         { title: t('companies.title'), href: '/companies' },
@@ -54,6 +74,35 @@ export default function Companies({ companies }: CompaniesProps) {
     const handleLoadDefaults = () => {
         router.post('/companies/load-defaults', {}, { preserveScroll: true });
     };
+
+    const getCompanyFilter = (companyId: string): CompanyFilter | undefined => {
+        return companyFilters.find((f) => f.company_id === companyId);
+    };
+
+    const handleFilterSubmit = (companyId: string, existingFilter: CompanyFilter | undefined, data: Omit<JobFilter, 'id' | 'company_id'>) => {
+        if (existingFilter) {
+            router.put(`/filters/${existingFilter.id}`, data, {
+                preserveScroll: true,
+                onSuccess: () => setFilterDialogCompany(null),
+            });
+        } else {
+            router.post('/filters', { ...data, company_id: companyId }, {
+                preserveScroll: true,
+                onSuccess: () => setFilterDialogCompany(null),
+            });
+        }
+    };
+
+    const handleFilterDelete = (filterId: string) => {
+        if (confirm(t('settings.filters.delete_override_confirm'))) {
+            router.delete(`/filters/${filterId}`, {
+                preserveScroll: true,
+                onSuccess: () => setFilterDialogCompany(null),
+            });
+        }
+    };
+
+    const activeFilter = filterDialogCompany ? getCompanyFilter(filterDialogCompany.id) : undefined;
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -97,52 +146,89 @@ export default function Companies({ companies }: CompaniesProps) {
                     </div>
                 ) : (
                     <div className="mt-6 space-y-3">
-                        {companies.map((company) => (
-                            <div
-                                key={company.id}
-                                className="flex items-center justify-between rounded-lg border border-border bg-card p-4"
-                            >
-                                <div className="min-w-0 flex-1">
-                                    <h3 className="font-medium">{company.name}</h3>
-                                    <p className="text-sm text-muted-foreground">
-                                        {company.provider_slug} · {company.job_postings_count} jobs · Last sync: {company.last_synced_at ?? 'Never synced'}
-                                    </p>
+                        {companies.map((company) => {
+                            const hasOverride = companyFilters.some((f) => f.company_id === company.id);
+                            return (
+                                <div
+                                    key={company.id}
+                                    className="flex items-center justify-between rounded-lg border border-border bg-card p-4"
+                                >
+                                    <div className="min-w-0 flex-1">
+                                        <h3 className="font-medium">{company.name}</h3>
+                                        <p className="text-sm text-muted-foreground">
+                                            {company.provider_slug} · {company.job_postings_count} jobs · Last sync: {company.last_synced_at ?? 'Never synced'}
+                                        </p>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            onClick={() => setFilterDialogCompany(company)}
+                                            title={t('settings.filters.title')}
+                                        >
+                                            <Filter className={`size-4 ${hasOverride ? 'text-primary' : 'text-muted-foreground'}`} />
+                                        </Button>
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            onClick={() => handleSync(company.id)}
+                                            title="Sync jobs"
+                                        >
+                                            <RefreshCw className="size-4" />
+                                        </Button>
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            onClick={() => handleToggleNotifications(company.id)}
+                                            title={company.email_notifications ? t('companies.disable_notifications') : t('companies.enable_notifications')}
+                                        >
+                                            {company.email_notifications ? (
+                                                <Bell className="size-4 text-teal-600" />
+                                            ) : (
+                                                <BellOff className="size-4 text-muted-foreground" />
+                                            )}
+                                        </Button>
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            onClick={() => handleUnfollow(company.id)}
+                                            title={t('companies.unfollow')}
+                                        >
+                                            <Trash2 className="size-4 text-red-500" />
+                                        </Button>
+                                    </div>
                                 </div>
-                                <div className="flex items-center gap-2">
-                                    <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        onClick={() => handleSync(company.id)}
-                                        title="Sync jobs"
-                                    >
-                                        <RefreshCw className="size-4" />
-                                    </Button>
-                                    <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        onClick={() => handleToggleNotifications(company.id)}
-                                        title={company.email_notifications ? t('companies.disable_notifications') : t('companies.enable_notifications')}
-                                    >
-                                        {company.email_notifications ? (
-                                            <Bell className="size-4 text-teal-600" />
-                                        ) : (
-                                            <BellOff className="size-4 text-muted-foreground" />
-                                        )}
-                                    </Button>
-                                    <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        onClick={() => handleUnfollow(company.id)}
-                                        title={t('companies.unfollow')}
-                                    >
-                                        <Trash2 className="size-4 text-red-500" />
-                                    </Button>
-                                </div>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
                 )}
             </div>
+
+            {/* Filter dialog */}
+            <Dialog open={!!filterDialogCompany} onOpenChange={(open) => !open && setFilterDialogCompany(null)}>
+                <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-lg">
+                    <DialogHeader>
+                        <DialogTitle>{filterDialogCompany?.name}</DialogTitle>
+                        <DialogDescription>
+                            {activeFilter
+                                ? t('settings.filters.company_overrides_description')
+                                : t('settings.filters.global_description')}
+                        </DialogDescription>
+                    </DialogHeader>
+                    {filterDialogCompany && (
+                        <FilterForm
+                            key={filterDialogCompany.id}
+                            filter={activeFilter ?? emptyFilter}
+                            departments={departments}
+                            countries={countries}
+                            onSubmit={(data) => handleFilterSubmit(filterDialogCompany.id, activeFilter, data)}
+                            onDelete={activeFilter ? () => handleFilterDelete(activeFilter.id) : undefined}
+                            submitLabel={activeFilter ? t('common.save') : t('settings.filters.create_override')}
+                            t={t}
+                        />
+                    )}
+                </DialogContent>
+            </Dialog>
         </AppLayout>
     );
 }

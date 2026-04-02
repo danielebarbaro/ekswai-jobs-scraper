@@ -20,7 +20,7 @@ it('returns current user filters on the index page', function () {
     $this->get(route('job-filters.index'))
         ->assertOk()
         ->assertInertia(fn ($page) => $page
-            ->component('settings/filters')
+            ->component('filters')
             ->where('globalFilter.id', $globalFilter->id)
             ->has('companyFilters', 1)
             ->has('companies', 1)

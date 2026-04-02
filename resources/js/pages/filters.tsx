@@ -3,17 +3,15 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import { useTranslation } from '@/hooks/use-translation';
 import AppLayout from '@/layouts/app-layout';
-import SettingsLayout from '@/layouts/settings/layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, router } from '@inertiajs/react';
 import { X } from 'lucide-react';
 import { type FormEvent, type KeyboardEvent, useCallback, useState } from 'react';
 
-interface JobFilter {
+export interface JobFilter {
     id: string;
     company_id: string | null;
     title_include: string[];
@@ -23,13 +21,13 @@ interface JobFilter {
     departments: string[];
 }
 
-interface Country {
+export interface Country {
     id: string;
     name: string;
     iso_alpha2: string;
 }
 
-interface ContinentGroup {
+export interface ContinentGroup {
     name: string;
     countries: Country[];
 }
@@ -47,7 +45,7 @@ interface FiltersPageProps {
     countries: ContinentGroup[];
 }
 
-function TagInput({
+export function TagInput({
     value,
     onChange,
     placeholder,
@@ -110,7 +108,7 @@ function TagInput({
     );
 }
 
-function ChipSelect({
+export function ChipSelect({
     options,
     value,
     onChange,
@@ -147,7 +145,7 @@ function ChipSelect({
     );
 }
 
-function CountrySelector({
+export function CountrySelector({
     continents,
     value,
     onChange,
@@ -193,13 +191,14 @@ function CountrySelector({
     );
 }
 
-function FilterForm({
+export function FilterForm({
     filter,
     departments,
     countries,
     companyName,
     onSubmit,
     onDelete,
+    submitLabel,
     t,
 }: {
     filter: JobFilter;
@@ -208,6 +207,7 @@ function FilterForm({
     companyName?: string;
     onSubmit: (data: Omit<JobFilter, 'id' | 'company_id'>) => void;
     onDelete?: () => void;
+    submitLabel?: string;
     t: (key: string) => string;
 }) {
     const [titleInclude, setTitleInclude] = useState<string[]>(filter.title_include);
@@ -276,12 +276,12 @@ function FilterForm({
                 </div>
             )}
 
-            <Button type="submit">{t('common.save')}</Button>
+            <Button type="submit">{submitLabel ?? t('common.save')}</Button>
         </form>
     );
 }
 
-const emptyFilter: JobFilter = {
+export const emptyFilter: JobFilter = {
     id: '',
     company_id: null,
     title_include: [],
@@ -291,47 +291,29 @@ const emptyFilter: JobFilter = {
     departments: [],
 };
 
-export default function Filters({ globalFilter, companyFilters, companies, departments, countries }: FiltersPageProps) {
+export default function Filters({ globalFilter, departments, countries }: FiltersPageProps) {
     const { t } = useTranslation();
 
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: t('settings.filters.title'),
-            href: '/settings/filters',
+            href: '/filters',
         },
     ];
 
     const handleGlobalSubmit = (data: Omit<JobFilter, 'id' | 'company_id'>) => {
         if (globalFilter) {
-            router.put(`/settings/filters/${globalFilter.id}`, data, { preserveScroll: true });
+            router.put(`/filters/${globalFilter.id}`, data, { preserveScroll: true });
         } else {
-            router.post('/settings/filters', { ...data, company_id: null }, { preserveScroll: true });
+            router.post('/filters', { ...data, company_id: null }, { preserveScroll: true });
         }
     };
-
-    const handleCompanySubmit = (filterId: string, data: Omit<JobFilter, 'id' | 'company_id'>) => {
-        router.put(`/settings/filters/${filterId}`, data, { preserveScroll: true });
-    };
-
-    const handleCompanyDelete = (filterId: string) => {
-        if (confirm(t('settings.filters.delete_override_confirm'))) {
-            router.delete(`/settings/filters/${filterId}`, { preserveScroll: true });
-        }
-    };
-
-    const handleAddOverride = (companyId: string) => {
-        router.post('/settings/filters', { ...emptyFilter, company_id: companyId }, { preserveScroll: true });
-    };
-
-    const companiesWithoutOverrides = companies.filter(
-        (company) => !companyFilters.some((f) => f.company_id === company.id),
-    );
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={t('settings.filters.title')} />
 
-            <SettingsLayout>
+            <div className="mx-auto w-full max-w-2xl p-6">
                 <div className="space-y-6">
                     <HeadingSmall
                         title={t('settings.filters.global_heading')}
@@ -346,62 +328,7 @@ export default function Filters({ globalFilter, companyFilters, companies, depar
                         t={t}
                     />
                 </div>
-
-                {globalFilter && (
-                    <>
-                        <Separator />
-
-                        <div className="space-y-6">
-                            <HeadingSmall
-                                title={t('settings.filters.company_overrides_heading')}
-                                description={t('settings.filters.company_overrides_description')}
-                            />
-
-                            {companyFilters.map((filter) => {
-                                const company = companies.find((c) => c.id === filter.company_id);
-                                return (
-                                    <div key={filter.id} className="space-y-4">
-                                        <FilterForm
-                                            filter={filter}
-                                            departments={departments}
-                                            countries={countries}
-                                            companyName={company?.name}
-                                            onSubmit={(data) => handleCompanySubmit(filter.id, data)}
-                                            onDelete={() => handleCompanyDelete(filter.id)}
-                                            t={t}
-                                        />
-                                        <Separator />
-                                    </div>
-                                );
-                            })}
-
-                            {companiesWithoutOverrides.length > 0 && (
-                                <div className="space-y-2">
-                                    <Label>{t('settings.filters.add_override')}</Label>
-                                    <div className="flex flex-wrap gap-2">
-                                        {companiesWithoutOverrides.map((company) => (
-                                            <Button
-                                                key={company.id}
-                                                variant="outline"
-                                                size="sm"
-                                                onClick={() => handleAddOverride(company.id)}
-                                            >
-                                                {company.name}
-                                            </Button>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-
-                            {companies.length === 0 && (
-                                <p className="text-sm text-muted-foreground">
-                                    {t('settings.filters.no_companies')}
-                                </p>
-                            )}
-                        </div>
-                    </>
-                )}
-            </SettingsLayout>
+            </div>
         </AppLayout>
     );
 }

@@ -14,6 +14,7 @@ class LoadDemoCompaniesAction
     public function __construct(
         private readonly SyncCompanyJobPostingsAction $syncAction
     ) {}
+
     /** @var array<int, array{provider: string, slug: string, name: string}> */
     private const array DEMO_COMPANIES = [
         ['provider' => 'workable', 'slug' => 'laravel', 'name' => 'Laravel'],

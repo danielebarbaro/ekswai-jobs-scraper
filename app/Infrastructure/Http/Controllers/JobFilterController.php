@@ -59,7 +59,7 @@ class JobFilterController extends Controller
                 ]),
             ]);
 
-        return Inertia::render('settings/filters', [
+        return Inertia::render('filters', [
             'globalFilter' => $globalFilter,
             'companyFilters' => $companyFilters,
             'companies' => $companies,
