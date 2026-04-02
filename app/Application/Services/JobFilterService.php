@@ -9,6 +9,7 @@ use App\Domain\Company\Company;
 use App\Domain\JobFilter\JobFilter;
 use App\Domain\User\User;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use PlinCode\IstatForeignCountries\Models\ForeignCountries\Country;
@@ -87,7 +88,7 @@ class JobFilterService
     /**
      * Uses LOWER() + LIKE for cross-database compatibility (PostgreSQL + SQLite).
      */
-    public function applyToQuery(Builder $query, ?JobFilter $filter): Builder
+    public function applyToQuery(Builder|BelongsToMany $query, ?JobFilter $filter): Builder|BelongsToMany
     {
         if ($filter === null) {
             return $query;
