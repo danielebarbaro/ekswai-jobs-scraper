@@ -60,7 +60,7 @@ it('collects scraping failures and includes them in user email', function (): vo
     expect($stats['companies_synced'])->toBe(1)
         ->and($stats['companies_failed'])->toBe(1);
 
-    Mail::assertQueued(NewJobsFoundMail::class, fn ($mail) => $mail->failures->isNotEmpty()
+    Mail::assertQueued(NewJobsFoundMail::class, fn ($mail): bool => $mail->failures->isNotEmpty()
         && $mail->failures->first()['company_name'] === $ttCompany->name);
 });
 

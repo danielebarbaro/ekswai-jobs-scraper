@@ -49,5 +49,5 @@ it('includes failures in the email', function (): void {
 
     $this->action->execute($user, $jobsByCompany, $failures);
 
-    Mail::assertQueued(NewJobsFoundMail::class, fn (NewJobsFoundMail $mail) => $mail->failures->count() === 1);
+    Mail::assertQueued(NewJobsFoundMail::class, fn (NewJobsFoundMail $mail): bool => $mail->failures->count() === 1);
 });
