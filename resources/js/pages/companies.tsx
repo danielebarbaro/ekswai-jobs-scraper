@@ -43,6 +43,7 @@ interface CompaniesProps {
 export default function Companies({ companies, companyFilters, departments, countries }: CompaniesProps) {
     const { t } = useTranslation();
     const [filterDialogCompany, setFilterDialogCompany] = useState<CompanySubscription | null>(null);
+    const [syncingCompanyId, setSyncingCompanyId] = useState<string | null>(null);
 
     const breadcrumbs: BreadcrumbItem[] = [
         { title: t('companies.title'), href: '/companies' },
@@ -64,7 +65,11 @@ export default function Companies({ companies, companyFilters, departments, coun
     };
 
     const handleSync = (companyId: string) => {
-        router.post(`/companies/${companyId}/sync`, {}, { preserveScroll: true });
+        setSyncingCompanyId(companyId);
+        router.post(`/companies/${companyId}/sync`, {}, {
+            preserveScroll: true,
+            onFinish: () => setSyncingCompanyId(null),
+        });
     };
 
     const handleToggleNotifications = (companyId: string) => {
@@ -172,9 +177,10 @@ export default function Companies({ companies, companyFilters, departments, coun
                                             variant="ghost"
                                             size="icon"
                                             onClick={() => handleSync(company.id)}
+                                            disabled={syncingCompanyId !== null}
                                             title="Sync jobs"
                                         >
-                                            <RefreshCw className="size-4" />
+                                            <RefreshCw className={`size-4 ${syncingCompanyId === company.id ? 'animate-spin' : ''}`} />
                                         </Button>
                                         <Button
                                             variant="ghost"
