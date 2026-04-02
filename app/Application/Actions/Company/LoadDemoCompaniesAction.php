@@ -9,14 +9,16 @@ use App\Domain\User\User;
 
 class LoadDemoCompaniesAction
 {
-    /** @var array<int, array{provider: string, slug: string}> */
+    /** @var array<int, array{provider: string, slug: string, name: string}> */
     private const array DEMO_COMPANIES = [
-        ['provider' => 'workable', 'slug' => 'laravel'],
-        ['provider' => 'workable', 'slug' => 'gelato'],
-        ['provider' => 'lever', 'slug' => 'scaleway'],
-        ['provider' => 'lever', 'slug' => 'coinspaid'],
-        ['provider' => 'teamtailor', 'slug' => 'weroad'],
-        ['provider' => 'factorial', 'slug' => 'shippypro'],
+        ['provider' => 'workable', 'slug' => 'laravel', 'name' => 'Laravel'],
+        ['provider' => 'workable', 'slug' => 'gelato', 'name' => 'Gelato'],
+        ['provider' => 'lever', 'slug' => 'scaleway', 'name' => 'Scaleway'],
+        ['provider' => 'lever', 'slug' => 'coinspaid', 'name' => 'CoinsPaid'],
+        ['provider' => 'teamtailor', 'slug' => 'weroad', 'name' => 'WeRoad'],
+        ['provider' => 'factorial', 'slug' => 'shippypro', 'name' => 'ShippyPro'],
+        ['provider' => 'ashby', 'slug' => 'jimdo.com', 'name' => 'Jimdo'],
+        ['provider' => 'greenhouse', 'slug' => 'carta', 'name' => 'Carta'],
     ];
 
     public function execute(User $user): int
@@ -24,13 +26,13 @@ class LoadDemoCompaniesAction
         $subscribed = 0;
 
         foreach (self::DEMO_COMPANIES as $data) {
-            $company = Company::where('provider', $data['provider'])
-                ->where('provider_slug', $data['slug'])
-                ->first();
-
-            if (! $company) {
-                continue;
-            }
+            $company = Company::firstOrCreate(
+                ['provider' => $data['provider'], 'provider_slug' => $data['slug']],
+                [
+                    'name' => $data['name'],
+                    'is_active' => true,
+                ]
+            );
 
             if ($user->subscribedCompanies()->where('company_id', $company->id)->exists()) {
                 continue;
