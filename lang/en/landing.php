@@ -42,7 +42,7 @@ return [
     'preview' => [
         'companies' => [
             'title' => 'My Companies',
-            'description' => 'Add companies from Workable, Lever, Teamtailor, or Factorial',
+            'description' => 'Add companies from Workable, Lever, Ashby, Greenhouse, Teamtailor, or Factorial',
         ],
         'dashboard' => [
             'title' => 'Your Dashboard',
@@ -58,7 +58,7 @@ return [
         ],
         'providers' => [
             'title' => 'Job board integration',
-            'description' => 'Supports Workable, Lever, Teamtailor, and Factorial. Add any company by their provider slug and we start syncing automatically.',
+            'description' => 'Supports Workable, Lever, Ashby, Greenhouse, Teamtailor, and Factorial. Add any company by their provider slug and we start syncing automatically.',
         ],
         'pipeline' => [
             'title' => 'Personal job pipeline',
@@ -72,7 +72,7 @@ return [
 
     'extensibility' => [
         'heading' => 'Built for extensibility',
-        'description' => 'ekswai is designed with a provider-agnostic architecture. It supports API integrations (Workable, Lever) and HTML scrapers with configurable selectors (Teamtailor, Factorial). Want to see your favorite job board here? Contributions are welcome.',
+        'description' => 'ekswai is designed with a provider-agnostic architecture. It supports API integrations (Workable, Lever, Ashby, Greenhouse) and HTML scrapers with configurable selectors (Teamtailor, Factorial). Want to see your favorite job board here? Contributions are welcome.',
         'steps' => [
             '1' => 'Add a new case to the JobBoardProvider enum',
             '2' => 'Create a class implementing the JobBoardClient interface',

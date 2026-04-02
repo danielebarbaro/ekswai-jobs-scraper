@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  Track job postings from multiple job boards, manage your application pipeline.
+  Multi-provider job board aggregator. Follow companies, get notified of new positions daily, and manage your application pipeline.
 </p>
 
 <p align="center">
@@ -33,6 +33,8 @@ Filament 4 panel to manage companies, job postings, users, and scraper configura
 |----------|-------------|-------------|
 | Workable | REST API | `apply.workable.com/laravel` |
 | Lever | REST API | `jobs.lever.co/scaleway` |
+| Ashby | REST API | `jobs.ashbyhq.com/ramp` |
+| Greenhouse | REST API | `boards.greenhouse.io/discord` |
 | Teamtailor | HTML Scraper | `weroad.teamtailor.com/jobs` |
 | Factorial | HTML Scraper | `shippypro.factorialhr.com` |
 
@@ -80,13 +82,15 @@ app/
         ├── Contracts/   # JobBoardClient interface
         ├── Workable/    # Workable API client
         ├── Lever/       # Lever API client
+        ├── Ashby/       # Ashby API client
+        ├── Greenhouse/  # Greenhouse API client
         ├── Teamtailor/  # Teamtailor HTML scraper
         ├── Factorial/   # Factorial HTML scraper
         ├── Scraping/    # BaseHtmlScraper, ScraperHealthChecker, exceptions
         └── JobBoardClientFactory.php
 ```
 
-**Provider pattern:** each job board integration implements the `JobBoardClient` interface (`fetchJobsForCompany` and `validateSlug`). The `JobBoardProvider` enum lists available providers, and `JobBoardClientFactory` resolves the correct client. API providers (Workable, Lever) call JSON endpoints directly. HTML scraper providers (Teamtailor, Factorial) extend `BaseHtmlScraper` which handles retry logic, DOM parsing, and validation using CSS selectors from `ScraperConfig`.
+**Provider pattern:** each job board integration implements the `JobBoardClient` interface (`fetchJobsForCompany` and `validateSlug`). The `JobBoardProvider` enum lists available providers, and `JobBoardClientFactory` resolves the correct client. API providers (Workable, Lever, Ashby, Greenhouse) call JSON endpoints directly. HTML scraper providers (Teamtailor, Factorial) extend `BaseHtmlScraper` which handles retry logic, DOM parsing, and validation using CSS selectors from `ScraperConfig`.
 
 **Key relationships:**
 Users subscribe to companies via `company_user` pivot (with email notification toggle). Each user has a per-job status via `job_posting_user` pivot (new, bookmarked, submitted, interview, dismissed). The sync is shared: one API/scrape call per company regardless of subscriber count.
@@ -113,7 +117,7 @@ npm install && npm run build
 
 Open http://localhost and register. Then go to /companies and add a company by selecting a provider and entering its slug.
 
-The seeder creates an admin user (`me@plincode.tech` / `password`) with 6 demo companies across all 4 providers, already synced with real job postings.
+The seeder creates an admin user (`me@plincode.tech` / `password`) with demo companies across all 6 providers, already synced with real job postings.
 
 ## Commands
 

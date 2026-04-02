@@ -212,8 +212,9 @@ export default function Landing({ locale, alternateLocale, translations: t, conf
                                 <div className="space-y-3 p-4">
                                     {[
                                         { name: 'Laravel', slug: 'laravel', provider: 'Workable' },
-                                        { name: 'WeRoad', slug: 'weroad', provider: 'Teamtailor' },
                                         { name: 'Scaleway', slug: 'scaleway', provider: 'Lever' },
+                                        { name: 'Ramp', slug: 'ramp', provider: 'Ashby' },
+                                        { name: 'Discord', slug: 'discord', provider: 'Greenhouse' },
                                     ].map((company) => (
                                         <div key={company.name} className="flex items-center justify-between rounded-lg border border-stone-100 bg-stone-50 px-3 py-2 dark:border-stone-700 dark:bg-stone-900">
                                             <div>
