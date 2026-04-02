@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Infrastructure\Services;
 
 use App\Domain\Company\JobBoardProvider;
+use App\Infrastructure\Services\Ashby\AshbyHttpClient;
 use App\Infrastructure\Services\Contracts\JobBoardClient;
 use App\Infrastructure\Services\Factorial\FactorialScraper;
+use App\Infrastructure\Services\Greenhouse\GreenhouseHttpClient;
 use App\Infrastructure\Services\Lever\LeverHttpClient;
 use App\Infrastructure\Services\Teamtailor\TeamtailorScraper;
-use App\Infrastructure\Services\Ashby\AshbyHttpClient;
 use App\Infrastructure\Services\Workable\WorkableHttpClient;
 
 class JobBoardClientFactory
@@ -22,6 +23,7 @@ class JobBoardClientFactory
             JobBoardProvider::Teamtailor => app(TeamtailorScraper::class),
             JobBoardProvider::Factorial => app(FactorialScraper::class),
             JobBoardProvider::Ashby => app(AshbyHttpClient::class),
+            JobBoardProvider::Greenhouse => app(GreenhouseHttpClient::class),
         };
     }
 }

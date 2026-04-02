@@ -21,6 +21,7 @@ class DemoSeeder extends Seeder
         ['provider' => 'teamtailor', 'slug' => 'weroad', 'name' => 'WeRoad'],
         ['provider' => 'factorial', 'slug' => 'shippypro', 'name' => 'ShippyPro'],
         ['provider' => 'ashby', 'slug' => 'jimdo.com', 'name' => 'Jimdo'],
+        ['provider' => 'greenhouse', 'slug' => 'carta', 'name' => 'Carta'],
     ];
 
     public function run(): void
