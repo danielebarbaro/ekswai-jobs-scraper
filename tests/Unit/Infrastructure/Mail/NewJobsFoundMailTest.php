@@ -7,7 +7,7 @@ use App\Domain\JobPosting\JobPosting;
 use App\Domain\User\User;
 use App\Infrastructure\Mail\NewJobsFoundMail;
 
-it('builds the correct subject with singular job and company', function () {
+it('builds the correct subject with singular job and company', function (): void {
     $user = User::factory()->create();
     $company = Company::factory()->create();
     $job = JobPosting::factory()->create(['company_id' => $company->id]);
@@ -23,7 +23,7 @@ it('builds the correct subject with singular job and company', function () {
         ->and($envelope->subject)->toContain('1');
 });
 
-it('builds the correct subject with multiple jobs and companies', function () {
+it('builds the correct subject with multiple jobs and companies', function (): void {
     $user = User::factory()->create();
     $company1 = Company::factory()->create();
     $company2 = Company::factory()->create();
@@ -42,7 +42,7 @@ it('builds the correct subject with multiple jobs and companies', function () {
         ->and($envelope->subject)->toContain('2');
 });
 
-it('renders the email content with correct data', function () {
+it('renders the email content with correct data', function (): void {
     $user = User::factory()->create();
     $company = Company::factory()->create(['name' => 'Acme Corp']);
     $job = JobPosting::factory()->create([
@@ -64,14 +64,14 @@ it('renders the email content with correct data', function () {
         ->and($content->with)->toHaveKey('failures');
 });
 
-it('has no attachments', function () {
+it('has no attachments', function (): void {
     $user = User::factory()->create();
     $mail = new NewJobsFoundMail($user, collect());
 
     expect($mail->attachments())->toBeEmpty();
 });
 
-it('accepts failures collection', function () {
+it('accepts failures collection', function (): void {
     $user = User::factory()->create();
     $failures = collect([['company_name' => 'FailCo']]);
     $mail = new NewJobsFoundMail($user, collect(), $failures);

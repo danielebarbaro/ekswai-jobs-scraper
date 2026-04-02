@@ -6,12 +6,12 @@ use App\Domain\Company\Company;
 use App\Domain\JobPosting\JobPosting;
 use App\Domain\User\User;
 
-beforeEach(function () {
+beforeEach(function (): void {
     $this->user = User::factory()->create();
     $this->actingAs($this->user);
 });
 
-it('shows the dashboard with job postings', function () {
+it('shows the dashboard with job postings', function (): void {
     $company = Company::factory()->create();
     $this->user->subscribedCompanies()->attach($company->id);
     $jp = JobPosting::factory()->create(['company_id' => $company->id]);
@@ -27,7 +27,7 @@ it('shows the dashboard with job postings', function () {
         );
 });
 
-it('filters by status', function () {
+it('filters by status', function (): void {
     $company = Company::factory()->create();
     $this->user->subscribedCompanies()->attach($company->id);
 
@@ -44,7 +44,7 @@ it('filters by status', function () {
         );
 });
 
-it('filters by company', function () {
+it('filters by company', function (): void {
     $company1 = Company::factory()->create();
     $company2 = Company::factory()->create();
     $this->user->subscribedCompanies()->attach([$company1->id, $company2->id]);
@@ -61,7 +61,7 @@ it('filters by company', function () {
         );
 });
 
-it('hides dismissed by default', function () {
+it('hides dismissed by default', function (): void {
     $company = Company::factory()->create();
     $this->user->subscribedCompanies()->attach($company->id);
 
@@ -77,7 +77,7 @@ it('hides dismissed by default', function () {
         );
 });
 
-it('shows dismissed when filtered explicitly', function () {
+it('shows dismissed when filtered explicitly', function (): void {
     $company = Company::factory()->create();
     $this->user->subscribedCompanies()->attach($company->id);
 
@@ -91,7 +91,7 @@ it('shows dismissed when filtered explicitly', function () {
         );
 });
 
-it('shows empty state when no subscriptions', function () {
+it('shows empty state when no subscriptions', function (): void {
     $this->get(route('dashboard'))
         ->assertOk()
         ->assertInertia(fn ($page) => $page

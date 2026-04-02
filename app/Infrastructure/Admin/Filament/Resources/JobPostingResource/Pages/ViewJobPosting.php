@@ -12,6 +12,7 @@ class ViewJobPosting extends ViewRecord
 {
     protected static string $resource = JobPostingResource::class;
 
+    #[\Override]
     protected function getHeaderActions(): array
     {
         return [

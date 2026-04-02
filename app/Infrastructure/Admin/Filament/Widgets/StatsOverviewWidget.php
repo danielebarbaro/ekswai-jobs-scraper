@@ -13,20 +13,21 @@ class StatsOverviewWidget extends BaseWidget
 {
     protected static ?int $sort = 1;
 
+    #[\Override]
     protected function getStats(): array
     {
-        $totalCompanies = Company::count();
+        $totalCompanies = Company::query()->count();
         $activeCompanies = Company::active()->count();
 
         return [
             Stat::make('Aziende attive', $activeCompanies.'/'.$totalCompanies)
                 ->description('su '.$totalCompanies.' totali')
                 ->icon('heroicon-o-building-office'),
-            Stat::make('Annunci totali', (string) JobPosting::count())
+            Stat::make('Annunci totali', (string) JobPosting::query()->count())
                 ->icon('heroicon-o-briefcase'),
-            Stat::make('Nuovi oggi', (string) JobPosting::where('first_seen_at', '>=', now()->startOfDay())->count())
+            Stat::make('Nuovi oggi', (string) JobPosting::query()->where('first_seen_at', '>=', now()->startOfDay())->count())
                 ->icon('heroicon-o-arrow-trending-up'),
-            Stat::make('Nuovi questa settimana', (string) JobPosting::where('first_seen_at', '>=', now()->startOfWeek())->count())
+            Stat::make('Nuovi questa settimana', (string) JobPosting::query()->where('first_seen_at', '>=', now()->startOfWeek())->count())
                 ->icon('heroicon-o-calendar'),
         ];
     }

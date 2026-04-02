@@ -8,13 +8,13 @@ use App\Domain\Company\Company;
 use App\Domain\JobFilter\JobFilter;
 use App\Domain\User\User;
 
-beforeEach(function () {
+beforeEach(function (): void {
     $this->service = app(JobFilterService::class);
 });
 
 // --- Filter resolution ---
 
-it('returns company-specific filter when it exists', function () {
+it('returns company-specific filter when it exists', function (): void {
     $user = User::factory()->create();
     $company = Company::factory()->create();
     JobFilter::factory()->create(['user_id' => $user->id, 'company_id' => null, 'title_exclude' => ['VP']]);
@@ -26,7 +26,7 @@ it('returns company-specific filter when it exists', function () {
     expect($result->title_exclude)->toBe(['Director']);
 });
 
-it('falls back to global filter when no company-specific filter exists', function () {
+it('falls back to global filter when no company-specific filter exists', function (): void {
     $user = User::factory()->create();
     $company = Company::factory()->create();
     $globalFilter = JobFilter::factory()->create(['user_id' => $user->id, 'company_id' => null, 'title_exclude' => ['VP']]);
@@ -36,7 +36,7 @@ it('falls back to global filter when no company-specific filter exists', functio
     expect($result->id)->toBe($globalFilter->id);
 });
 
-it('returns null when no filters exist', function () {
+it('returns null when no filters exist', function (): void {
     $user = User::factory()->create();
     $company = Company::factory()->create();
 
@@ -47,7 +47,7 @@ it('returns null when no filters exist', function () {
 
 // --- Title include filter ---
 
-it('filters jobs by title include keywords', function () {
+it('filters jobs by title include keywords', function (): void {
     $filter = JobFilter::factory()->make(['title_include' => ['Engineer', 'Developer']]);
 
     $jobs = collect([
@@ -64,7 +64,7 @@ it('filters jobs by title include keywords', function () {
 
 // --- Title exclude filter ---
 
-it('filters jobs by title exclude keywords', function () {
+it('filters jobs by title exclude keywords', function (): void {
     $filter = JobFilter::factory()->make(['title_exclude' => ['VP', 'Director']]);
 
     $jobs = collect([
@@ -81,7 +81,7 @@ it('filters jobs by title exclude keywords', function () {
 
 // --- Remote only filter ---
 
-it('filters for remote jobs by location string', function () {
+it('filters for remote jobs by location string', function (): void {
     $filter = JobFilter::factory()->make(['remote_only' => true]);
 
     $jobs = collect([
@@ -95,7 +95,7 @@ it('filters for remote jobs by location string', function () {
     expect($result->first()->externalId)->toBe('1');
 });
 
-it('filters for remote jobs by raw_payload isRemote flag', function () {
+it('filters for remote jobs by raw_payload isRemote flag', function (): void {
     $filter = JobFilter::factory()->make(['remote_only' => true]);
 
     $jobs = collect([
@@ -111,7 +111,7 @@ it('filters for remote jobs by raw_payload isRemote flag', function () {
 
 // --- Department include filter ---
 
-it('filters jobs by department include', function () {
+it('filters jobs by department include', function (): void {
     $filter = JobFilter::factory()->make(['department_include' => ['Engineering', 'Product']]);
 
     $jobs = collect([
@@ -129,7 +129,7 @@ it('filters jobs by department include', function () {
 
 // --- Null filter passes everything ---
 
-it('passes all jobs when filter is null', function () {
+it('passes all jobs when filter is null', function (): void {
     $jobs = collect([
         new JobPostingDTO('1', 'Engineer', null, 'http://example.com', null, []),
         new JobPostingDTO('2', 'VP Sales', null, 'http://example.com', null, []),
@@ -142,7 +142,7 @@ it('passes all jobs when filter is null', function () {
 
 // --- Combined filters ---
 
-it('applies multiple filters in sequence', function () {
+it('applies multiple filters in sequence', function (): void {
     $filter = JobFilter::factory()->make([
         'title_include' => ['Engineer'],
         'title_exclude' => ['Junior'],

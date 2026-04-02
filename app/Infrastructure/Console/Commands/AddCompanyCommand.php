@@ -38,7 +38,7 @@ class AddCompanyCommand extends Command
             return self::FAILURE;
         }
 
-        $existing = Company::where('provider', $provider->value)
+        $existing = Company::query()->where('provider', $provider->value)
             ->where('provider_slug', $slug)
             ->first();
 
@@ -61,7 +61,7 @@ class AddCompanyCommand extends Command
 
         $name = $this->option('name') ?? $detectedName;
 
-        $company = Company::create([
+        $company = Company::query()->create([
             'name' => $name,
             'provider' => $provider->value,
             'provider_slug' => $slug,

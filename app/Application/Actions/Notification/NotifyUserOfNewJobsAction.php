@@ -45,7 +45,7 @@ class NotifyUserOfNewJobsAction
             // Queue the email instead of sending synchronously
             Mail::to($user->email)
                 ->queue(
-                    (new NewJobsFoundMail($user, $jobsByCompany, $failures))
+                    new NewJobsFoundMail($user, $jobsByCompany, $failures)
                         ->onQueue('emails')
                 );
 

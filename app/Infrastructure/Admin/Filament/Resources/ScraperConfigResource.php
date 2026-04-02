@@ -21,21 +21,25 @@ class ScraperConfigResource extends Resource
 {
     protected static ?string $model = ScraperConfig::class;
 
+    #[\Override]
     public static function getNavigationIcon(): string
     {
         return 'heroicon-o-cog-6-tooth';
     }
 
+    #[\Override]
     public static function getNavigationSort(): int
     {
         return 5;
     }
 
+    #[\Override]
     public static function getNavigationLabel(): string
     {
         return 'Scraper Configs';
     }
 
+    #[\Override]
     public static function form(Schema $schema): Schema
     {
         return $schema
@@ -45,8 +49,8 @@ class ScraperConfigResource extends Resource
                         Forms\Components\Select::make('provider')
                             ->options(
                                 collect(JobBoardProvider::cases())
-                                    ->reject(fn (JobBoardProvider $p) => $p === JobBoardProvider::Workable)
-                                    ->mapWithKeys(fn (JobBoardProvider $p) => [$p->value => ucfirst($p->value)])
+                                    ->reject(fn (JobBoardProvider $p): bool => $p === JobBoardProvider::Workable)
+                                    ->mapWithKeys(fn (JobBoardProvider $p): array => [$p->value => ucfirst($p->value)])
                                     ->toArray()
                             )
                             ->required(),
@@ -89,6 +93,7 @@ class ScraperConfigResource extends Resource
             ]);
     }
 
+    #[\Override]
     public static function table(Table $table): Table
     {
         return $table
@@ -124,7 +129,7 @@ class ScraperConfigResource extends Resource
                     ->icon('heroicon-o-heart')
                     ->color('warning')
                     ->requiresConfirmation()
-                    ->action(function (ScraperConfig $record) {
+                    ->action(function (ScraperConfig $record): void {
                         $checker = app(ScraperHealthChecker::class);
                         $results = $checker->checkAll();
 
@@ -158,11 +163,13 @@ class ScraperConfigResource extends Resource
             ->defaultSort('provider');
     }
 
+    #[\Override]
     public static function getRelations(): array
     {
         return [];
     }
 
+    #[\Override]
     public static function getPages(): array
     {
         return [

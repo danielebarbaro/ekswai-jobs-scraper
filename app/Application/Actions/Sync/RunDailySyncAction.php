@@ -70,7 +70,7 @@ class RunDailySyncAction
                         $userId = $user->id;
 
                         $filter = $this->jobFilterService->getEffectiveFilter($user, $company);
-                        $jobDtos = $newJobs->map(fn (JobPosting $job) => new JobPostingDTO(
+                        $jobDtos = $newJobs->map(fn (JobPosting $job): JobPostingDTO => new JobPostingDTO(
                             externalId: $job->external_id,
                             title: $job->title,
                             location: $job->location,
@@ -84,9 +84,9 @@ class RunDailySyncAction
                             continue;
                         }
 
-                        $filteredExternalIds = $filteredDtos->map(fn (JobPostingDTO $dto) => $dto->externalId)->all();
+                        $filteredExternalIds = $filteredDtos->map(fn (JobPostingDTO $dto): string => $dto->externalId)->all();
                         $filteredJobs = $newJobs->filter(
-                            fn (JobPosting $job) => in_array($job->external_id, $filteredExternalIds, true)
+                            fn (JobPosting $job): bool => in_array($job->external_id, $filteredExternalIds, true)
                         )->values();
 
                         if (! $jobsByUser->has($userId)) {

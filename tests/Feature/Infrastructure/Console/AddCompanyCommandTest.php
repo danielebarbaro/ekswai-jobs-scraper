@@ -6,7 +6,7 @@ use App\Domain\Company\Company;
 use App\Infrastructure\Services\Contracts\JobBoardClient;
 use App\Infrastructure\Services\JobBoardClientFactory;
 
-it('adds a company successfully', function () {
+it('adds a company successfully', function (): void {
     $mockClient = Mockery::mock(JobBoardClient::class);
     $mockClient->shouldReceive('validateSlug')
         ->with('testco')
@@ -23,15 +23,15 @@ it('adds a company successfully', function () {
     $this->artisan('companies:add', ['provider' => 'workable', 'slug' => 'testco'])
         ->assertSuccessful();
 
-    expect(Company::where('provider_slug', 'testco')->exists())->toBeTrue();
+    expect(Company::query()->where('provider_slug', 'testco')->exists())->toBeTrue();
 });
 
-it('fails with invalid provider', function () {
+it('fails with invalid provider', function (): void {
     $this->artisan('companies:add', ['provider' => 'invalid', 'slug' => 'testco'])
         ->assertFailed();
 });
 
-it('fails when company already exists', function () {
+it('fails when company already exists', function (): void {
     Company::factory()->create([
         'provider' => 'workable',
         'provider_slug' => 'existing',
@@ -42,7 +42,7 @@ it('fails when company already exists', function () {
         ->assertFailed();
 });
 
-it('fails when slug validation returns null', function () {
+it('fails when slug validation returns null', function (): void {
     $mockClient = Mockery::mock(JobBoardClient::class);
     $mockClient->shouldReceive('validateSlug')
         ->with('invalid-slug')
@@ -60,7 +60,7 @@ it('fails when slug validation returns null', function () {
         ->assertFailed();
 });
 
-it('uses name option when provided', function () {
+it('uses name option when provided', function (): void {
     $mockClient = Mockery::mock(JobBoardClient::class);
     $mockClient->shouldReceive('validateSlug')
         ->with('testco')
@@ -80,5 +80,5 @@ it('uses name option when provided', function () {
         '--name' => 'Custom Name',
     ])->assertSuccessful();
 
-    expect(Company::where('name', 'Custom Name')->exists())->toBeTrue();
+    expect(Company::query()->where('name', 'Custom Name')->exists())->toBeTrue();
 });

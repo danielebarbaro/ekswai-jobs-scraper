@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 use Illuminate\Support\Facades\Mail;
 
-it('sends a test email to specified address', function () {
+it('sends a test email to specified address', function (): void {
     Mail::fake();
 
     $this->artisan('mail:test', ['email' => 'test@example.com'])
         ->assertSuccessful();
 });
 
-it('runs successfully with default email', function () {
+it('runs successfully with default email', function (): void {
     Mail::fake();
 
     $this->artisan('mail:test')

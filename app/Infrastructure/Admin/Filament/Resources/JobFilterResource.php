@@ -18,16 +18,19 @@ class JobFilterResource extends Resource
 {
     protected static ?string $model = JobFilter::class;
 
+    #[\Override]
     public static function getNavigationIcon(): string
     {
         return 'heroicon-o-funnel';
     }
 
+    #[\Override]
     public static function getNavigationSort(): int
     {
         return 5;
     }
 
+    #[\Override]
     public static function form(Schema $schema): Schema
     {
         return $schema
@@ -57,6 +60,7 @@ class JobFilterResource extends Resource
             ]);
     }
 
+    #[\Override]
     public static function table(Table $table): Table
     {
         return $table
@@ -93,11 +97,13 @@ class JobFilterResource extends Resource
             ->defaultSort('created_at', 'desc');
     }
 
+    #[\Override]
     public static function getRelations(): array
     {
         return [];
     }
 
+    #[\Override]
     public static function getPages(): array
     {
         return [

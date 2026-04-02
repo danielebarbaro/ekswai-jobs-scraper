@@ -7,7 +7,7 @@ use App\Domain\JobFilter\JobFilter;
 use App\Domain\JobPosting\JobPosting;
 use App\Domain\User\User;
 
-beforeEach(function () {
+beforeEach(function (): void {
     $this->user = User::factory()->create();
     $this->actingAs($this->user);
 
@@ -15,7 +15,7 @@ beforeEach(function () {
     $this->user->subscribedCompanies()->attach($this->company->id);
 });
 
-it('hides jobs matching title_exclude filter', function () {
+it('hides jobs matching title_exclude filter', function (): void {
     JobFilter::factory()
         ->global()
         ->withTitleExclude(['VP', 'Director'])
@@ -41,7 +41,7 @@ it('hides jobs matching title_exclude filter', function () {
         );
 });
 
-it('shows only jobs matching title_include filter', function () {
+it('shows only jobs matching title_include filter', function (): void {
     JobFilter::factory()
         ->global()
         ->withTitleInclude(['Engineer', 'Developer'])
@@ -67,7 +67,7 @@ it('shows only jobs matching title_include filter', function () {
         );
 });
 
-it('shows only remote jobs when remote_only is true', function () {
+it('shows only remote jobs when remote_only is true', function (): void {
     JobFilter::factory()
         ->global()
         ->remoteOnly()
@@ -95,7 +95,7 @@ it('shows only remote jobs when remote_only is true', function () {
         );
 });
 
-it('uses company-specific filter over global', function () {
+it('uses company-specific filter over global', function (): void {
     // Global filter excludes "Engineer"
     JobFilter::factory()
         ->global()
@@ -130,7 +130,7 @@ it('uses company-specific filter over global', function () {
         );
 });
 
-it('shows all jobs when no filter exists', function () {
+it('shows all jobs when no filter exists', function (): void {
     $jp1 = JobPosting::factory()->create([
         'company_id' => $this->company->id,
         'title' => 'VP of Engineering',

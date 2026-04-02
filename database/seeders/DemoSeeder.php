@@ -27,17 +27,14 @@ class DemoSeeder extends Seeder
 
     public function run(): void
     {
-        $admin = User::where('email', 'me@plincode.tech')->firstOrFail();
+        $admin = User::query()->where('email', 'me@plincode.tech')->firstOrFail();
         $syncAction = app(SyncCompanyJobPostingsAction::class);
 
         foreach (self::DEMO_COMPANIES as $data) {
-            $company = Company::firstOrCreate(
-                ['provider' => $data['provider'], 'provider_slug' => $data['slug']],
-                [
-                    'name' => $data['name'],
-                    'is_active' => true,
-                ]
-            );
+            $company = Company::query()->firstOrCreate(['provider' => $data['provider'], 'provider_slug' => $data['slug']], [
+                'name' => $data['name'],
+                'is_active' => true,
+            ]);
 
             $admin->subscribedCompanies()->syncWithoutDetaching([
                 $company->id => ['email_notifications' => true],

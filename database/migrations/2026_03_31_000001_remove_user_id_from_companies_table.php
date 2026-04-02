@@ -10,7 +10,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('companies', function (Blueprint $table) {
+        Schema::table('companies', function (Blueprint $table): void {
             $table->dropForeign(['user_id']);
             $table->dropIndex(['user_id', 'is_active']);
             $table->dropColumn('user_id');
@@ -19,7 +19,7 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::table('companies', function (Blueprint $table) {
+        Schema::table('companies', function (Blueprint $table): void {
             $table->foreignUuid('user_id')->nullable()->constrained()->cascadeOnDelete();
             $table->index(['user_id', 'is_active']);
         });

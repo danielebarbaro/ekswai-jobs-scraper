@@ -12,6 +12,7 @@ class ListScraperConfigs extends ListRecords
 {
     protected static string $resource = ScraperConfigResource::class;
 
+    #[\Override]
     protected function getHeaderActions(): array
     {
         return [Actions\CreateAction::make()];

@@ -10,7 +10,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('job_filters', function (Blueprint $table) {
+        Schema::create('job_filters', function (Blueprint $table): void {
             $table->uuid('id')->primary();
             $table->foreignUuid('user_id')->constrained()->cascadeOnDelete();
             $table->foreignUuid('company_id')->nullable()->constrained()->cascadeOnDelete();

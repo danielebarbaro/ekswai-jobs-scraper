@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use App\Application\Actions\Sync\RunDailySyncAction;
 
-it('outputs success table on successful sync', function () {
+it('outputs success table on successful sync', function (): void {
     $mock = Mockery::mock(RunDailySyncAction::class);
     $mock->shouldReceive('execute')
         ->once()
@@ -20,7 +20,7 @@ it('outputs success table on successful sync', function () {
         ->assertSuccessful();
 });
 
-it('outputs failure on exception', function () {
+it('outputs failure on exception', function (): void {
     $mock = Mockery::mock(RunDailySyncAction::class);
     $mock->shouldReceive('execute')
         ->once()

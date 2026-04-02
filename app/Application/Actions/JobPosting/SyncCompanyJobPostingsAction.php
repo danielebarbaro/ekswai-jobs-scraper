@@ -45,7 +45,7 @@ class SyncCompanyJobPostingsAction
         $newJobs = collect();
         $subscriberIds = $company->subscribers()->pluck('users.id')->toArray();
 
-        DB::transaction(function () use ($company, $jobs, &$newJobs, $subscriberIds) {
+        DB::transaction(function () use ($company, $jobs, &$newJobs, $subscriberIds): void {
             foreach ($jobs as $jobDTO) {
                 $existing = $company->jobPostings()
                     ->where('external_id', $jobDTO->externalId)

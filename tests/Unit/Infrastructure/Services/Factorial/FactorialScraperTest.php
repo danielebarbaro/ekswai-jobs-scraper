@@ -7,7 +7,7 @@ use App\Domain\ScraperConfig\ScraperConfig;
 use App\Infrastructure\Services\Factorial\FactorialScraper;
 use Illuminate\Support\Facades\Http;
 
-beforeEach(function () {
+beforeEach(function (): void {
     $this->config = ScraperConfig::factory()->factorial()->create([
         'retry_delay_seconds' => 0,
     ]);
@@ -16,11 +16,11 @@ beforeEach(function () {
     $this->fixture = file_get_contents(base_path('tests/Fixtures/factorial-shippypro-jobs.html'));
 });
 
-it('returns the correct provider', function () {
+it('returns the correct provider', function (): void {
     expect($this->scraper->getProvider())->toBe(JobBoardProvider::Factorial);
 });
 
-it('parses jobs from real factorial html', function () {
+it('parses jobs from real factorial html', function (): void {
     Http::fake(['https://shippypro.factorialhr.com/' => Http::response($this->fixture, 200)]);
 
     $jobs = $this->scraper->fetchJobsForCompany('shippypro');
@@ -31,7 +31,7 @@ it('parses jobs from real factorial html', function () {
         ->and($jobs->first()->url)->toBeString()->toContain('factorialhr.com');
 });
 
-it('extracts numeric external id from url', function () {
+it('extracts numeric external id from url', function (): void {
     Http::fake(['https://shippypro.factorialhr.com/' => Http::response($this->fixture, 200)]);
 
     $jobs = $this->scraper->fetchJobsForCompany('shippypro');
@@ -40,7 +40,7 @@ it('extracts numeric external id from url', function () {
     expect($jobs->first()->externalId)->toMatch('/^\d+$/');
 });
 
-it('extracts data attributes into raw payload', function () {
+it('extracts data attributes into raw payload', function (): void {
     Http::fake(['https://shippypro.factorialhr.com/' => Http::response($this->fixture, 200)]);
 
     $jobs = $this->scraper->fetchJobsForCompany('shippypro');
@@ -54,11 +54,11 @@ it('extracts data attributes into raw payload', function () {
         ->toHaveKey('team_id');
 });
 
-it('extracts department', function () {
+it('extracts department', function (): void {
     Http::fake(['https://shippypro.factorialhr.com/' => Http::response($this->fixture, 200)]);
 
     $jobs = $this->scraper->fetchJobsForCompany('shippypro');
 
-    $withDept = $jobs->filter(fn ($job) => $job->department !== null);
+    $withDept = $jobs->filter(fn ($job): bool => $job->department !== null);
     expect($withDept)->not->toBeEmpty();
 });

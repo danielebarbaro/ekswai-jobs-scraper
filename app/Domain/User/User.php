@@ -44,6 +44,7 @@ class User extends Authenticatable implements CanResetPassword, FilamentUser, Ha
         'remember_token',
     ];
 
+    #[\Override]
     protected function casts(): array
     {
         return [

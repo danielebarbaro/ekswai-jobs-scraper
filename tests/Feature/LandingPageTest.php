@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-it('redirects root to locale based on accept-language', function () {
+it('redirects root to locale based on accept-language', function (): void {
     $this->get('/', ['Accept-Language' => 'it-IT,it;q=0.9,en;q=0.8'])
         ->assertRedirect('/it');
 });
 
-it('redirects root to en by default', function () {
+it('redirects root to en by default', function (): void {
     $this->get('/')
         ->assertRedirect('/en');
 });
 
-it('renders landing page for en locale', function () {
+it('renders landing page for en locale', function (): void {
     $this->get('/en')
         ->assertOk()
         ->assertInertia(fn ($page) => $page
@@ -24,7 +24,7 @@ it('renders landing page for en locale', function () {
         );
 });
 
-it('renders landing page for it locale', function () {
+it('renders landing page for it locale', function (): void {
     $this->get('/it')
         ->assertOk()
         ->assertInertia(fn ($page) => $page
@@ -34,12 +34,12 @@ it('renders landing page for it locale', function () {
         );
 });
 
-it('returns 404 for invalid locale', function () {
+it('returns 404 for invalid locale', function (): void {
     $this->get('/fr')
         ->assertNotFound();
 });
 
-it('passes landing config to the page', function () {
+it('passes landing config to the page', function (): void {
     $this->get('/en')
         ->assertInertia(fn ($page) => $page
             ->has('config.repo_url')
@@ -47,7 +47,7 @@ it('passes landing config to the page', function () {
         );
 });
 
-it('passes translations to the page', function () {
+it('passes translations to the page', function (): void {
     $this->get('/en')
         ->assertInertia(fn ($page) => $page
             ->has('translations.hero.headline')
