@@ -11,10 +11,12 @@ use Database\Factories\CompanyFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 
 /**
  * @property JobBoardProvider $provider
  * @property string $provider_slug
+ * @property Carbon|null $last_synced_at
  */
 class Company extends BaseModel
 {
@@ -31,6 +33,7 @@ class Company extends BaseModel
         return [
             'is_active' => 'boolean',
             'provider' => JobBoardProvider::class,
+            'last_synced_at' => 'datetime',
         ];
     }
 

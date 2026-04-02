@@ -32,11 +32,31 @@ it('can follow a company', function () {
         ]),
     ]);
 
-    $this->post(route('companies.follow'), ['slug' => 'laravel'])
+    $this->post(route('companies.follow'), ['slug' => 'laravel', 'provider' => 'workable'])
         ->assertRedirect();
 
     expect($this->user->fresh()->subscribedCompanies)->toHaveCount(1)
         ->and($this->user->subscribedCompanies->first()->provider_slug)->toBe('laravel');
+});
+
+it('can follow a company by URL without provider', function () {
+    Http::fake([
+        'apply.workable.com/api/v1/widget/accounts/laravel' => Http::response([
+            'name' => 'Laravel',
+            'jobs' => [],
+        ]),
+    ]);
+
+    $this->post(route('companies.follow'), ['slug' => 'https://apply.workable.com/laravel'])
+        ->assertRedirect();
+
+    expect($this->user->fresh()->subscribedCompanies)->toHaveCount(1)
+        ->and($this->user->subscribedCompanies->first()->provider_slug)->toBe('laravel');
+});
+
+it('returns validation error for slug without provider', function () {
+    $this->post(route('companies.follow'), ['slug' => 'nonexistent'])
+        ->assertSessionHasErrors('slug');
 });
 
 it('returns validation error for invalid slug', function () {
@@ -44,7 +64,7 @@ it('returns validation error for invalid slug', function () {
         'apply.workable.com/api/v1/widget/accounts/nonexistent' => Http::response([], 404),
     ]);
 
-    $this->post(route('companies.follow'), ['slug' => 'nonexistent'])
+    $this->post(route('companies.follow'), ['slug' => 'nonexistent', 'provider' => 'workable'])
         ->assertSessionHasErrors('slug');
 });
 
@@ -52,7 +72,7 @@ it('returns validation error when already following', function () {
     $company = Company::factory()->create(['provider_slug' => 'already']);
     $this->user->subscribedCompanies()->attach($company->id);
 
-    $this->post(route('companies.follow'), ['slug' => 'already'])
+    $this->post(route('companies.follow'), ['slug' => 'already', 'provider' => 'workable'])
         ->assertSessionHasErrors('slug');
 });
 

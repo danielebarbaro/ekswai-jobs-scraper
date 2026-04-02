@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Application\Actions\Company;
 
 use App\Application\Actions\JobPosting\SyncCompanyJobPostingsAction;
+use App\Application\Services\JobBoardUrlParser;
 use App\Domain\Company\Company;
 use App\Domain\Company\JobBoardProvider;
 use App\Domain\User\User;
@@ -15,12 +16,29 @@ class FollowCompanyAction
 {
     public function __construct(
         private readonly JobBoardClientFactory $clientFactory,
-        private readonly SyncCompanyJobPostingsAction $syncAction
+        private readonly SyncCompanyJobPostingsAction $syncAction,
+        private readonly JobBoardUrlParser $urlParser,
     ) {}
 
-    public function execute(User $user, string $slug, JobBoardProvider $provider = JobBoardProvider::Workable): Company
+    public function execute(User $user, string $input, ?JobBoardProvider $provider = null): Company
     {
-        $slug = strtolower(trim($slug));
+        $input = strtolower(trim($input));
+
+        if ($provider === null) {
+            $parsed = $this->urlParser->parse($input);
+            if ($parsed !== null) {
+                $provider = $parsed['provider'];
+                $input = $parsed['slug'];
+            }
+        }
+
+        if ($provider === null) {
+            throw ValidationException::withMessages([
+                'slug' => ['Could not detect the provider. Please select one or paste the full job board URL.'],
+            ]);
+        }
+
+        $slug = $input;
 
         $existingCompany = Company::where('provider', $provider)
             ->where('provider_slug', $slug)

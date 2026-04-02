@@ -78,6 +78,8 @@ class SyncCompanyJobPostingsAction
             }
         });
 
+        $company->update(['last_synced_at' => now()]);
+
         Log::info('Job sync completed', [
             'company_id' => $company->id,
             'total_jobs_from_api' => $jobs->count(),

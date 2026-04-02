@@ -6,7 +6,10 @@ namespace App\Application\Actions\Sync;
 
 use App\Application\Actions\JobPosting\SyncCompanyJobPostingsAction;
 use App\Application\Actions\Notification\NotifyUserOfNewJobsAction;
+use App\Application\DTOs\JobPostingDTO;
+use App\Application\Services\JobFilterService;
 use App\Domain\Company\Company;
+use App\Domain\JobPosting\JobPosting;
 use App\Domain\User\User;
 use App\Infrastructure\Services\Scraping\Exceptions\ScrapingFailedException;
 use Illuminate\Support\Collection;
@@ -16,7 +19,8 @@ class RunDailySyncAction
 {
     public function __construct(
         private readonly SyncCompanyJobPostingsAction $syncCompanyAction,
-        private readonly NotifyUserOfNewJobsAction $notifyUserAction
+        private readonly NotifyUserOfNewJobsAction $notifyUserAction,
+        private readonly JobFilterService $jobFilterService
     ) {}
 
     public function execute(): array
@@ -65,6 +69,26 @@ class RunDailySyncAction
                         /** @var User $user */
                         $userId = $user->id;
 
+                        $filter = $this->jobFilterService->getEffectiveFilter($user, $company);
+                        $jobDtos = $newJobs->map(fn (JobPosting $job) => new JobPostingDTO(
+                            externalId: $job->external_id,
+                            title: $job->title,
+                            location: $job->location,
+                            url: $job->url,
+                            department: $job->department,
+                            rawPayload: $job->raw_payload ?? [],
+                        ));
+                        $filteredDtos = $this->jobFilterService->apply($jobDtos, $filter);
+
+                        if ($filteredDtos->isEmpty()) {
+                            continue;
+                        }
+
+                        $filteredExternalIds = $filteredDtos->map(fn (JobPostingDTO $dto) => $dto->externalId)->all();
+                        $filteredJobs = $newJobs->filter(
+                            fn (JobPosting $job) => in_array($job->external_id, $filteredExternalIds, true)
+                        )->values();
+
                         if (! $jobsByUser->has($userId)) {
                             $jobsByUser->put($userId, [
                                 'user' => $user,
@@ -74,7 +98,7 @@ class RunDailySyncAction
 
                         $jobsByUser->get($userId)['jobs']->push([
                             'company' => $company,
-                            'jobs' => $newJobs,
+                            'jobs' => $filteredJobs,
                         ]);
                     }
                 }

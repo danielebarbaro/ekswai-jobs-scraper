@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Application\Actions\Company\FollowCompanyAction;
 use App\Application\Actions\JobPosting\SyncCompanyJobPostingsAction;
+use App\Application\Services\JobBoardUrlParser;
 use App\Domain\Company\Company;
 use App\Domain\Company\JobBoardProvider;
 use App\Domain\JobPosting\JobPosting;
@@ -20,14 +21,15 @@ beforeEach(function () {
     $this->factory->shouldReceive('make')->with(JobBoardProvider::Workable)->andReturn($this->jobBoardClient);
 
     $this->syncAction = new SyncCompanyJobPostingsAction($this->factory);
-    $this->action = new FollowCompanyAction($this->factory, $this->syncAction);
+    $this->urlParser = new JobBoardUrlParser;
+    $this->action = new FollowCompanyAction($this->factory, $this->syncAction, $this->urlParser);
 });
 
 it('creates a new company and subscribes the user', function () {
     $this->jobBoardClient->shouldReceive('validateSlug')->with('test-company')->andReturn('Test Company');
     $this->jobBoardClient->shouldReceive('fetchJobsForCompany')->andReturn(collect());
 
-    $company = $this->action->execute($this->user, 'test-company');
+    $company = $this->action->execute($this->user, 'test-company', JobBoardProvider::Workable);
 
     expect($company->name)->toBe('Test Company')
         ->and($company->provider_slug)->toBe('test-company')
@@ -44,7 +46,7 @@ it('subscribes to an existing company without creating a duplicate', function ()
     $this->jobBoardClient->shouldReceive('validateSlug')->with('existing-co')->andReturn('Existing Co');
     $this->jobBoardClient->shouldReceive('fetchJobsForCompany')->andReturn(collect());
 
-    $company = $this->action->execute($this->user, 'existing-co');
+    $company = $this->action->execute($this->user, 'existing-co', JobBoardProvider::Workable);
 
     expect($company->id)->toBe($existing->id)
         ->and(Company::where('provider_slug', 'existing-co')->count())->toBe(1)
@@ -57,7 +59,7 @@ it('creates job_posting_user records for existing job postings', function () {
 
     $this->jobBoardClient->shouldReceive('validateSlug')->with('has-jobs')->andReturn('Has Jobs Co');
 
-    $this->action->execute($this->user, 'has-jobs');
+    $this->action->execute($this->user, 'has-jobs', JobBoardProvider::Workable);
 
     expect($this->user->jobPostingStatuses)->toHaveCount(3);
     expect($this->user->jobPostingStatuses->pluck('pivot.status')->unique()->toArray())->toBe(['new']);
@@ -66,21 +68,21 @@ it('creates job_posting_user records for existing job postings', function () {
 it('throws validation error for invalid slug', function () {
     $this->jobBoardClient->shouldReceive('validateSlug')->with('nonexistent')->andReturn(null);
 
-    $this->action->execute($this->user, 'nonexistent');
+    $this->action->execute($this->user, 'nonexistent', JobBoardProvider::Workable);
 })->throws(ValidationException::class);
 
 it('throws validation error when already following', function () {
     $company = Company::factory()->create(['provider_slug' => 'already-followed']);
     $this->user->subscribedCompanies()->attach($company->id);
 
-    $this->action->execute($this->user, 'already-followed');
+    $this->action->execute($this->user, 'already-followed', JobBoardProvider::Workable);
 })->throws(ValidationException::class);
 
 it('normalizes slug to lowercase', function () {
     $this->jobBoardClient->shouldReceive('validateSlug')->with('my-company')->andReturn('My Company');
     $this->jobBoardClient->shouldReceive('fetchJobsForCompany')->andReturn(collect());
 
-    $company = $this->action->execute($this->user, '  My-Company  ');
+    $company = $this->action->execute($this->user, '  My-Company  ', JobBoardProvider::Workable);
 
     expect($company->provider_slug)->toBe('my-company');
 });
