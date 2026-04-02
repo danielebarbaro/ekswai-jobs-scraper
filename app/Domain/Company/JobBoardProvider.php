@@ -10,4 +10,5 @@ enum JobBoardProvider: string
     case Lever = 'lever';
     case Teamtailor = 'teamtailor';
     case Factorial = 'factorial';
+    case Ashby = 'ashby';
 }

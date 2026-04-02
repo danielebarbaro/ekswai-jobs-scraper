@@ -9,6 +9,7 @@ use App\Infrastructure\Services\Contracts\JobBoardClient;
 use App\Infrastructure\Services\Factorial\FactorialScraper;
 use App\Infrastructure\Services\Lever\LeverHttpClient;
 use App\Infrastructure\Services\Teamtailor\TeamtailorScraper;
+use App\Infrastructure\Services\Ashby\AshbyHttpClient;
 use App\Infrastructure\Services\Workable\WorkableHttpClient;
 
 class JobBoardClientFactory
@@ -20,6 +21,7 @@ class JobBoardClientFactory
             JobBoardProvider::Lever => app(LeverHttpClient::class),
             JobBoardProvider::Teamtailor => app(TeamtailorScraper::class),
             JobBoardProvider::Factorial => app(FactorialScraper::class),
+            JobBoardProvider::Ashby => app(AshbyHttpClient::class),
         };
     }
 }
