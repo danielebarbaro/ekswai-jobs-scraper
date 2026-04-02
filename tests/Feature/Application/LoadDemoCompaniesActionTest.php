@@ -17,8 +17,8 @@ it('subscribes user to demo companies', function () {
 
     $subscribed = $action->execute($user);
 
-    expect($subscribed)->toBe(8)
-        ->and($user->subscribedCompanies()->count())->toBe(8);
+    expect($subscribed)->toBe(9)
+        ->and($user->subscribedCompanies()->count())->toBe(9);
 });
 
 it('skips already subscribed companies', function () {
@@ -34,7 +34,7 @@ it('skips already subscribed companies', function () {
     $secondRun = $action->execute($user);
 
     expect($secondRun)->toBe(0)
-        ->and($user->subscribedCompanies()->count())->toBe(8);
+        ->and($user->subscribedCompanies()->count())->toBe(9);
 });
 
 it('handles sync failure gracefully', function () {
@@ -48,5 +48,5 @@ it('handles sync failure gracefully', function () {
 
     $subscribed = $action->execute($user);
 
-    expect($subscribed)->toBe(8);
+    expect($subscribed)->toBe(9);
 });
