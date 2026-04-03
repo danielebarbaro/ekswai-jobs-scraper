@@ -68,6 +68,24 @@ class AshbyHttpClient implements JobBoardClient
         }
     }
 
+    public function fetchCompanyDescription(string $slug): ?string
+    {
+        try {
+            $url = sprintf('%s/%s', self::API_BASE_URL, $slug);
+            $response = Http::timeout(15)->get($url);
+
+            if (! $response->successful()) {
+                return null;
+            }
+
+            $description = $response->json('jobBoard.description');
+
+            return is_string($description) && $description !== '' ? $description : null;
+        } catch (\Throwable) {
+            return null;
+        }
+    }
+
     public function validateSlug(string $slug): ?string
     {
         try {

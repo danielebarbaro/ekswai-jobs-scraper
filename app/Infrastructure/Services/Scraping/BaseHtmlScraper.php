@@ -86,6 +86,38 @@ abstract class BaseHtmlScraper implements JobBoardClient
         }
     }
 
+    public function fetchCompanyDescription(string $slug): ?string
+    {
+        try {
+            $config = $this->getConfig();
+            $url = $this->buildUrl($config->base_url_pattern, $slug);
+            $html = $this->fetchHtml($url);
+            $crawler = new Crawler($html);
+
+            $meta = $crawler->filter('meta[name="description"]');
+
+            if ($meta->count() > 0) {
+                $content = trim($meta->first()->attr('content') ?? '');
+                if ($content !== '') {
+                    return $content;
+                }
+            }
+
+            $ogMeta = $crawler->filter('meta[property="og:description"]');
+
+            if ($ogMeta->count() > 0) {
+                $content = trim($ogMeta->first()->attr('content') ?? '');
+                if ($content !== '') {
+                    return $content;
+                }
+            }
+
+            return null;
+        } catch (\Throwable) {
+            return null;
+        }
+    }
+
     protected function getConfigSelectors(): array
     {
         return $this->getConfig()->selectors;
@@ -99,12 +131,12 @@ abstract class BaseHtmlScraper implements JobBoardClient
             ->firstOrFail();
     }
 
-    private function buildUrl(string $pattern, string $slug): string
+    protected function buildUrl(string $pattern, string $slug): string
     {
         return str_replace('{slug}', $slug, $pattern);
     }
 
-    private function fetchHtml(string $url): string
+    protected function fetchHtml(string $url): string
     {
         $response = Http::timeout(self::TIMEOUT_SECONDS)->get($url);
 
