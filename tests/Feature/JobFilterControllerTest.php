@@ -7,6 +7,7 @@ use App\Domain\JobFilter\JobFilter;
 use App\Domain\User\User;
 
 beforeEach(function (): void {
+    $this->withoutVite();
     $this->user = User::factory()->create();
     $this->actingAs($this->user);
 });
