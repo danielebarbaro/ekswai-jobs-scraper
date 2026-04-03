@@ -68,6 +68,28 @@ class GreenhouseHttpClient implements JobBoardClient
         }
     }
 
+    public function fetchCompanyDescription(string $slug): ?string
+    {
+        try {
+            $url = sprintf('%s/%s', self::API_BASE_URL, $slug);
+            $response = Http::timeout(15)->get($url);
+
+            if (! $response->successful()) {
+                return null;
+            }
+
+            $content = $response->json('content');
+
+            if (! is_string($content) || $content === '') {
+                return null;
+            }
+
+            return trim(strip_tags($content));
+        } catch (\Throwable) {
+            return null;
+        }
+    }
+
     public function validateSlug(string $slug): ?string
     {
         try {

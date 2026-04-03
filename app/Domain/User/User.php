@@ -51,6 +51,7 @@ class User extends Authenticatable implements CanResetPassword, FilamentUser, Ha
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'is_admin' => 'boolean',
+            'has_completed_onboarding' => 'boolean',
         ];
     }
 

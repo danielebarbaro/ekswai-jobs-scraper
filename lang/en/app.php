@@ -13,6 +13,7 @@ return [
         'continue' => 'Continue',
         'warning' => 'Warning',
         'password' => 'Password',
+        'skip' => 'Skip',
     ],
 
     'nav' => [
@@ -60,6 +61,29 @@ return [
         'empty' => 'No companies yet. Add one above or load the demo set to start tracking jobs.',
         'load_defaults' => 'Load demo companies',
         'jobs_count' => ':count jobs',
+    ],
+
+    'explore' => [
+        'title' => 'Explore',
+        'page_description' => 'Discover companies to follow based on your preferences.',
+        'onboarding_title' => 'Welcome! Let\'s set up your job tracker.',
+        'onboarding_description' => 'Tell us what you\'re looking for and we\'ll suggest companies to follow.',
+        'step1_title' => 'Set your preferences',
+        'step1_description' => 'Filter companies by role type, location, and department.',
+        'find_companies' => 'Find companies',
+        'step2_title' => 'Choose companies to follow',
+        'step2_description_found' => ':count companies match your filters',
+        'step2_no_results' => 'No companies match your filters. Try adjusting them.',
+        'no_matching_companies' => 'No companies match your filters. Try adjusting them.',
+        'select_all' => 'Select all',
+        'selected' => 'Deselect all',
+        'already_followed' => 'Already following',
+        'follow_selected' => 'Follow :count companies',
+        'step3_title' => 'Confirm your selection',
+        'step3_description' => 'Review the companies and filters you\'ve chosen.',
+        'your_filters' => 'Your filters',
+        'companies_to_follow' => ':count companies to follow',
+        'confirm_follow' => 'Follow :count companies',
     ],
 
     'settings' => [

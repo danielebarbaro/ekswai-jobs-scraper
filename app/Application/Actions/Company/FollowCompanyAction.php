@@ -59,7 +59,9 @@ class FollowCompanyAction
             ]);
         }
 
-        $company = Company::query()->firstOrCreate(['provider' => $provider, 'provider_slug' => $slug], ['name' => $companyName, 'is_active' => true]);
+        $description = $client->fetchCompanyDescription($slug);
+
+        $company = Company::query()->firstOrCreate(['provider' => $provider, 'provider_slug' => $slug], ['name' => $companyName, 'description' => $description, 'is_active' => true]);
 
         $user->subscribedCompanies()->attach($company->id, ['email_notifications' => true]);
 

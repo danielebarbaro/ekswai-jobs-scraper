@@ -21,4 +21,10 @@ interface JobBoardClient
      * Returns the company name if valid, null otherwise.
      */
     public function validateSlug(string $slug): ?string;
+
+    /**
+     * Fetch a description for the company.
+     * Returns null if not available.
+     */
+    public function fetchCompanyDescription(string $slug): ?string;
 }

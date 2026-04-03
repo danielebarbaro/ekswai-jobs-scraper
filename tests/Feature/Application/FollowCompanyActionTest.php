@@ -27,6 +27,7 @@ beforeEach(function (): void {
 
 it('creates a new company and subscribes the user', function (): void {
     $this->jobBoardClient->shouldReceive('validateSlug')->with('test-company')->andReturn('Test Company');
+    $this->jobBoardClient->shouldReceive('fetchCompanyDescription')->with('test-company')->andReturn(null);
     $this->jobBoardClient->shouldReceive('fetchJobsForCompany')->andReturn(collect());
 
     $company = $this->action->execute($this->user, 'test-company', JobBoardProvider::Workable);
@@ -44,6 +45,7 @@ it('subscribes to an existing company without creating a duplicate', function ()
     ]);
 
     $this->jobBoardClient->shouldReceive('validateSlug')->with('existing-co')->andReturn('Existing Co');
+    $this->jobBoardClient->shouldReceive('fetchCompanyDescription')->with('existing-co')->andReturn(null);
     $this->jobBoardClient->shouldReceive('fetchJobsForCompany')->andReturn(collect());
 
     $company = $this->action->execute($this->user, 'existing-co', JobBoardProvider::Workable);
@@ -58,6 +60,7 @@ it('creates job_posting_user records for existing job postings', function (): vo
     JobPosting::factory()->count(3)->create(['company_id' => $company->id]);
 
     $this->jobBoardClient->shouldReceive('validateSlug')->with('has-jobs')->andReturn('Has Jobs Co');
+    $this->jobBoardClient->shouldReceive('fetchCompanyDescription')->with('has-jobs')->andReturn(null);
 
     $this->action->execute($this->user, 'has-jobs', JobBoardProvider::Workable);
 
@@ -80,6 +83,7 @@ it('throws validation error when already following', function (): void {
 
 it('normalizes slug to lowercase', function (): void {
     $this->jobBoardClient->shouldReceive('validateSlug')->with('my-company')->andReturn('My Company');
+    $this->jobBoardClient->shouldReceive('fetchCompanyDescription')->with('my-company')->andReturn(null);
     $this->jobBoardClient->shouldReceive('fetchJobsForCompany')->andReturn(collect());
 
     $company = $this->action->execute($this->user, '  My-Company  ', JobBoardProvider::Workable);
