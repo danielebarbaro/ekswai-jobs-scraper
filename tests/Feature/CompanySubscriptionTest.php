@@ -107,6 +107,22 @@ it('can toggle email notifications', function (): void {
     expect((bool) $pivot->email_notifications)->toBeFalse();
 });
 
+it('loads patchstack as a demo company', function (): void {
+    Http::fake([
+        'apply.workable.com/api/v1/widget/accounts/*' => Http::response([
+            'name' => 'Test Company',
+            'jobs' => [],
+        ]),
+        '*' => Http::response('', 200),
+    ]);
+
+    $this->post(route('companies.load-defaults'));
+
+    expect(
+        $this->user->fresh()->subscribedCompanies->pluck('provider_slug')->toArray()
+    )->toContain('patchstack');
+});
+
 it('requires authentication for all routes', function (): void {
     auth()->logout();
 

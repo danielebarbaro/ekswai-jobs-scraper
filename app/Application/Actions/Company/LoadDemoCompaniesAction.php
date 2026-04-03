@@ -16,9 +16,10 @@ class LoadDemoCompaniesAction
     ) {}
 
     /** @var array<int, array{provider: string, slug: string, name: string}> */
-    private const array DEMO_COMPANIES = [
+    public const array DEMO_COMPANIES = [
         ['provider' => 'workable', 'slug' => 'laravel', 'name' => 'Laravel'],
         ['provider' => 'workable', 'slug' => 'gelato', 'name' => 'Gelato'],
+        ['provider' => 'workable', 'slug' => 'patchstack', 'name' => 'Patchstack'],
         ['provider' => 'lever', 'slug' => 'scaleway', 'name' => 'Scaleway'],
         ['provider' => 'lever', 'slug' => 'coinspaid', 'name' => 'CoinsPaid'],
         ['provider' => 'teamtailor', 'slug' => 'weroad', 'name' => 'WeRoad'],

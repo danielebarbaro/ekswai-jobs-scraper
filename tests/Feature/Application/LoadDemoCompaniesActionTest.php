@@ -17,8 +17,10 @@ it('subscribes user to demo companies', function (): void {
 
     $subscribed = $action->execute($user);
 
-    expect($subscribed)->toBe(9)
-        ->and($user->subscribedCompanies()->count())->toBe(9);
+    $expectedCount = count(LoadDemoCompaniesAction::DEMO_COMPANIES);
+
+    expect($subscribed)->toBe($expectedCount)
+        ->and($user->subscribedCompanies()->count())->toBe($expectedCount);
 });
 
 it('skips already subscribed companies', function (): void {
@@ -34,7 +36,7 @@ it('skips already subscribed companies', function (): void {
     $secondRun = $action->execute($user);
 
     expect($secondRun)->toBe(0)
-        ->and($user->subscribedCompanies()->count())->toBe(9);
+        ->and($user->subscribedCompanies()->count())->toBe(count(LoadDemoCompaniesAction::DEMO_COMPANIES));
 });
 
 it('handles sync failure gracefully', function (): void {
@@ -48,5 +50,5 @@ it('handles sync failure gracefully', function (): void {
 
     $subscribed = $action->execute($user);
 
-    expect($subscribed)->toBe(9);
+    expect($subscribed)->toBe(count(LoadDemoCompaniesAction::DEMO_COMPANIES));
 });
