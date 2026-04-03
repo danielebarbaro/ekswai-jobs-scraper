@@ -58,15 +58,15 @@ class ExploreController extends Controller
         $departmentInclude = $request->input('department_include', []);
 
         $filter = new JobFilter;
-        $filter->title_include = ! empty($titleInclude) ? $titleInclude : null;
-        $filter->title_exclude = ! empty($titleExclude) ? $titleExclude : null;
-        $filter->country_ids = ! empty($countryIds) ? $countryIds : null;
+        $filter->title_include = empty($titleInclude) ? null : $titleInclude;
+        $filter->title_exclude = empty($titleExclude) ? null : $titleExclude;
+        $filter->country_ids = empty($countryIds) ? null : $countryIds;
         $filter->remote_only = $remoteOnly;
-        $filter->department_include = ! empty($departmentInclude) ? $departmentInclude : null;
+        $filter->department_include = empty($departmentInclude) ? null : $departmentInclude;
 
         $companies = Company::query()
             ->where('is_active', true)
-            ->withCount(['jobPostings as matched_jobs_count' => function ($query) use ($filter): void {
+            ->withCount(['jobPostings as matched_jobs_count' => function (\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Relations\BelongsToMany $query) use ($filter): void {
                 $this->jobFilterService->applyToQuery($query, $filter);
             }])
             ->get()
