@@ -47,7 +47,10 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user() ? array_merge(
                     $request->user()->toArray(),
-                    ['avatar' => 'https://www.gravatar.com/avatar/'.md5(strtolower(trim((string) $request->user()->email))).'?d=mp&s=80']
+                    [
+                        'avatar' => 'https://www.gravatar.com/avatar/'.md5(strtolower(trim((string) $request->user()->email))).'?d=mp&s=80',
+                        'has_completed_onboarding' => $request->user()->has_completed_onboarding,
+                    ]
                 ) : null,
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
