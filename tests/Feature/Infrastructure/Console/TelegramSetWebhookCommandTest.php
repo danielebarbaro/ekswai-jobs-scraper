@@ -17,7 +17,7 @@ it('registers the webhook with telegram api', function (): void {
     $this->artisan('telegram:set-webhook', ['url' => 'https://example.com/api/telegram/webhook'])
         ->assertExitCode(0);
 
-    Http::assertSent(fn ($request) => str_contains($request->url(), 'setWebhook')
+    Http::assertSent(fn ($request): bool => str_contains((string) $request->url(), 'setWebhook')
         && $request['url'] === 'https://example.com/api/telegram/webhook'
     );
 });

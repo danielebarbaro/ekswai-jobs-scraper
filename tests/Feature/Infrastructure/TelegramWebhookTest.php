@@ -30,8 +30,8 @@ it('creates a company from a valid workable URL', function (): void {
 
     expect(Company::query()->where('provider_slug', 'patchstack')->exists())->toBeTrue();
 
-    Http::assertSent(fn ($request) => str_contains($request->url(), 'api.telegram.org')
-        && str_contains($request['text'], 'Patchstack')
+    Http::assertSent(fn ($request): bool => str_contains((string) $request->url(), 'api.telegram.org')
+        && str_contains((string) $request['text'], 'Patchstack')
     );
 });
 
@@ -49,8 +49,8 @@ it('replies with error for already existing company', function (): void {
         ],
     ])->assertOk();
 
-    Http::assertSent(fn ($request) => str_contains($request->url(), 'api.telegram.org')
-        && str_contains($request['text'], 'Already exists')
+    Http::assertSent(fn ($request): bool => str_contains((string) $request->url(), 'api.telegram.org')
+        && str_contains((string) $request['text'], 'Already exists')
     );
 });
 
@@ -62,8 +62,8 @@ it('replies with error for unparseable URL', function (): void {
         ],
     ])->assertOk();
 
-    Http::assertSent(fn ($request) => str_contains($request->url(), 'api.telegram.org')
-        && str_contains($request['text'], 'Could not parse')
+    Http::assertSent(fn ($request): bool => str_contains((string) $request->url(), 'api.telegram.org')
+        && str_contains((string) $request['text'], 'Could not parse')
     );
 });
 
@@ -75,8 +75,8 @@ it('replies with error for invalid slug', function (): void {
         ],
     ])->assertOk();
 
-    Http::assertSent(fn ($request) => str_contains($request->url(), 'api.telegram.org')
-        && str_contains($request['text'], 'Could not find')
+    Http::assertSent(fn ($request): bool => str_contains((string) $request->url(), 'api.telegram.org')
+        && str_contains((string) $request['text'], 'Could not find')
     );
 });
 
@@ -89,7 +89,7 @@ it('ignores messages from unknown chat ids', function (): void {
     ])->assertOk();
 
     expect(Company::query()->count())->toBe(0);
-    Http::assertNotSent(fn ($request) => str_contains($request->url(), 'api.telegram.org'));
+    Http::assertNotSent(fn ($request): bool => str_contains((string) $request->url(), 'api.telegram.org'));
 });
 
 it('ignores webhook payloads without a message', function (): void {
