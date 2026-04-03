@@ -58,6 +58,11 @@ class CompanyResource extends Resource
                             ->required()
                             ->default(true)
                             ->helperText('Enable or disable job tracking for this company'),
+                        Forms\Components\Textarea::make('description')
+                            ->rows(3)
+                            ->maxLength(1000)
+                            ->helperText('Company description (auto-fetched or manually entered)')
+                            ->columnSpanFull(),
                     ])
                     ->columns(2),
             ]);
@@ -81,6 +86,9 @@ class CompanyResource extends Resource
                 Tables\Columns\IconColumn::make('is_active')
                     ->boolean()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('description')
+                    ->limit(50)
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('subscribers_count')
                     ->counts('subscribers')
                     ->label('Subscribers')

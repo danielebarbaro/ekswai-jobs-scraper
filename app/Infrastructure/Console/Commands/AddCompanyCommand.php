@@ -60,9 +60,11 @@ class AddCompanyCommand extends Command
         }
 
         $name = $this->option('name') ?? $detectedName;
+        $description = $client->fetchCompanyDescription($slug);
 
         $company = Company::query()->create([
             'name' => $name,
+            'description' => $description,
             'provider' => $provider->value,
             'provider_slug' => $slug,
             'is_active' => true,

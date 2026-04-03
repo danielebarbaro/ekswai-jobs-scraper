@@ -10,6 +10,7 @@ use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Symfony\Component\DomCrawler\Crawler;
 
 class LeverHttpClient implements JobBoardClient
 {
@@ -60,6 +61,30 @@ class LeverHttpClient implements JobBoardClient
             ]);
 
             return collect();
+        }
+    }
+
+    public function fetchCompanyDescription(string $slug): ?string
+    {
+        try {
+            $response = Http::timeout(15)->get("https://jobs.lever.co/{$slug}");
+
+            if (! $response->successful()) {
+                return null;
+            }
+
+            $crawler = new Crawler($response->body());
+            $meta = $crawler->filter('meta[name="description"]');
+
+            if ($meta->count() === 0) {
+                return null;
+            }
+
+            $content = trim($meta->first()->attr('content') ?? '');
+
+            return $content !== '' ? $content : null;
+        } catch (\Throwable) {
+            return null;
         }
     }
 

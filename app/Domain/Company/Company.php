@@ -17,7 +17,9 @@ use Illuminate\Support\Carbon;
 /**
  * @property JobBoardProvider $provider
  * @property string $provider_slug
+ * @property string|null $description
  * @property Carbon|null $last_synced_at
+ * @property-read int|null $matched_jobs_count
  */
 class Company extends BaseModel
 {

@@ -2,6 +2,7 @@
 
 use App\Infrastructure\Http\Controllers\CompanySubscriptionController;
 use App\Infrastructure\Http\Controllers\DashboardController;
+use App\Infrastructure\Http\Controllers\ExploreController;
 use App\Infrastructure\Http\Controllers\JobFilterController;
 use App\Infrastructure\Http\Controllers\JobPostingStatusController;
 use App\Infrastructure\Http\Controllers\LandingController;
@@ -31,6 +32,11 @@ Route::middleware(['auth', 'verified', RedirectAdmin::class])->group(function ()
     Route::post('filters', [JobFilterController::class, 'store'])->name('job-filters.store');
     Route::put('filters/{jobFilter}', [JobFilterController::class, 'update'])->name('job-filters.update');
     Route::delete('filters/{jobFilter}', [JobFilterController::class, 'destroy'])->name('job-filters.destroy');
+
+    Route::get('explore', [ExploreController::class, 'index'])->name('explore.index');
+    Route::get('explore/companies', [ExploreController::class, 'companies'])->name('explore.companies');
+    Route::post('explore/follow-many', [ExploreController::class, 'followMany'])->name('explore.follow-many');
+    Route::post('explore/skip-onboarding', [ExploreController::class, 'skipOnboarding'])->name('explore.skip-onboarding');
 
     Route::patch('user/locale', function (Request $request): RedirectResponse {
         $request->validate(['locale' => 'required|in:en,it']);

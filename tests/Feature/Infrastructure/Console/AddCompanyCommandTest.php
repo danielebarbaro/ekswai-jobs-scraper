@@ -12,6 +12,10 @@ it('adds a company successfully', function (): void {
         ->with('testco')
         ->once()
         ->andReturn('TestCo Inc');
+    $mockClient->shouldReceive('fetchCompanyDescription')
+        ->with('testco')
+        ->once()
+        ->andReturn(null);
 
     $mockFactory = Mockery::mock(JobBoardClientFactory::class);
     $mockFactory->shouldReceive('make')
@@ -66,6 +70,10 @@ it('uses name option when provided', function (): void {
         ->with('testco')
         ->once()
         ->andReturn('Auto Detected Name');
+    $mockClient->shouldReceive('fetchCompanyDescription')
+        ->with('testco')
+        ->once()
+        ->andReturn(null);
 
     $mockFactory = Mockery::mock(JobBoardClientFactory::class);
     $mockFactory->shouldReceive('make')

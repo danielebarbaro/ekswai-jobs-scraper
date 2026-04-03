@@ -13,6 +13,7 @@ return [
         'continue' => 'Continua',
         'warning' => 'Attenzione',
         'password' => 'Password',
+        'skip' => 'Salta',
     ],
 
     'nav' => [
@@ -60,6 +61,29 @@ return [
         'empty' => 'Nessuna azienda ancora. Aggiungine una sopra o carica il set demo per iniziare.',
         'load_defaults' => 'Carica aziende demo',
         'jobs_count' => ':count offerte',
+    ],
+
+    'explore' => [
+        'title' => 'Esplora',
+        'page_description' => 'Scopri aziende da seguire in base alle tue preferenze.',
+        'onboarding_title' => 'Benvenuto! Configuriamo il tuo tracker di lavoro.',
+        'onboarding_description' => 'Dicci cosa cerchi e ti suggeriremo aziende da seguire.',
+        'step1_title' => 'Imposta le tue preferenze',
+        'step1_description' => 'Filtra le aziende per tipo di ruolo, posizione e reparto.',
+        'find_companies' => 'Trova aziende',
+        'step2_title' => 'Scegli le aziende da seguire',
+        'step2_description_found' => ':count aziende corrispondono ai tuoi filtri',
+        'step2_no_results' => 'Nessuna azienda corrisponde ai tuoi filtri. Prova a modificarli.',
+        'no_matching_companies' => 'Nessuna azienda corrisponde ai tuoi filtri. Prova a modificarli.',
+        'select_all' => 'Seleziona tutto',
+        'selected' => 'Deseleziona tutto',
+        'already_followed' => 'Già seguito',
+        'follow_selected' => 'Segui :count aziende',
+        'step3_title' => 'Conferma la tua selezione',
+        'step3_description' => 'Rivedi le aziende e i filtri che hai scelto.',
+        'your_filters' => 'I tuoi filtri',
+        'companies_to_follow' => ':count aziende da seguire',
+        'confirm_follow' => 'Segui :count aziende',
     ],
 
     'settings' => [
