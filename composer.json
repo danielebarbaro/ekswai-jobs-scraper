@@ -19,6 +19,7 @@
         "laravel/fortify": "^1.30",
         "laravel/framework": "^12.0",
         "laravel/horizon": "*",
+        "laravel/nightwatch": "^1.26",
         "laravel/tinker": "^2.10.1",
         "laravel/wayfinder": "^0.1.9",
         "plin-code/laravel-istat-foreign-countries": "^1.1",
