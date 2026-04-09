@@ -76,11 +76,20 @@ class CompanySubscriptionController extends Controller
                 ]),
             ]);
 
+        $demoSlugs = collect(LoadDemoCompaniesAction::DEMO_COMPANIES)
+            ->map(fn (array $d): string => $d['provider'].':'.$d['slug']);
+
+        $followedSlugs = $user->subscribedCompanies->map(fn (Company $c): string => $c->provider->value.':'.$c->provider_slug);
+
+        $demoFollowed = $demoSlugs->intersect($followedSlugs)->count();
+
         return Inertia::render('companies', [
             'companies' => $companies,
             'companyFilters' => $companyFilters,
             'departments' => $departments,
             'countries' => $countries,
+            'demoCompaniesTotal' => $demoSlugs->count(),
+            'demoCompaniesFollowed' => $demoFollowed,
         ]);
     }
 
