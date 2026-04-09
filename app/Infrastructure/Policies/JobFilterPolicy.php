@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Policies;
 
+use App\Domain\JobFilter\JobFilter;
 use App\Domain\User\User;
 
 class JobFilterPolicy
