@@ -6,7 +6,7 @@ import {
     DialogTitle,
 } from '@/components/ui/dialog';
 import { useTranslation } from '@/hooks/use-translation';
-import { type ContinentGroup } from '@/pages/filters';
+import { type ContinentGroup } from '@/components/filters/filter-components';
 import { router } from '@inertiajs/react';
 import { useState } from 'react';
 import { emptyExploreFilters, type ExploreFilters, WizardFilters } from './wizard-filters';

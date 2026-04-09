@@ -1,7 +1,7 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from '@/hooks/use-translation';
-import { type ContinentGroup } from '@/pages/filters';
+import { type ContinentGroup } from '@/components/filters/filter-components';
 import { Building2 } from 'lucide-react';
 import { useMemo } from 'react';
 import { type ExploreCompany } from './wizard-results';

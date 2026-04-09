@@ -13,7 +13,7 @@ import { type BreadcrumbItem } from '@/types';
 import { Head, useForm, router } from '@inertiajs/react';
 import { Bell, BellOff, Building2, Download, Filter, Plus, RefreshCw, Trash2 } from 'lucide-react';
 import { useState } from 'react';
-import { type ContinentGroup, type JobFilter, FilterForm, emptyFilter } from './filters';
+import { type ContinentGroup, type JobFilter, FilterForm, emptyFilter } from '@/components/filters/filter-components';
 
 interface CompanySubscription {
     id: string;

@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { useTranslation } from '@/hooks/use-translation';
-import { ChipSelect, CountrySelector, TagInput, type ContinentGroup } from '@/pages/filters';
+import { ChipSelect, CountrySelector, TagInput, type ContinentGroup } from '@/components/filters/filter-components';
 import { type FormEvent, useState } from 'react';
 
 export interface ExploreFilters {
