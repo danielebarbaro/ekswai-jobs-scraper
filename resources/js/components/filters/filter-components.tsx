@@ -101,7 +101,7 @@ export function TagInput({
 
 export function ChipSelect({
     options,
-    value,
+    value = [],
     onChange,
 }: {
     options: string[];
@@ -138,7 +138,7 @@ export function ChipSelect({
 
 export function CountrySelector({
     continents,
-    value,
+    value = [],
     onChange,
 }: {
     continents: ContinentGroup[];
@@ -201,11 +201,11 @@ export function FilterForm({
     submitLabel?: string;
     t: (key: string) => string;
 }) {
-    const [titleInclude, setTitleInclude] = useState<string[]>(filter.title_include);
-    const [titleExclude, setTitleExclude] = useState<string[]>(filter.title_exclude);
-    const [selectedCountries, setSelectedCountries] = useState<string[]>(filter.countries);
-    const [remoteOnly, setRemoteOnly] = useState(filter.remote_only);
-    const [selectedDepartments, setSelectedDepartments] = useState<string[]>(filter.departments);
+    const [titleInclude, setTitleInclude] = useState<string[]>(filter.title_include ?? []);
+    const [titleExclude, setTitleExclude] = useState<string[]>(filter.title_exclude ?? []);
+    const [selectedCountries, setSelectedCountries] = useState<string[]>(filter.countries ?? []);
+    const [remoteOnly, setRemoteOnly] = useState(filter.remote_only ?? false);
+    const [selectedDepartments, setSelectedDepartments] = useState<string[]>(filter.departments ?? []);
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
