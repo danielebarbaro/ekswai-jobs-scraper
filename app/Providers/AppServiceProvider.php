@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use App\Domain\JobFilter\JobFilter;
-use App\Domain\JobFilter\JobFilterPolicy;
+use App\Infrastructure\Policies\JobFilterPolicy;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Diagnostics\DiagnosingHealth;
 use Illuminate\Support\Facades\Event;

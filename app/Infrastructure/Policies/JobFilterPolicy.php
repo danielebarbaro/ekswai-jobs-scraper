@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\JobFilter;
+namespace App\Infrastructure\Policies;
 
 use App\Domain\User\User;
 
