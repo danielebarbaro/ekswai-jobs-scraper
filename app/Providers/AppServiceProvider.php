@@ -40,7 +40,7 @@ class AppServiceProvider extends ServiceProvider
 
         RateLimiter::for('emails', fn () => Limit::perSecond(1));
 
-        Event::listen(static function (DiagnosingHealth $event) {
+        Event::listen(static function (DiagnosingHealth $event): void {
             Nightwatch::dontSample();
         });
     }
