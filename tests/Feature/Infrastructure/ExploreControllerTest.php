@@ -84,9 +84,9 @@ it('can follow multiple companies at once', function (): void {
         'filters' => [
             'title_include' => ['engineer'],
             'title_exclude' => [],
-            'country_ids' => [],
+            'countries' => [],
             'remote_only' => true,
-            'department_include' => [],
+            'departments' => [],
         ],
     ])->assertOk();
 

@@ -24,7 +24,6 @@ export interface JobFilter {
 export interface Country {
     id: string;
     name: string;
-    iso_alpha2: string;
 }
 
 export interface ContinentGroup {
@@ -181,7 +180,7 @@ export function CountrySelector({
                                         : 'border-input bg-background text-foreground hover:bg-muted'
                                 }`}
                             >
-                                {country.iso_alpha2}
+                                {country.name}
                             </button>
                         ))}
                     </div>

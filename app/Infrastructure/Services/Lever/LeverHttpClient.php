@@ -7,6 +7,7 @@ namespace App\Infrastructure\Services\Lever;
 use App\Application\DTOs\JobPostingDTO;
 use App\Infrastructure\Services\Contracts\JobBoardClient;
 use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -14,7 +15,11 @@ use Symfony\Component\DomCrawler\Crawler;
 
 class LeverHttpClient implements JobBoardClient
 {
-    private const string API_BASE_URL = 'https://api.lever.co/v0/postings';
+    /** @var string[] */
+    private const array API_BASE_URLS = [
+        'https://api.lever.co/v0/postings',
+        'https://api.eu.lever.co/v0/postings',
+    ];
 
     private const int TIMEOUT_SECONDS = 30;
 
@@ -24,16 +29,11 @@ class LeverHttpClient implements JobBoardClient
     public function fetchJobsForCompany(string $slug): Collection
     {
         try {
-            $url = sprintf('%s/%s', self::API_BASE_URL, $slug);
+            $response = $this->requestFromAnyRegion($slug, self::TIMEOUT_SECONDS);
 
-            $response = Http::timeout(self::TIMEOUT_SECONDS)
-                ->get($url);
-
-            if (! $response->successful()) {
-                Log::warning('Lever API request failed', [
+            if ($response === null) {
+                Log::warning('Lever API request failed on all regions', [
                     'company_slug' => $slug,
-                    'status' => $response->status(),
-                    'body' => $response->body(),
                 ]);
 
                 return collect();
@@ -91,11 +91,9 @@ class LeverHttpClient implements JobBoardClient
     public function validateSlug(string $slug): ?string
     {
         try {
-            $url = sprintf('%s/%s', self::API_BASE_URL, $slug);
+            $response = $this->requestFromAnyRegion($slug, 15);
 
-            $response = Http::timeout(15)->get($url);
-
-            if (! $response->successful()) {
+            if ($response === null) {
                 return null;
             }
 
@@ -109,6 +107,19 @@ class LeverHttpClient implements JobBoardClient
         } catch (\Throwable) {
             return null;
         }
+    }
+
+    private function requestFromAnyRegion(string $slug, int $timeout): ?Response
+    {
+        foreach (self::API_BASE_URLS as $baseUrl) {
+            $response = Http::timeout($timeout)->get(sprintf('%s/%s', $baseUrl, $slug));
+
+            if ($response->successful()) {
+                return $response;
+            }
+        }
+
+        return null;
     }
 
     private function mapToDTO(array $data): JobPostingDTO

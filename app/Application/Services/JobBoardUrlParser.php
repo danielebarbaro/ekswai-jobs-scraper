@@ -12,6 +12,7 @@ class JobBoardUrlParser
     private const array URL_PATTERNS = [
         'apply.workable.com' => JobBoardProvider::Workable,
         'jobs.lever.co' => JobBoardProvider::Lever,
+        'jobs.eu.lever.co' => JobBoardProvider::Lever,
         'jobs.ashbyhq.com' => JobBoardProvider::Ashby,
         'boards.greenhouse.io' => JobBoardProvider::Greenhouse,
         'job-boards.greenhouse.io' => JobBoardProvider::Greenhouse,

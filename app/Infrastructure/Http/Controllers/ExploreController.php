@@ -8,6 +8,8 @@ use App\Application\Services\JobFilterService;
 use App\Domain\Company\Company;
 use App\Domain\JobFilter\JobFilter;
 use App\Domain\JobPosting\JobPosting;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -53,9 +55,9 @@ class ExploreController extends Controller
 
         $titleInclude = $request->input('title_include', []);
         $titleExclude = $request->input('title_exclude', []);
-        $countryIds = $request->input('country_ids', []);
+        $countryIds = $request->input('country_ids', $request->input('countries', []));
         $remoteOnly = filter_var($request->input('remote_only', false), FILTER_VALIDATE_BOOLEAN);
-        $departmentInclude = $request->input('department_include', []);
+        $departmentInclude = $request->input('department_include', $request->input('departments', []));
 
         $filter = new JobFilter;
         $filter->title_include = empty($titleInclude) ? null : $titleInclude;
@@ -66,7 +68,7 @@ class ExploreController extends Controller
 
         $companies = Company::query()
             ->where('is_active', true)
-            ->withCount(['jobPostings as matched_jobs_count' => function (\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Relations\BelongsToMany $query) use ($filter): void {
+            ->withCount(['jobPostings as matched_jobs_count' => function (Builder|BelongsToMany $query) use ($filter): void {
                 $this->jobFilterService->applyToQuery($query, $filter);
             }])
             ->get()
@@ -94,12 +96,13 @@ class ExploreController extends Controller
             'filters' => ['required', 'array'],
             'filters.title_include' => ['nullable', 'array'],
             'filters.title_exclude' => ['nullable', 'array'],
-            'filters.country_ids' => ['nullable', 'array'],
+            'filters.countries' => ['nullable', 'array'],
             'filters.remote_only' => ['required', 'boolean'],
-            'filters.department_include' => ['nullable', 'array'],
+            'filters.departments' => ['nullable', 'array'],
         ]);
 
         $user = $request->user();
+        $filters = $validated['filters'];
         $alreadyFollowed = $user->subscribedCompanies()->pluck('companies.id')->toArray();
 
         $newCompanyIds = array_diff($validated['company_ids'], $alreadyFollowed);
@@ -120,26 +123,22 @@ class ExploreController extends Controller
             }
         }
 
-        $filters = $validated['filters'];
         $globalFilter = $user->globalJobFilter;
+        $filterData = [
+            'title_include' => $filters['title_include'] ?? null,
+            'title_exclude' => $filters['title_exclude'] ?? null,
+            'country_ids' => $filters['countries'] ?? null,
+            'remote_only' => $filters['remote_only'],
+            'department_include' => $filters['departments'] ?? null,
+        ];
 
         if ($globalFilter) {
-            $globalFilter->update([
-                'title_include' => $filters['title_include'] ?? null,
-                'title_exclude' => $filters['title_exclude'] ?? null,
-                'country_ids' => $filters['country_ids'] ?? null,
-                'remote_only' => $filters['remote_only'],
-                'department_include' => $filters['department_include'] ?? null,
-            ]);
+            $globalFilter->update($filterData);
         } else {
             JobFilter::query()->create([
                 'user_id' => $user->id,
                 'company_id' => null,
-                'title_include' => $filters['title_include'] ?? null,
-                'title_exclude' => $filters['title_exclude'] ?? null,
-                'country_ids' => $filters['country_ids'] ?? null,
-                'remote_only' => $filters['remote_only'],
-                'department_include' => $filters['department_include'] ?? null,
+                ...$filterData,
             ]);
         }
 
