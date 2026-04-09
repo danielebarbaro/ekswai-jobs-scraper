@@ -1,20 +1,33 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from '@/hooks/use-translation';
+import { type ContinentGroup } from '@/pages/filters';
 import { Building2 } from 'lucide-react';
+import { useMemo } from 'react';
 import { type ExploreCompany } from './wizard-results';
 import { type ExploreFilters } from './wizard-filters';
 
 interface WizardConfirmProps {
     filters: ExploreFilters;
     selectedCompanies: ExploreCompany[];
+    countries: ContinentGroup[];
     onBack: () => void;
     onConfirm: () => void;
     onSkip?: () => void;
 }
 
-export function WizardConfirm({ filters, selectedCompanies, onBack, onConfirm, onSkip }: WizardConfirmProps) {
+export function WizardConfirm({ filters, selectedCompanies, countries, onBack, onConfirm, onSkip }: WizardConfirmProps) {
     const { t } = useTranslation();
+
+    const countryNameById = useMemo(() => {
+        const map = new Map<string, string>();
+        for (const continent of countries) {
+            for (const country of continent.countries) {
+                map.set(country.id, country.name);
+            }
+        }
+        return map;
+    }, [countries]);
 
     const hasFilters =
         filters.title_include.length > 0 ||
@@ -41,7 +54,7 @@ export function WizardConfirm({ filters, selectedCompanies, onBack, onConfirm, o
                         ))}
                         {filters.countries.map((c) => (
                             <Badge key={`c-${c}`} variant="secondary">
-                                {c}
+                                {countryNameById.get(c) ?? c}
                             </Badge>
                         ))}
                         {filters.departments.map((d) => (

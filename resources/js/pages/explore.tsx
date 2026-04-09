@@ -97,6 +97,7 @@ export default function Explore({ departments, countries }: ExplorePageProps) {
                         <WizardConfirm
                             filters={filters}
                             selectedCompanies={selectedCompanies}
+                            countries={countries}
                             onBack={() => setStep('results')}
                             onConfirm={() => void handleConfirm()}
                         />
