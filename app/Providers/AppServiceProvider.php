@@ -5,10 +5,13 @@ namespace App\Providers;
 use App\Domain\JobFilter\JobFilter;
 use App\Domain\JobFilter\JobFilterPolicy;
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Foundation\Diagnostics\DiagnosingHealth;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
+use Laravel\Nightwatch\Nightwatch;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -36,5 +39,9 @@ class AppServiceProvider extends ServiceProvider
         );
 
         RateLimiter::for('emails', fn () => Limit::perSecond(1));
+
+        Event::listen(static function (DiagnosingHealth $event): void {
+            Nightwatch::dontSample();
+        });
     }
 }
