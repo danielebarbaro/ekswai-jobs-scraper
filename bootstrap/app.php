@@ -10,7 +10,7 @@ use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withCommands([
-        __DIR__.'/../app/Infrastructure/Console/Commands',
+        __DIR__.'/../app/Application/Console/Commands',
     ])
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
