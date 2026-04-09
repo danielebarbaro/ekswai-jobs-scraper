@@ -93,14 +93,31 @@ class AshbyHttpClient implements JobBoardClient
 
             $response = Http::timeout(15)->get($url);
 
-            if (! $response->successful() || ! isset($response->json()['jobBoard']['title'])) {
+            if (! $response->successful()) {
                 return null;
             }
 
-            return $response->json()['jobBoard']['title'];
+            $data = $response->json();
+
+            if (isset($data['jobBoard']['title']) && $data['jobBoard']['title'] !== '') {
+                return $data['jobBoard']['title'];
+            }
+
+            if (isset($data['jobs']) && is_array($data['jobs'])) {
+                return $this->humanizeSlug($slug);
+            }
+
+            return null;
         } catch (\Throwable) {
             return null;
         }
+    }
+
+    private function humanizeSlug(string $slug): string
+    {
+        $slug = preg_replace('/\.(com|io|co|org|net)$/i', '', $slug) ?? $slug;
+
+        return ucwords(str_replace(['-', '_'], ' ', $slug));
     }
 
     private function mapToDTO(array $data): JobPostingDTO

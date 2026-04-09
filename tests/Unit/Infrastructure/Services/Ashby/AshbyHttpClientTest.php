@@ -158,9 +158,35 @@ it('returns null for slug validation on connection error', function (): void {
     expect($name)->toBeNull();
 });
 
-it('returns null when validate slug response is missing jobBoard title', function (): void {
+it('derives name from slug when jobBoard title is missing but jobs exist', function (): void {
     Http::fake([
-        'api.ashbyhq.com/posting-api/job-board/testco' => Http::response(['jobs' => []]),
+        'api.ashbyhq.com/posting-api/job-board/propel' => Http::response([
+            'jobs' => [['id' => '1', 'title' => 'Engineer']],
+            'apiVersion' => '2',
+        ]),
+    ]);
+
+    $name = $this->client->validateSlug('propel');
+
+    expect($name)->toBe('Propel');
+});
+
+it('strips domain suffix when deriving name from slug', function (): void {
+    Http::fake([
+        'api.ashbyhq.com/posting-api/job-board/kraken.com' => Http::response([
+            'jobs' => [['id' => '1', 'title' => 'Engineer']],
+            'apiVersion' => '2',
+        ]),
+    ]);
+
+    $name = $this->client->validateSlug('kraken.com');
+
+    expect($name)->toBe('Kraken');
+});
+
+it('returns null when response has no jobBoard and no jobs', function (): void {
+    Http::fake([
+        'api.ashbyhq.com/posting-api/job-board/testco' => Http::response(['error' => 'unknown']),
     ]);
 
     $name = $this->client->validateSlug('testco');
