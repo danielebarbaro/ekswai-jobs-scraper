@@ -39,9 +39,11 @@ interface CompaniesProps {
     companyFilters: CompanyFilter[];
     departments: string[];
     countries: ContinentGroup[];
+    demoCompaniesTotal: number;
+    demoCompaniesFollowed: number;
 }
 
-export default function Companies({ companies, companyFilters, departments, countries }: CompaniesProps) {
+export default function Companies({ companies, companyFilters, departments, countries, demoCompaniesTotal, demoCompaniesFollowed }: CompaniesProps) {
     const { t } = useTranslation();
     const [filterDialogCompany, setFilterDialogCompany] = useState<CompanySubscription | null>(null);
     const [syncingCompanyId, setSyncingCompanyId] = useState<string | null>(null);
@@ -152,13 +154,24 @@ export default function Companies({ companies, companyFilters, departments, coun
                         <Plus className="mr-1 size-4" />
                         {t('companies.follow')}
                     </Button>
-                    <Button type="button" variant="outline" onClick={handleLoadDefaults}>
-                        <Download className="mr-1 size-4" />
-                        {t('companies.load_defaults')}
-                    </Button>
                 </form>
                 {(form.errors.slug || form.errors.provider) && (
                     <p className="mt-2 text-sm text-red-600 dark:text-red-400">{form.errors.slug || form.errors.provider}</p>
+                )}
+
+                {/* Demo companies banner */}
+                {demoCompaniesFollowed < demoCompaniesTotal && (
+                    <div className="mt-4 flex items-center justify-between rounded-lg border border-dashed border-border bg-muted/30 px-4 py-3">
+                        <p className="text-sm text-muted-foreground">
+                            {t('companies.demo_progress')
+                                .replace(':followed', String(demoCompaniesFollowed))
+                                .replace(':total', String(demoCompaniesTotal))}
+                        </p>
+                        <Button variant="outline" size="sm" onClick={handleLoadDefaults}>
+                            <Download className="mr-1 size-4" />
+                            {t('companies.load_defaults')}
+                        </Button>
+                    </div>
                 )}
 
                 {/* Companies list */}
@@ -166,10 +179,6 @@ export default function Companies({ companies, companyFilters, departments, coun
                     <div className="mt-12 text-center text-muted-foreground">
                         <Building2 className="mx-auto size-12 opacity-30" />
                         <p className="mt-4">{t('companies.empty')}</p>
-                        <Button variant="outline" className="mt-4" onClick={handleLoadDefaults}>
-                            <Download className="mr-1 size-4" />
-                            {t('companies.load_defaults')}
-                        </Button>
                     </div>
                 ) : (
                     <div className="mt-6 space-y-3">

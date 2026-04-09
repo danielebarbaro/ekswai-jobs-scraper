@@ -60,6 +60,7 @@ return [
         'disable_notifications' => 'Disattiva notifiche',
         'empty' => 'Nessuna azienda ancora. Aggiungine una sopra o carica il set demo per iniziare.',
         'load_defaults' => 'Carica aziende demo',
+        'demo_progress' => 'Aziende demo: :followed/:total',
         'jobs_count' => ':count offerte',
     ],
 

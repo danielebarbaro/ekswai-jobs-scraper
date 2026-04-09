@@ -60,6 +60,7 @@ return [
         'disable_notifications' => 'Disable notifications',
         'empty' => 'No companies yet. Add one above or load the demo set to start tracking jobs.',
         'load_defaults' => 'Load demo companies',
+        'demo_progress' => 'Demo companies: :followed/:total',
         'jobs_count' => ':count jobs',
     ],
 
