@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Console\Commands;
+namespace App\Application\Console\Commands;
 
 use App\Infrastructure\Services\Scraping\ScraperHealthChecker;
 use Illuminate\Console\Command;
