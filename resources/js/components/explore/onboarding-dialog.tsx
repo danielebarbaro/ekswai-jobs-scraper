@@ -131,6 +131,7 @@ export function OnboardingDialog({ departments, countries }: OnboardingDialogPro
                     <WizardConfirm
                         filters={filters}
                         selectedCompanies={selectedCompanies}
+                        countries={countries}
                         onBack={() => setStep('results')}
                         onConfirm={() => void handleConfirm()}
                         onSkip={() => void handleSkip()}
