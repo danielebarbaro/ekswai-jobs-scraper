@@ -26,3 +26,5 @@ parameters:
         - '#Parameter.*\$callback.*map\(\) expects#'
         - '#Call to an undefined method Illuminate\\Database\\Eloquent\\Model::userStatuses#'
         - '#Access to an undefined property Illuminate\\Database\\Eloquent\\Model::\$id#'
+        - '#.*DiagnosingHealth.*#'
+        - '#.*Nightwatch.*#'

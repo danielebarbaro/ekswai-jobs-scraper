@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Console\Commands;
+namespace App\Application\Console\Commands;
 
 use App\Domain\Company\Company;
 use App\Domain\Company\JobBoardProvider;
