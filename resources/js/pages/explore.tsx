@@ -3,7 +3,7 @@ import { emptyExploreFilters, type ExploreFilters, WizardFilters } from '@/compo
 import { type ExploreCompany, WizardResults } from '@/components/explore/wizard-results';
 import { useTranslation } from '@/hooks/use-translation';
 import AppLayout from '@/layouts/app-layout';
-import { type ContinentGroup } from '@/pages/filters';
+import { type ContinentGroup } from '@/components/filters/filter-components';
 import { type BreadcrumbItem } from '@/types';
 import { Head, router } from '@inertiajs/react';
 import { useState } from 'react';
