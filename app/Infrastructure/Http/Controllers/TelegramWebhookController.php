@@ -48,7 +48,7 @@ class TelegramWebhookController extends Controller
         $parsed = $this->urlParser->parse($text);
 
         if ($parsed === null) {
-            return 'Could not parse URL. Supported providers: Workable, Lever, Ashby, Greenhouse, Teamtailor, Factorial.';
+            return 'Could not parse URL. Supported providers: Workable, Lever, Ashby, Greenhouse, Teamtailor, Factorial, Personio.';
         }
 
         $provider = $parsed['provider'];
