@@ -10,6 +10,7 @@ use App\Infrastructure\Services\Contracts\JobBoardClient;
 use App\Infrastructure\Services\Factorial\FactorialScraper;
 use App\Infrastructure\Services\Greenhouse\GreenhouseHttpClient;
 use App\Infrastructure\Services\Lever\LeverHttpClient;
+use App\Infrastructure\Services\Personio\PersonioHttpClient;
 use App\Infrastructure\Services\Teamtailor\TeamtailorScraper;
 use App\Infrastructure\Services\Workable\WorkableHttpClient;
 
@@ -24,7 +25,7 @@ class JobBoardClientFactory
             JobBoardProvider::Factorial => app(FactorialScraper::class),
             JobBoardProvider::Ashby => app(AshbyHttpClient::class),
             JobBoardProvider::Greenhouse => app(GreenhouseHttpClient::class),
-            JobBoardProvider::Personio => throw new \InvalidArgumentException('Personio client not yet implemented'),
+            JobBoardProvider::Personio => app(PersonioHttpClient::class),
         };
     }
 }
