@@ -81,3 +81,33 @@ it('retries without language param when the first response has zero positions', 
 
     expect($jobs)->toHaveCount(2);
 });
+
+it('validateSlug returns subcompany name when present', function (): void {
+    Http::fake([
+        'koro-handels-gmbh.jobs.personio.de/xml*' => Http::response($this->fixture, 200, ['Content-Type' => 'application/xml']),
+    ]);
+
+    expect($this->client->validateSlug('koro-handels-gmbh'))->toBe('KoRo Handels GmbH');
+});
+
+it('validateSlug returns slug fallback when subcompany is empty', function (): void {
+    $xmlWithoutSubcompany = '<?xml version="1.0"?><workzag-jobs><position><id>1</id><subcompany></subcompany><name>Job</name></position></workzag-jobs>';
+
+    Http::fake([
+        'empty-sub.jobs.personio.de/xml*' => Http::response($xmlWithoutSubcompany, 200, ['Content-Type' => 'application/xml']),
+    ]);
+
+    expect($this->client->validateSlug('empty-sub'))->toBe('empty-sub');
+});
+
+it('validateSlug returns null on http error', function (): void {
+    Http::fake([
+        'gone.jobs.personio.de/xml*' => Http::response('Not Found', 404),
+    ]);
+
+    expect($this->client->validateSlug('gone'))->toBeNull();
+});
+
+it('fetchCompanyDescription always returns null', function (): void {
+    expect($this->client->fetchCompanyDescription('any-slug'))->toBeNull();
+});
