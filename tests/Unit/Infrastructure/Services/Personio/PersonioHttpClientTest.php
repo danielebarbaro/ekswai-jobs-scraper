@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Application\DTOs\JobPostingDTO;
 use App\Infrastructure\Services\Personio\PersonioHttpClient;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
 
 beforeEach(function (): void {
@@ -43,4 +44,28 @@ it('falls back to the slug as the title when name is empty', function (): void {
 
     expect($jobs)->toHaveCount(1)
         ->and($jobs->first()->title)->toBe('Untitled Position');
+});
+
+it('returns empty collection on failed http response', function (): void {
+    Http::fake([
+        'broken.jobs.personio.de/xml*' => Http::response('Server Error', 500),
+    ]);
+
+    expect($this->client->fetchJobsForCompany('broken'))->toBeEmpty();
+});
+
+it('returns empty collection on malformed xml', function (): void {
+    Http::fake([
+        'malformed.jobs.personio.de/xml*' => Http::response('<not-xml<<', 200),
+    ]);
+
+    expect($this->client->fetchJobsForCompany('malformed'))->toBeEmpty();
+});
+
+it('returns empty collection on connection error', function (): void {
+    Http::fake([
+        'timeout.jobs.personio.de/xml*' => fn () => throw new ConnectionException('Connection timed out'),
+    ]);
+
+    expect($this->client->fetchJobsForCompany('timeout'))->toBeEmpty();
 });
