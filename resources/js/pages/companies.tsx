@@ -60,6 +60,7 @@ export default function Companies({ companies, companyFilters, departments, coun
         { value: 'greenhouse', label: 'Greenhouse' },
         { value: 'teamtailor', label: 'Teamtailor' },
         { value: 'factorial', label: 'Factorial' },
+        { value: 'personio', label: 'Personio' },
     ];
 
     const form = useForm({ slug: '', provider: '' });
