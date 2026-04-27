@@ -24,6 +24,7 @@ class JobBoardClientFactory
             JobBoardProvider::Factorial => app(FactorialScraper::class),
             JobBoardProvider::Ashby => app(AshbyHttpClient::class),
             JobBoardProvider::Greenhouse => app(GreenhouseHttpClient::class),
+            JobBoardProvider::Personio => throw new \InvalidArgumentException('Personio client not yet implemented'),
         };
     }
 }
