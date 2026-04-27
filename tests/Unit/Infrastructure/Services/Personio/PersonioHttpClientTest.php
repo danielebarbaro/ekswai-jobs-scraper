@@ -69,3 +69,15 @@ it('returns empty collection on connection error', function (): void {
 
     expect($this->client->fetchJobsForCompany('timeout'))->toBeEmpty();
 });
+
+it('retries without language param when the first response has zero positions', function (): void {
+    $emptyResponse = '<?xml version="1.0"?><workzag-jobs></workzag-jobs>';
+
+    Http::fakeSequence('monolingual.jobs.personio.de/xml*')
+        ->push($emptyResponse, 200, ['Content-Type' => 'application/xml'])
+        ->push($this->fixture, 200, ['Content-Type' => 'application/xml']);
+
+    $jobs = $this->client->fetchJobsForCompany('monolingual');
+
+    expect($jobs)->toHaveCount(2);
+});
