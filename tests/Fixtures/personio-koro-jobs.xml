@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workzag-jobs>
+    <position>
+        <id>1234567</id>
+        <subcompany>KoRo Handels GmbH</subcompany>
+        <office>Berlin</office>
+        <additionalOffices></additionalOffices>
+        <department>Marketing</department>
+        <recruitingCategory>Marketing</recruitingCategory>
+        <name>Senior Brand Manager</name>
+        <employmentType>permanent</employmentType>
+        <seniority>senior</seniority>
+        <schedule>full-time</schedule>
+        <yearsOfExperience>3-5</yearsOfExperience>
+        <occupation>marketing_manager</occupation>
+        <occupationCategory>marketing_communications</occupationCategory>
+        <createdAt>2026-04-10T08:00:00+02:00</createdAt>
+        <jobDescriptions>
+            <jobDescription>
+                <name>About the role</name>
+                <value><![CDATA[<p>Lead our brand strategy.</p>]]></value>
+            </jobDescription>
+        </jobDescriptions>
+    </position>
+    <position>
+        <id>2345678</id>
+        <subcompany></subcompany>
+        <office>Frankfurt</office>
+        <additionalOffices>
+            <office>Lyon</office>
+        </additionalOffices>
+        <department>Field Sales</department>
+        <recruitingCategory>Sales</recruitingCategory>
+        <name>Regional Field Sales Manager</name>
+        <employmentType>permanent</employmentType>
+        <seniority>experienced</seniority>
+        <schedule>full-time</schedule>
+        <yearsOfExperience>3-5</yearsOfExperience>
+        <occupation>sales_manager</occupation>
+        <occupationCategory>sales_business_development</occupationCategory>
+        <createdAt>2026-04-12T08:00:00+02:00</createdAt>
+        <jobDescriptions>
+            <jobDescription>
+                <name>Responsibilities</name>
+                <value><![CDATA[<p>Manage field sales team.</p>]]></value>
+            </jobDescription>
+        </jobDescriptions>
+    </position>
+</workzag-jobs>
