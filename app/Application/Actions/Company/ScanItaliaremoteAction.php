@@ -48,8 +48,10 @@ class ScanItaliaremoteAction
 
         foreach ($entries as $entry) {
             $careerUrl = $entry['career_page_url'] ?? null;
-
-            if (! is_string($careerUrl) || $careerUrl === '') {
+            if (! is_string($careerUrl)) {
+                continue;
+            }
+            if ($careerUrl === '') {
                 continue;
             }
 
