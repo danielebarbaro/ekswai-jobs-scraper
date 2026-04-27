@@ -78,3 +78,20 @@ it('strips trailing slashes and paths from slug', function (): void {
     expect($result['provider'])->toBe(JobBoardProvider::Lever);
     expect($result['slug'])->toBe('scaleway');
 });
+
+it('parses personio URL', function (): void {
+    $result = $this->parser->parse('https://koro-handels-gmbh.jobs.personio.de');
+    expect($result['provider'])->toBe(JobBoardProvider::Personio);
+    expect($result['slug'])->toBe('koro-handels-gmbh');
+});
+
+it('parses personio URL with language query param', function (): void {
+    $result = $this->parser->parse('https://koro-handels-gmbh.jobs.personio.de/?language=en');
+    expect($result['provider'])->toBe(JobBoardProvider::Personio);
+    expect($result['slug'])->toBe('koro-handels-gmbh');
+});
+
+it('returns null for personio root host without slug subdomain', function (): void {
+    $result = $this->parser->parse('https://jobs.personio.de');
+    expect($result)->toBeNull();
+});

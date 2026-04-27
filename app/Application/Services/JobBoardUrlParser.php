@@ -56,6 +56,13 @@ class JobBoardUrlParser
                 return ['provider' => JobBoardProvider::Factorial, 'slug' => $slug];
             }
 
+            // Personio: {slug}.jobs.personio.de
+            if (str_ends_with($host, '.jobs.personio.de')) {
+                $slug = str_replace('.jobs.personio.de', '', $host);
+
+                return ['provider' => JobBoardProvider::Personio, 'slug' => $slug];
+            }
+
             // Other providers: host match + slug from path
             foreach (self::URL_PATTERNS as $domain => $provider) {
                 if ($host === $domain) {
