@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Infrastructure\Http\Requests\Settings;
 
 use App\Domain\User\User;
