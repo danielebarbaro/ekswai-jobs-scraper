@@ -17,3 +17,11 @@ Schedule::command('jobs:sync-daily')
     ->withoutOverlapping()
     ->onOneServer()
     ->runInBackground();
+
+// Scan awesome-italia-remote daily and auto-add matching companies
+Schedule::command('italiaremote:scan')
+    ->dailyAt('06:00')
+    ->timezone('UTC')
+    ->withoutOverlapping()
+    ->onOneServer()
+    ->runInBackground();
