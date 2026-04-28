@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Infrastructure\Http\Controllers\Settings\PasswordController;
 use App\Infrastructure\Http\Controllers\Settings\ProfileController;
 use App\Infrastructure\Http\Controllers\Settings\TwoFactorAuthenticationController;
