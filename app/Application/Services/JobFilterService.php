@@ -138,7 +138,7 @@ class JobFilterService
     {
         $lowerText = mb_strtolower($text);
 
-        return array_any($keywords, fn ($keyword): bool => str_contains($lowerText, mb_strtolower((string) $keyword)));
+        return array_any($keywords, fn (string $keyword): bool => str_contains($lowerText, mb_strtolower($keyword)));
     }
 
     /**
