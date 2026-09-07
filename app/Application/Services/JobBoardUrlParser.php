@@ -21,6 +21,12 @@ class JobBoardUrlParser
         'factorialhr.com' => JobBoardProvider::Factorial,
     ];
 
+    /** @var list<string> */
+    private const array PERSONIO_SUFFIXES = [
+        '.jobs.personio.de',
+        '.jobs.personio.com',
+    ];
+
     /**
      * @return array{provider: JobBoardProvider, slug: string}|null
      */
@@ -56,11 +62,13 @@ class JobBoardUrlParser
                 return ['provider' => JobBoardProvider::Factorial, 'slug' => $slug];
             }
 
-            // Personio: {slug}.jobs.personio.de
-            if (str_ends_with($host, '.jobs.personio.de')) {
-                $slug = str_replace('.jobs.personio.de', '', $host);
+            // Personio: {slug}.jobs.personio.de or {slug}.jobs.personio.com (both serve the same board)
+            foreach (self::PERSONIO_SUFFIXES as $suffix) {
+                if (str_ends_with($host, $suffix)) {
+                    $slug = str_replace($suffix, '', $host);
 
-                return ['provider' => JobBoardProvider::Personio, 'slug' => $slug];
+                    return ['provider' => JobBoardProvider::Personio, 'slug' => $slug];
+                }
             }
 
             // Other providers: host match + slug from path

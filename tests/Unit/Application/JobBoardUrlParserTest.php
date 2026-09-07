@@ -91,7 +91,18 @@ it('parses personio URL with language query param', function (): void {
     expect($result['slug'])->toBe('koro-handels-gmbh');
 });
 
+it('parses personio .com URL', function (): void {
+    $result = $this->parser->parse('https://sensoryminds.jobs.personio.com/');
+    expect($result['provider'])->toBe(JobBoardProvider::Personio);
+    expect($result['slug'])->toBe('sensoryminds');
+});
+
 it('returns null for personio root host without slug subdomain', function (): void {
     $result = $this->parser->parse('https://jobs.personio.de');
+    expect($result)->toBeNull();
+});
+
+it('returns null for personio .com root host without slug subdomain', function (): void {
+    $result = $this->parser->parse('https://jobs.personio.com');
     expect($result)->toBeNull();
 });
