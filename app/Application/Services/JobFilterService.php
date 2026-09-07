@@ -90,14 +90,14 @@ class JobFilterService
         if (! empty($filter->title_include)) {
             $query->where(function (Builder $q) use ($filter): void {
                 foreach ($filter->title_include as $keyword) {
-                    $q->orWhereRaw('LOWER(title) LIKE ?', ['%'.mb_strtolower($keyword).'%']);
+                    $q->orWhereRaw("LOWER(title) LIKE ? ESCAPE '\\'", [$this->likePattern($keyword)]);
                 }
             });
         }
 
         if (! empty($filter->title_exclude)) {
             foreach ($filter->title_exclude as $keyword) {
-                $query->whereRaw('LOWER(title) NOT LIKE ?', ['%'.mb_strtolower($keyword).'%']);
+                $query->whereRaw("LOWER(title) NOT LIKE ? ESCAPE '\\'", [$this->likePattern($keyword)]);
             }
         }
 
@@ -106,7 +106,7 @@ class JobFilterService
             $query->where(function (Builder $q) use ($countryPatterns): void {
                 $q->whereNull('location');
                 foreach ($countryPatterns as $pattern) {
-                    $q->orWhereRaw('LOWER(location) LIKE ?', ['%'.mb_strtolower($pattern).'%']);
+                    $q->orWhereRaw("LOWER(location) LIKE ? ESCAPE '\\'", [$this->likePattern($pattern)]);
                 }
             });
         }
@@ -129,6 +129,20 @@ class JobFilterService
         }
 
         return $query;
+    }
+
+    /**
+     * Build a LIKE pattern that matches the keyword literally.
+     *
+     * Escapes %, _ and the escape character itself, so a keyword such as
+     * "100% remote" is not treated as a wildcard. Callers must pair this with
+     * an explicit ESCAPE clause: PostgreSQL defaults to backslash but SQLite
+     * has no default escape character, so the clause is required for the
+     * escaping to take effect on both drivers.
+     */
+    private function likePattern(string $keyword): string
+    {
+        return '%'.addcslashes(mb_strtolower($keyword), '%_\\').'%';
     }
 
     /**
