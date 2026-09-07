@@ -9,6 +9,7 @@ use App\Infrastructure\Services\Greenhouse\GreenhouseHttpClient;
 use App\Infrastructure\Services\JobBoardClientFactory;
 use App\Infrastructure\Services\Lever\LeverHttpClient;
 use App\Infrastructure\Services\Personio\PersonioHttpClient;
+use App\Infrastructure\Services\SmartRecruiters\SmartRecruitersHttpClient;
 use App\Infrastructure\Services\Teamtailor\TeamtailorScraper;
 use App\Infrastructure\Services\Workable\WorkableHttpClient;
 
@@ -63,5 +64,14 @@ it('returns PersonioHttpClient for Personio provider', function (): void {
     $client = $factory->make(JobBoardProvider::Personio);
 
     expect($client)->toBeInstanceOf(PersonioHttpClient::class)
+        ->and($client)->toBeInstanceOf(JobBoardClient::class);
+});
+
+it('returns SmartRecruitersHttpClient for SmartRecruiters provider', function (): void {
+    $factory = new JobBoardClientFactory;
+
+    $client = $factory->make(JobBoardProvider::SmartRecruiters);
+
+    expect($client)->toBeInstanceOf(SmartRecruitersHttpClient::class)
         ->and($client)->toBeInstanceOf(JobBoardClient::class);
 });

@@ -11,6 +11,7 @@ use App\Infrastructure\Services\Factorial\FactorialScraper;
 use App\Infrastructure\Services\Greenhouse\GreenhouseHttpClient;
 use App\Infrastructure\Services\Lever\LeverHttpClient;
 use App\Infrastructure\Services\Personio\PersonioHttpClient;
+use App\Infrastructure\Services\SmartRecruiters\SmartRecruitersHttpClient;
 use App\Infrastructure\Services\Teamtailor\TeamtailorScraper;
 use App\Infrastructure\Services\Workable\WorkableHttpClient;
 
@@ -26,6 +27,7 @@ class JobBoardClientFactory
             JobBoardProvider::Ashby => app(AshbyHttpClient::class),
             JobBoardProvider::Greenhouse => app(GreenhouseHttpClient::class),
             JobBoardProvider::Personio => app(PersonioHttpClient::class),
+            JobBoardProvider::SmartRecruiters => app(SmartRecruitersHttpClient::class),
         };
     }
 }

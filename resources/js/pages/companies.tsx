@@ -61,6 +61,7 @@ export default function Companies({ companies, companyFilters, departments, coun
         { value: 'teamtailor', label: 'Teamtailor' },
         { value: 'factorial', label: 'Factorial' },
         { value: 'personio', label: 'Personio' },
+        { value: 'smartrecruiters', label: 'SmartRecruiters' },
     ];
 
     const form = useForm({ slug: '', provider: '' });
