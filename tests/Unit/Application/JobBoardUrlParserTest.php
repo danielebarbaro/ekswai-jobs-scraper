@@ -106,3 +106,39 @@ it('returns null for personio .com root host without slug subdomain', function (
     $result = $this->parser->parse('https://jobs.personio.com');
     expect($result)->toBeNull();
 });
+
+it('parses smartrecruiters jobs URL', function (): void {
+    $result = $this->parser->parse('https://jobs.smartrecruiters.com/ABOUTYOUGmbH');
+    expect($result['provider'])->toBe(JobBoardProvider::SmartRecruiters);
+    expect($result['slug'])->toBe('aboutyougmbh');
+});
+
+it('parses smartrecruiters careers URL', function (): void {
+    $result = $this->parser->parse('https://careers.smartrecruiters.com/ABOUTYOUGmbH');
+    expect($result['provider'])->toBe(JobBoardProvider::SmartRecruiters);
+    expect($result['slug'])->toBe('aboutyougmbh');
+});
+
+it('strips the posting path from a smartrecruiters URL', function (): void {
+    $result = $this->parser->parse('https://jobs.smartrecruiters.com/ABOUTYOUGmbH/744000147566189-intern-marketing');
+    expect($result['provider'])->toBe(JobBoardProvider::SmartRecruiters);
+    expect($result['slug'])->toBe('aboutyougmbh');
+});
+
+it('parses smartrecruiters URL without https prefix', function (): void {
+    $result = $this->parser->parse('jobs.smartrecruiters.com/ABOUTYOUGmbH/');
+    expect($result['provider'])->toBe(JobBoardProvider::SmartRecruiters);
+    expect($result['slug'])->toBe('aboutyougmbh');
+});
+
+it('returns null for a smartrecruiters URL without an identifier', function (): void {
+    expect($this->parser->parse('https://jobs.smartrecruiters.com/'))->toBeNull();
+});
+
+it('normalises smartrecruiters identifier casing so one board cannot create two companies', function (): void {
+    $upper = $this->parser->parse('https://jobs.smartrecruiters.com/ABOUTYOUGmbH');
+    $lower = $this->parser->parse('https://jobs.smartrecruiters.com/aboutyougmbh');
+
+    expect($upper['slug'])->toBe($lower['slug'])
+        ->and($upper['slug'])->toBe('aboutyougmbh');
+});

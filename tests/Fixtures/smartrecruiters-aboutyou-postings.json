@@ -1,0 +1,95 @@
+{
+    "offset": 0,
+    "limit": 100,
+    "totalFound": 3,
+    "content": [
+        {
+            "id": "744000147566189",
+            "name": "Praktikum Marketing & GTM Strategy (all genders)",
+            "uuid": "553090ce-69b0-4e84-a353-2cf7eabdda24",
+            "refNumber": "ID2609-00480A",
+            "company": {
+                "identifier": "ABOUTYOUGmbH",
+                "name": "ABOUT YOU SE & Co. KG"
+            },
+            "releasedDate": "2026-09-04T16:46:24.116Z",
+            "location": {
+                "city": "Hamburg",
+                "region": "HH",
+                "country": "de",
+                "remote": false,
+                "hybrid": true,
+                "fullLocation": "Hamburg, HH, Germany"
+            },
+            "department": {
+                "id": "8633151",
+                "label": "Business"
+            },
+            "typeOfEmployment": {
+                "id": "intern",
+                "label": "Intern"
+            },
+            "language": {
+                "code": "de",
+                "label": "German"
+            }
+        },
+        {
+            "id": "744000147564650",
+            "name": "Intern Marketing & GTM Strategy (all genders)",
+            "uuid": "94d0cec3-a218-4d2a-9e77-fb566d4eebd8",
+            "refNumber": "ID2609-00480A",
+            "company": {
+                "identifier": "ABOUTYOUGmbH",
+                "name": "ABOUT YOU SE & Co. KG"
+            },
+            "releasedDate": "2026-09-04T16:46:24.116Z",
+            "location": {
+                "city": "Hamburg",
+                "region": "HH",
+                "country": "de",
+                "remote": false,
+                "hybrid": true,
+                "fullLocation": "Hamburg, HH, Germany"
+            },
+            "department": {
+                "id": "8633151",
+                "label": "Business"
+            },
+            "typeOfEmployment": {
+                "id": "intern",
+                "label": "Intern"
+            },
+            "language": {
+                "code": "en",
+                "label": "English"
+            }
+        },
+        {
+            "id": "744000147556063",
+            "name": "Senior Backend Engineer (all genders)",
+            "uuid": "afa6c9f9-72c8-47bf-97aa-22b963710e2d",
+            "refNumber": "ID2608-00454A",
+            "company": {
+                "identifier": "ABOUTYOUGmbH",
+                "name": "ABOUT YOU SE & Co. KG"
+            },
+            "releasedDate": "2026-08-21T09:12:00.000Z",
+            "location": {
+                "city": "Hamburg",
+                "region": "HH",
+                "country": "de",
+                "remote": true,
+                "hybrid": false
+            },
+            "department": {
+                "id": "8633152",
+                "label": "Tech"
+            },
+            "language": {
+                "code": "en",
+                "label": "English"
+            }
+        }
+    ]
+}

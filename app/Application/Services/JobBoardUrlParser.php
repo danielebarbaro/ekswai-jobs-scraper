@@ -19,6 +19,8 @@ class JobBoardUrlParser
         'job-boards.eu.greenhouse.io' => JobBoardProvider::Greenhouse,
         'teamtailor.com' => JobBoardProvider::Teamtailor,
         'factorialhr.com' => JobBoardProvider::Factorial,
+        'jobs.smartrecruiters.com' => JobBoardProvider::SmartRecruiters,
+        'careers.smartrecruiters.com' => JobBoardProvider::SmartRecruiters,
     ];
 
     /** @var list<string> */
@@ -75,6 +77,15 @@ class JobBoardUrlParser
             foreach (self::URL_PATTERNS as $domain => $provider) {
                 if ($host === $domain) {
                     $slug = explode('/', $path)[0];
+
+                    // SmartRecruiters identifiers are published mixed-case (ABOUTYOUGmbH) but
+                    // both the API and the public job pages resolve case-insensitively. Companies
+                    // are unique on (provider, provider_slug), so without normalising here the
+                    // same board added from two different casings would create two rows.
+                    if ($provider === JobBoardProvider::SmartRecruiters) {
+                        $slug = mb_strtolower($slug);
+                    }
+
                     if ($slug !== '') {
                         return ['provider' => $provider, 'slug' => $slug];
                     }
