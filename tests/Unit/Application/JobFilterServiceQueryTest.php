@@ -73,3 +73,40 @@ it('returns unmodified query when filter is null', function (): void {
 
     expect($result)->toHaveCount(3);
 });
+
+it('treats a percent sign in an include keyword as a literal character', function (): void {
+    $company = Company::factory()->create();
+    JobPosting::factory()->create(['company_id' => $company->id, 'title' => 'Senior 100% Remote Engineer']);
+    JobPosting::factory()->create(['company_id' => $company->id, 'title' => 'Level 100 Remote Engineer']);
+
+    $filter = JobFilter::factory()->make(['title_include' => ['100%']]);
+    $query = JobPosting::query()->where('company_id', $company->id);
+    $result = $this->service->applyToQuery($query, $filter)->get();
+
+    expect($result->pluck('title')->all())->toBe(['Senior 100% Remote Engineer']);
+});
+
+it('treats an underscore in an include keyword as a literal character', function (): void {
+    $company = Company::factory()->create();
+    JobPosting::factory()->create(['company_id' => $company->id, 'title' => 'Data_Engineer']);
+    JobPosting::factory()->create(['company_id' => $company->id, 'title' => 'Data Engineer']);
+    JobPosting::factory()->create(['company_id' => $company->id, 'title' => 'DataXEngineer']);
+
+    $filter = JobFilter::factory()->make(['title_include' => ['Data_Engineer']]);
+    $query = JobPosting::query()->where('company_id', $company->id);
+    $result = $this->service->applyToQuery($query, $filter)->get();
+
+    expect($result->pluck('title')->all())->toBe(['Data_Engineer']);
+});
+
+it('treats wildcards in an exclude keyword as literal characters', function (): void {
+    $company = Company::factory()->create();
+    JobPosting::factory()->create(['company_id' => $company->id, 'title' => 'Senior 100% Remote Engineer']);
+    JobPosting::factory()->create(['company_id' => $company->id, 'title' => 'Level 100 Remote Engineer']);
+
+    $filter = JobFilter::factory()->make(['title_exclude' => ['100%']]);
+    $query = JobPosting::query()->where('company_id', $company->id);
+    $result = $this->service->applyToQuery($query, $filter)->get();
+
+    expect($result->pluck('title')->all())->toBe(['Level 100 Remote Engineer']);
+});
