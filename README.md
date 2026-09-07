@@ -35,10 +35,16 @@ Filament 4 panel to manage companies, job postings, users, and scraper configura
 | Lever | REST API | `jobs.lever.co/scaleway` |
 | Ashby | REST API | `jobs.ashbyhq.com/ramp` |
 | Greenhouse | REST API | `boards.greenhouse.io/discord` |
+| Personio | XML Feed | `sensoryminds.jobs.personio.com` |
+| SmartRecruiters | REST API | `jobs.smartrecruiters.com/ABOUTYOUGmbH` |
 | Teamtailor | HTML Scraper | `weroad.teamtailor.com/jobs` |
 | Factorial | HTML Scraper | `shippypro.factorialhr.com` |
 
-API providers use JSON endpoints directly. HTML scraper providers use configurable CSS selectors with built in health checks and retry logic (managed via the admin panel).
+API providers use JSON endpoints directly. Personio serves an XML feed on both the `.de` and `.com` domains. HTML scraper providers use configurable CSS selectors with built in health checks and retry logic (managed via the admin panel).
+
+### Default companies
+
+`resources/data/default-companies.json` holds the baseline company list (provider, slug, name) that a fresh install starts with. It is read by `DefaultCompanyList`, which backs both the `DefaultCompaniesSeeder` and the in app "load defaults" action, so the two can never drift apart. Adding a default company is a JSON edit, not a code change.
 
 ## Tech Stack
 
@@ -87,13 +93,15 @@ app/
         ├── Lever/       # Lever API client
         ├── Ashby/       # Ashby API client
         ├── Greenhouse/  # Greenhouse API client
+        ├── Personio/    # Personio XML feed client
+        ├── SmartRecruiters/ # SmartRecruiters API client
         ├── Teamtailor/  # Teamtailor HTML scraper
         ├── Factorial/   # Factorial HTML scraper
         ├── Scraping/    # BaseHtmlScraper, ScraperHealthChecker, exceptions
         └── JobBoardClientFactory.php
 ```
 
-**Provider pattern:** each job board integration implements the `JobBoardClient` interface (`fetchJobsForCompany` and `validateSlug`). The `JobBoardProvider` enum lists available providers, and `JobBoardClientFactory` resolves the correct client. API providers (Workable, Lever, Ashby, Greenhouse) call JSON endpoints directly. HTML scraper providers (Teamtailor, Factorial) extend `BaseHtmlScraper` which handles retry logic, DOM parsing, and validation using CSS selectors from `ScraperConfig`.
+**Provider pattern:** each job board integration implements the `JobBoardClient` interface (`fetchJobsForCompany` and `validateSlug`). The `JobBoardProvider` enum lists available providers, and `JobBoardClientFactory` resolves the correct client. API providers (Workable, Lever, Ashby, Greenhouse, SmartRecruiters) call JSON endpoints directly, Personio reads an XML feed. HTML scraper providers (Teamtailor, Factorial) extend `BaseHtmlScraper` which handles retry logic, DOM parsing, and validation using CSS selectors from `ScraperConfig`.
 
 **Job Filters:**
 Users can define filters to control which job postings appear in their dashboard and email notifications. Filters support title keywords (include/exclude), country (powered by [laravel-istat-foreign-countries](https://github.com/plin-code/laravel-istat-foreign-countries) for ISO country matching), remote only, and department. Filters are global by default, with optional per-company overrides. All criteria combine with AND logic, values within each criterion combine with OR. Filter data is stored in the `job_filters` table and managed through the Filters page (global) or the company filter dialog (per-company overrides).
@@ -106,7 +114,9 @@ Users subscribe to companies via `company_user` pivot (with email notification t
 1. Add a new case to `JobBoardProvider` enum (`app/Domain/Company/JobBoardProvider.php`)
 2. Create a class implementing `JobBoardClient` (`app/Infrastructure/Services/Contracts/JobBoardClient.php`)
 3. Register it in `JobBoardClientFactory::make()` (`app/Infrastructure/Services/JobBoardClientFactory.php`)
-4. For HTML scraper providers: add a `ScraperConfig` entry with CSS selectors in `ScraperConfigSeeder`
+4. Add the host to `JobBoardUrlParser` so pasted career page URLs resolve to the provider (`app/Application/Services/JobBoardUrlParser.php`)
+5. Add the provider to the hardcoded dropdown in `resources/js/pages/companies.tsx`. The Filament selects read `JobBoardProvider::cases()` and pick it up on their own, this one does not
+6. For HTML scraper providers: add a `ScraperConfig` entry with CSS selectors in `ScraperConfigSeeder`
 
 ## Quick Start
 
