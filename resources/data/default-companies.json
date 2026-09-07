@@ -1,0 +1,12 @@
+[
+    { "provider": "workable", "slug": "laravel", "name": "Laravel" },
+    { "provider": "workable", "slug": "gelato", "name": "Gelato" },
+    { "provider": "workable", "slug": "patchstack", "name": "Patchstack" },
+    { "provider": "lever", "slug": "scaleway", "name": "Scaleway" },
+    { "provider": "lever", "slug": "coinspaid", "name": "CoinsPaid" },
+    { "provider": "teamtailor", "slug": "weroad", "name": "WeRoad" },
+    { "provider": "factorial", "slug": "shippypro", "name": "ShippyPro" },
+    { "provider": "ashby", "slug": "jimdo.com", "name": "Jimdo" },
+    { "provider": "greenhouse", "slug": "carta", "name": "Carta" },
+    { "provider": "greenhouse", "slug": "scalapaysrl", "name": "Scalapay" }
+]

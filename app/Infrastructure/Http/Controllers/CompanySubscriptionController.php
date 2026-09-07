@@ -8,6 +8,7 @@ use App\Application\Actions\Company\FollowCompanyAction;
 use App\Application\Actions\Company\LoadDemoCompaniesAction;
 use App\Application\Actions\Company\UnfollowCompanyAction;
 use App\Application\Actions\JobPosting\SyncCompanyJobPostingsAction;
+use App\Application\Services\DefaultCompanyList;
 use App\Domain\Company\Company;
 use App\Domain\Company\JobBoardProvider;
 use App\Domain\JobPosting\JobPosting;
@@ -76,7 +77,7 @@ class CompanySubscriptionController extends Controller
                 ]),
             ]);
 
-        $demoSlugs = collect(LoadDemoCompaniesAction::DEMO_COMPANIES)
+        $demoSlugs = collect(DefaultCompanyList::all())
             ->map(fn (array $d): string => $d['provider'].':'.$d['slug']);
 
         $followedSlugs = $user->subscribedCompanies->map(fn (Company $c): string => $c->provider->value.':'.$c->provider_slug);
