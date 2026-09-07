@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Application\Actions\Company\LoadDemoCompaniesAction;
 use App\Application\Actions\JobPosting\SyncCompanyJobPostingsAction;
+use App\Application\Services\DefaultCompanyList;
 use App\Domain\User\User;
 
 it('subscribes user to demo companies', function (): void {
@@ -17,7 +18,7 @@ it('subscribes user to demo companies', function (): void {
 
     $subscribed = $action->execute($user);
 
-    $expectedCount = count(LoadDemoCompaniesAction::DEMO_COMPANIES);
+    $expectedCount = count(DefaultCompanyList::all());
 
     expect($subscribed)->toBe($expectedCount)
         ->and($user->subscribedCompanies()->count())->toBe($expectedCount);
@@ -36,7 +37,7 @@ it('skips already subscribed companies', function (): void {
     $secondRun = $action->execute($user);
 
     expect($secondRun)->toBe(0)
-        ->and($user->subscribedCompanies()->count())->toBe(count(LoadDemoCompaniesAction::DEMO_COMPANIES));
+        ->and($user->subscribedCompanies()->count())->toBe(count(DefaultCompanyList::all()));
 });
 
 it('handles sync failure gracefully', function (): void {
@@ -50,5 +51,5 @@ it('handles sync failure gracefully', function (): void {
 
     $subscribed = $action->execute($user);
 
-    expect($subscribed)->toBe(count(LoadDemoCompaniesAction::DEMO_COMPANIES));
+    expect($subscribed)->toBe(count(DefaultCompanyList::all()));
 });
