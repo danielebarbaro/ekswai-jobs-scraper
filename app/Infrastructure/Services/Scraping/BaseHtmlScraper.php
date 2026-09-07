@@ -19,6 +19,8 @@ abstract class BaseHtmlScraper implements JobBoardClient
 {
     private const int TIMEOUT_SECONDS = 30;
 
+    private ?ScraperConfig $config = null;
+
     abstract public function getProvider(): JobBoardProvider;
 
     abstract protected function mapJobElement(Crawler $node): JobPostingDTO;
@@ -123,9 +125,15 @@ abstract class BaseHtmlScraper implements JobBoardClient
         return $this->getConfig()->selectors;
     }
 
+    /**
+     * Memoised per instance: getConfigSelectors() is called from inside the
+     * per-element mapping closure, so without this the config is re-queried
+     * once per job posting on every sync. Scrapers are resolved fresh from the
+     * container on each call, so an admin edit is still picked up next sync.
+     */
     protected function getConfig(): ScraperConfig
     {
-        return ScraperConfig::query()
+        return $this->config ??= ScraperConfig::query()
             ->where('provider', $this->getProvider()->value)
             ->where('is_active', true)
             ->firstOrFail();

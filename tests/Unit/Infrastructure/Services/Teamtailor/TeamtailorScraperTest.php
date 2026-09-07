@@ -51,3 +51,19 @@ it('extracts department and location', function (): void {
     expect($job->department)->toBeString()->not->toBeEmpty()
         ->and($job->rawPayload)->toHaveKey('source', 'teamtailor');
 });
+
+it('reads the scraper config once per sync instead of once per job posting', function (): void {
+    Http::fake(['https://weroad.teamtailor.com/jobs' => Http::response($this->fixture, 200)]);
+
+    $queries = 0;
+    DB::listen(function ($query) use (&$queries): void {
+        if (str_contains($query->sql, 'scraper_configs')) {
+            $queries++;
+        }
+    });
+
+    $jobs = $this->scraper->fetchJobsForCompany('weroad');
+
+    expect($jobs)->not->toBeEmpty()
+        ->and($queries)->toBe(1);
+});
