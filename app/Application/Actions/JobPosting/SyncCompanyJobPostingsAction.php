@@ -34,7 +34,7 @@ class SyncCompanyJobPostingsAction
         $client = $this->clientFactory->make($company->provider);
         $jobs = $client->fetchJobsForCompany($company->provider_slug);
 
-        if ($jobs->isEmpty()) {
+        if ($jobs === []) {
             Log::info('No jobs found from API', [
                 'company_id' => $company->id,
             ]);
@@ -82,7 +82,7 @@ class SyncCompanyJobPostingsAction
 
         Log::info('Job sync completed', [
             'company_id' => $company->id,
-            'total_jobs_from_api' => $jobs->count(),
+            'total_jobs_from_api' => count($jobs),
             'new_jobs_found' => $newJobs->count(),
         ]);
 

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-use App\Application\DTOs\JobPostingDTO;
 use App\Application\Services\JobFilterService;
 use App\Domain\Company\Company;
 use App\Domain\JobFilter\JobFilter;
 use App\Domain\User\User;
+use PlinCode\JobBoards\Data\JobPostingDTO;
 
 beforeEach(function (): void {
     $this->service = app(JobFilterService::class);

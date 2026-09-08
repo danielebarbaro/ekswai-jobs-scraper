@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Domain\Company\JobBoardProvider;
 use App\Domain\ScraperConfig\ScraperConfig;
 use App\Infrastructure\Services\Teamtailor\TeamtailorScraper;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
 beforeEach(function (): void {
@@ -27,9 +28,9 @@ it('parses jobs from real teamtailor html', function (): void {
     $jobs = $this->scraper->fetchJobsForCompany('weroad');
 
     expect($jobs)->not->toBeEmpty()
-        ->and($jobs->first()->title)->toBeString()->not->toBeEmpty()
-        ->and($jobs->first()->externalId)->toBeString()->not->toBeEmpty()
-        ->and($jobs->first()->url)->toBeString()->toContain('teamtailor.com');
+        ->and($jobs[0]->title)->toBeString()->not->toBeEmpty()
+        ->and($jobs[0]->externalId)->toBeString()->not->toBeEmpty()
+        ->and($jobs[0]->url)->toBeString()->toContain('teamtailor.com');
 });
 
 it('extracts numeric external id from url', function (): void {
@@ -38,14 +39,14 @@ it('extracts numeric external id from url', function (): void {
     $jobs = $this->scraper->fetchJobsForCompany('weroad');
 
     // The first job URL is /jobs/7289318-customer-care-assistant, so ID should be 7289318
-    expect($jobs->first()->externalId)->toMatch('/^\d+$/');
+    expect($jobs[0]->externalId)->toMatch('/^\d+$/');
 });
 
 it('extracts department and location', function (): void {
     Http::fake(['https://weroad.teamtailor.com/jobs' => Http::response($this->fixture, 200)]);
 
     $jobs = $this->scraper->fetchJobsForCompany('weroad');
-    $job = $jobs->first();
+    $job = $jobs[0];
 
     // First job should have department "Commercial" and location "Milan"
     expect($job->department)->toBeString()->not->toBeEmpty()
@@ -56,7 +57,7 @@ it('reads the scraper config once per sync instead of once per job posting', fun
     Http::fake(['https://weroad.teamtailor.com/jobs' => Http::response($this->fixture, 200)]);
 
     $queries = 0;
-    \Illuminate\Support\Facades\DB::listen(function ($query) use (&$queries): void {
+    DB::listen(function ($query) use (&$queries): void {
         if (str_contains($query->sql, 'scraper_configs')) {
             $queries++;
         }

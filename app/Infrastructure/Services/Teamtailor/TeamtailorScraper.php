@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Services\Teamtailor;
 
-use App\Application\DTOs\JobPostingDTO;
 use App\Domain\Company\JobBoardProvider;
 use App\Infrastructure\Services\Scraping\BaseHtmlScraper;
+use PlinCode\JobBoards\Data\JobPostingDTO;
 use Symfony\Component\DomCrawler\Crawler;
 
 class TeamtailorScraper extends BaseHtmlScraper

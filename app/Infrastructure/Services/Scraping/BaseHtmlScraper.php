@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Services\Scraping;
 
-use App\Application\DTOs\JobPostingDTO;
 use App\Domain\Company\JobBoardProvider;
 use App\Domain\ScraperConfig\ScraperConfig;
-use App\Infrastructure\Services\Contracts\JobBoardClient;
 use App\Infrastructure\Services\Scraping\Exceptions\DomStructureChangedException;
 use App\Infrastructure\Services\Scraping\Exceptions\ScrapingFailedException;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use PlinCode\JobBoards\Contracts\JobBoardClient;
+use PlinCode\JobBoards\Data\JobPostingDTO;
 use Symfony\Component\DomCrawler\Crawler;
 
 abstract class BaseHtmlScraper implements JobBoardClient
@@ -25,7 +24,10 @@ abstract class BaseHtmlScraper implements JobBoardClient
 
     abstract protected function mapJobElement(Crawler $node): JobPostingDTO;
 
-    public function fetchJobsForCompany(string $slug): Collection
+    /**
+     * @return list<JobPostingDTO>
+     */
+    public function fetchJobsForCompany(string $slug): array
     {
         $config = $this->getConfig();
         $url = $this->buildUrl($config->base_url_pattern, $slug);
@@ -41,9 +43,9 @@ abstract class BaseHtmlScraper implements JobBoardClient
 
                 $jobListSelector = $config->selectors['job_list'];
 
-                return collect($crawler->filter($jobListSelector)->each(
+                return $crawler->filter($jobListSelector)->each(
                     fn (Crawler $node): JobPostingDTO => $this->mapJobElement($node)
-                ));
+                );
             } catch (DomStructureChangedException|ScrapingFailedException $e) {
                 $lastException = $e;
             } catch (\Throwable $e) {

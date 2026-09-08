@@ -3,16 +3,16 @@
 declare(strict_types=1);
 
 use App\Application\Actions\Sync\RunDailySyncAction;
-use App\Application\DTOs\JobPostingDTO;
 use App\Domain\Company\Company;
 use App\Domain\Company\JobBoardProvider;
 use App\Domain\ScraperConfig\ScraperConfig;
 use App\Domain\User\User;
 use App\Infrastructure\Mail\NewJobsFoundMail;
-use App\Infrastructure\Services\Contracts\JobBoardClient;
 use App\Infrastructure\Services\JobBoardClientFactory;
 use App\Infrastructure\Services\Scraping\Exceptions\DomStructureChangedException;
 use Illuminate\Support\Facades\Mail;
+use PlinCode\JobBoards\Contracts\JobBoardClient;
+use PlinCode\JobBoards\Data\JobPostingDTO;
 
 beforeEach(function (): void {
     Mail::fake();
@@ -33,9 +33,9 @@ it('collects scraping failures and includes them in user email', function (): vo
     $mockClient = Mockery::mock(JobBoardClient::class);
     $mockClient->shouldReceive('fetchJobsForCompany')
         ->with('good-co')
-        ->andReturn(collect([
+        ->andReturn([
             new JobPostingDTO('j1', 'Engineer', 'Remote', 'https://example.com/j1', 'Eng', []),
-        ]));
+        ]);
 
     $failingClient = Mockery::mock(JobBoardClient::class);
     $failingClient->shouldReceive('fetchJobsForCompany')
