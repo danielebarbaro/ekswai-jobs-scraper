@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6dab2de13d3784f02acb93b20366efda",
+    "content-hash": "9554032503e388bec7be06006550c5a8",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -5055,36 +5055,7 @@
                     "PlinCode\\JobBoards\\Ashby\\": "src/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "PlinCode\\JobBoards\\Ashby\\Tests\\": "tests/"
-                }
-            },
-            "scripts": {
-                "post-autoload-dump": [
-                    "@prepare"
-                ],
-                "prepare": [
-                    "@php vendor/bin/testbench package:discover --ansi"
-                ],
-                "lint": [
-                    "vendor/bin/pint --parallel"
-                ],
-                "lint:check": [
-                    "vendor/bin/pint --parallel --test"
-                ],
-                "analyse": [
-                    "vendor/bin/phpstan analyse"
-                ],
-                "test:unit": [
-                    "vendor/bin/pest"
-                ],
-                "test": [
-                    "@analyse",
-                    "@lint:check",
-                    "@test:unit"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -5098,17 +5069,17 @@
             "description": "Ashby job board connector for the plin-code job-boards family",
             "homepage": "https://github.com/plin-code/job-boards-ashby",
             "keywords": [
+                "ATS",
                 "PlinCode",
                 "ashby",
-                "ats",
                 "job-board",
                 "job-boards",
                 "laravel",
                 "plin-code"
             ],
             "support": {
-                "source": "https://github.com/plin-code/job-boards-ashby/tree/v0.1.1",
-                "issues": "https://github.com/plin-code/job-boards-ashby/issues"
+                "issues": "https://github.com/plin-code/job-boards-ashby/issues",
+                "source": "https://github.com/plin-code/job-boards-ashby/tree/v0.1.1"
             },
             "time": "2026-09-08T09:37:25+00:00"
         },
@@ -5148,29 +5119,7 @@
                     "PlinCode\\JobBoards\\": "src/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "PlinCode\\JobBoards\\Tests\\": "tests/"
-                }
-            },
-            "scripts": {
-                "analyse": [
-                    "vendor/bin/phpstan analyse"
-                ],
-                "test": [
-                    "vendor/bin/pest"
-                ],
-                "test-coverage": [
-                    "vendor/bin/pest --coverage"
-                ],
-                "format": [
-                    "vendor/bin/pint"
-                ],
-                "check": [
-                    "@analyse",
-                    "@test"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -5184,8 +5133,8 @@
             "description": "Framework agnostic contracts, DTOs and HTTP helpers shared by every plin-code job board connector",
             "homepage": "https://github.com/plin-code/job-boards-core",
             "keywords": [
+                "ATS",
                 "PlinCode",
-                "ats",
                 "job-board",
                 "job-boards",
                 "plin-code",
@@ -5193,8 +5142,8 @@
                 "scraping"
             ],
             "support": {
-                "source": "https://github.com/plin-code/job-boards-core/tree/v0.3.0",
-                "issues": "https://github.com/plin-code/job-boards-core/issues"
+                "issues": "https://github.com/plin-code/job-boards-core/issues",
+                "source": "https://github.com/plin-code/job-boards-core/tree/v0.3.0"
             },
             "time": "2026-09-08T07:15:56+00:00"
         },
@@ -5243,36 +5192,7 @@
                     "PlinCode\\JobBoards\\Greenhouse\\": "src/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "PlinCode\\JobBoards\\Greenhouse\\Tests\\": "tests/"
-                }
-            },
-            "scripts": {
-                "post-autoload-dump": [
-                    "@prepare"
-                ],
-                "prepare": [
-                    "@php vendor/bin/testbench package:discover --ansi"
-                ],
-                "lint": [
-                    "vendor/bin/pint --parallel"
-                ],
-                "lint:check": [
-                    "vendor/bin/pint --parallel --test"
-                ],
-                "analyse": [
-                    "vendor/bin/phpstan analyse"
-                ],
-                "test:unit": [
-                    "vendor/bin/pest"
-                ],
-                "test": [
-                    "@analyse",
-                    "@lint:check",
-                    "@test:unit"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -5286,8 +5206,8 @@
             "description": "Greenhouse job board connector for the plin-code job-boards family",
             "homepage": "https://github.com/plin-code/job-boards-greenhouse",
             "keywords": [
+                "ATS",
                 "PlinCode",
-                "ats",
                 "greenhouse",
                 "job-board",
                 "job-boards",
@@ -5295,8 +5215,8 @@
                 "plin-code"
             ],
             "support": {
-                "source": "https://github.com/plin-code/job-boards-greenhouse/tree/v0.1.1",
-                "issues": "https://github.com/plin-code/job-boards-greenhouse/issues"
+                "issues": "https://github.com/plin-code/job-boards-greenhouse/issues",
+                "source": "https://github.com/plin-code/job-boards-greenhouse/tree/v0.1.1"
             },
             "time": "2026-09-08T09:37:30+00:00"
         },
@@ -5346,36 +5266,7 @@
                     "PlinCode\\JobBoards\\Lever\\": "src/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "PlinCode\\JobBoards\\Lever\\Tests\\": "tests/"
-                }
-            },
-            "scripts": {
-                "post-autoload-dump": [
-                    "@prepare"
-                ],
-                "prepare": [
-                    "@php vendor/bin/testbench package:discover --ansi"
-                ],
-                "lint": [
-                    "vendor/bin/pint --parallel"
-                ],
-                "lint:check": [
-                    "vendor/bin/pint --parallel --test"
-                ],
-                "analyse": [
-                    "vendor/bin/phpstan analyse"
-                ],
-                "test:unit": [
-                    "vendor/bin/pest"
-                ],
-                "test": [
-                    "@analyse",
-                    "@lint:check",
-                    "@test:unit"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -5389,8 +5280,8 @@
             "description": "Lever job board connector for the plin-code job-boards family",
             "homepage": "https://github.com/plin-code/job-boards-lever",
             "keywords": [
+                "ATS",
                 "PlinCode",
-                "ats",
                 "job-board",
                 "job-boards",
                 "laravel",
@@ -5398,8 +5289,8 @@
                 "plin-code"
             ],
             "support": {
-                "source": "https://github.com/plin-code/job-boards-lever/tree/v0.1.2",
-                "issues": "https://github.com/plin-code/job-boards-lever/issues"
+                "issues": "https://github.com/plin-code/job-boards-lever/issues",
+                "source": "https://github.com/plin-code/job-boards-lever/tree/v0.1.2"
             },
             "time": "2026-09-08T09:51:40+00:00"
         },
@@ -5450,36 +5341,7 @@
                     "PlinCode\\JobBoards\\Personio\\": "src/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "PlinCode\\JobBoards\\Personio\\Tests\\": "tests/"
-                }
-            },
-            "scripts": {
-                "post-autoload-dump": [
-                    "@prepare"
-                ],
-                "prepare": [
-                    "@php vendor/bin/testbench package:discover --ansi"
-                ],
-                "lint": [
-                    "vendor/bin/pint --parallel"
-                ],
-                "lint:check": [
-                    "vendor/bin/pint --parallel --test"
-                ],
-                "analyse": [
-                    "vendor/bin/phpstan analyse"
-                ],
-                "test:unit": [
-                    "vendor/bin/pest"
-                ],
-                "test": [
-                    "@analyse",
-                    "@lint:check",
-                    "@test:unit"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -5493,8 +5355,8 @@
             "description": "Personio job board connector for the plin-code job-boards family",
             "homepage": "https://github.com/plin-code/job-boards-personio",
             "keywords": [
+                "ATS",
                 "PlinCode",
-                "ats",
                 "job-board",
                 "job-boards",
                 "laravel",
@@ -5502,8 +5364,8 @@
                 "plin-code"
             ],
             "support": {
-                "source": "https://github.com/plin-code/job-boards-personio/tree/v0.1.1",
-                "issues": "https://github.com/plin-code/job-boards-personio/issues"
+                "issues": "https://github.com/plin-code/job-boards-personio/issues",
+                "source": "https://github.com/plin-code/job-boards-personio/tree/v0.1.1"
             },
             "time": "2026-09-08T09:37:36+00:00"
         },
@@ -5552,36 +5414,7 @@
                     "PlinCode\\JobBoards\\SmartRecruiters\\": "src/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "PlinCode\\JobBoards\\SmartRecruiters\\Tests\\": "tests/"
-                }
-            },
-            "scripts": {
-                "post-autoload-dump": [
-                    "@prepare"
-                ],
-                "prepare": [
-                    "@php vendor/bin/testbench package:discover --ansi"
-                ],
-                "lint": [
-                    "vendor/bin/pint --parallel"
-                ],
-                "lint:check": [
-                    "vendor/bin/pint --parallel --test"
-                ],
-                "analyse": [
-                    "vendor/bin/phpstan analyse"
-                ],
-                "test:unit": [
-                    "vendor/bin/pest"
-                ],
-                "test": [
-                    "@analyse",
-                    "@lint:check",
-                    "@test:unit"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -5595,8 +5428,8 @@
             "description": "SmartRecruiters job board connector for the plin-code job-boards family",
             "homepage": "https://github.com/plin-code/job-boards-smartrecruiters",
             "keywords": [
+                "ATS",
                 "PlinCode",
-                "ats",
                 "job-board",
                 "job-boards",
                 "laravel",
@@ -5604,8 +5437,8 @@
                 "smartrecruiters"
             ],
             "support": {
-                "source": "https://github.com/plin-code/job-boards-smartrecruiters/tree/v0.1.1",
-                "issues": "https://github.com/plin-code/job-boards-smartrecruiters/issues"
+                "issues": "https://github.com/plin-code/job-boards-smartrecruiters/issues",
+                "source": "https://github.com/plin-code/job-boards-smartrecruiters/tree/v0.1.1"
             },
             "time": "2026-09-08T09:37:42+00:00"
         },
@@ -5654,36 +5487,7 @@
                     "PlinCode\\JobBoards\\Workable\\": "src/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "PlinCode\\JobBoards\\Workable\\Tests\\": "tests/"
-                }
-            },
-            "scripts": {
-                "post-autoload-dump": [
-                    "@prepare"
-                ],
-                "prepare": [
-                    "@php vendor/bin/testbench package:discover --ansi"
-                ],
-                "lint": [
-                    "vendor/bin/pint --parallel"
-                ],
-                "lint:check": [
-                    "vendor/bin/pint --parallel --test"
-                ],
-                "analyse": [
-                    "vendor/bin/phpstan analyse"
-                ],
-                "test:unit": [
-                    "vendor/bin/pest"
-                ],
-                "test": [
-                    "@analyse",
-                    "@lint:check",
-                    "@test:unit"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -5697,8 +5501,8 @@
             "description": "Workable job board connector for the plin-code job-boards family",
             "homepage": "https://github.com/plin-code/job-boards-workable",
             "keywords": [
+                "ATS",
                 "PlinCode",
-                "ats",
                 "job-board",
                 "job-boards",
                 "laravel",
@@ -5706,8 +5510,8 @@
                 "workable"
             ],
             "support": {
-                "source": "https://github.com/plin-code/job-boards-workable/tree/v0.1.2",
-                "issues": "https://github.com/plin-code/job-boards-workable/issues"
+                "issues": "https://github.com/plin-code/job-boards-workable/issues",
+                "source": "https://github.com/plin-code/job-boards-workable/tree/v0.1.2"
             },
             "time": "2026-09-08T09:37:13+00:00"
         },
