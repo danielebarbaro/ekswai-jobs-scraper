@@ -51,10 +51,6 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/plin-code/job-boards-core.git"
-        },
-        {
-            "type": "vcs",
             "url": "https://github.com/plin-code/job-boards-workable.git"
         },
         {
