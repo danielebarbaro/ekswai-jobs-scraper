@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-use App\Application\DTOs\JobPostingDTO;
 use App\Domain\ScraperConfig\ScraperConfig;
 use App\Infrastructure\Services\Scraping\Exceptions\DomStructureChangedException;
 use App\Infrastructure\Services\Scraping\Exceptions\ScrapingFailedException;
 use Illuminate\Support\Facades\Http;
+use PlinCode\JobBoards\Data\JobPostingDTO;
 use Tests\Unit\Infrastructure\Services\Scraping\FakeHtmlScraper;
 
 beforeEach(function (): void {

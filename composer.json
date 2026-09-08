@@ -22,6 +22,12 @@
         "laravel/nightwatch": "^1.26",
         "laravel/tinker": "^2.10.1",
         "laravel/wayfinder": "^0.1.9",
+        "plin-code/job-boards-ashby": "^0.1.1",
+        "plin-code/job-boards-greenhouse": "^0.1.1",
+        "plin-code/job-boards-lever": "^0.1.2",
+        "plin-code/job-boards-personio": "^0.1.1",
+        "plin-code/job-boards-smartrecruiters": "^0.1.1",
+        "plin-code/job-boards-workable": "^0.1.2",
         "plin-code/laravel-istat-foreign-countries": "^1.1",
         "resend/resend-laravel": "*",
         "symfony/css-selector": "^8.0",
@@ -42,6 +48,36 @@
         "pestphp/pest-plugin-laravel": "^4.0",
         "rector/rector": "^2.0"
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/plin-code/job-boards-core.git"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/plin-code/job-boards-workable.git"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/plin-code/job-boards-lever.git"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/plin-code/job-boards-ashby.git"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/plin-code/job-boards-greenhouse.git"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/plin-code/job-boards-personio.git"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/plin-code/job-boards-smartrecruiters.git"
+        }
+    ],
     "autoload": {
         "psr-4": {
             "App\\": "app/",

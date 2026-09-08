@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "71c95e0b6952bed863363f6981fa98d9",
+    "content-hash": "8702caf916c77c546a2bdb2ab540c351",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -5009,6 +5009,707 @@
                 "source": "https://github.com/phpstan/phpdoc-parser/tree/2.3.5"
             },
             "time": "2026-08-31T16:05:28+00:00"
+        },
+        {
+            "name": "plin-code/job-boards-ashby",
+            "version": "v0.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/plin-code/job-boards-ashby.git",
+                "reference": "d1b4aa2672b22e626df64213e75cc1cc76a66935"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/plin-code/job-boards-ashby/zipball/d1b4aa2672b22e626df64213e75cc1cc76a66935",
+                "reference": "d1b4aa2672b22e626df64213e75cc1cc76a66935",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^7.8",
+                "illuminate/contracts": "^12.0||^13.0",
+                "php": "^8.3",
+                "plin-code/job-boards-core": "^0.2||^0.3",
+                "psr/http-client": "^1.0",
+                "psr/http-factory": "^1.0",
+                "psr/log": "^2.0||^3.0",
+                "spatie/laravel-package-tools": "^1.16"
+            },
+            "require-dev": {
+                "larastan/larastan": "^3.0",
+                "laravel/pint": "^1.24",
+                "orchestra/testbench": "^10.0||^11.0",
+                "pestphp/pest": "^3.0||^4.0",
+                "pestphp/pest-plugin-laravel": "^3.0||^4.0",
+                "phpstan/extension-installer": "^1.4"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "PlinCode\\JobBoards\\Ashby\\AshbyServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "PlinCode\\JobBoards\\Ashby\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "PlinCode\\JobBoards\\Ashby\\Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "post-autoload-dump": [
+                    "@prepare"
+                ],
+                "prepare": [
+                    "@php vendor/bin/testbench package:discover --ansi"
+                ],
+                "lint": [
+                    "vendor/bin/pint --parallel"
+                ],
+                "lint:check": [
+                    "vendor/bin/pint --parallel --test"
+                ],
+                "analyse": [
+                    "vendor/bin/phpstan analyse"
+                ],
+                "test:unit": [
+                    "vendor/bin/pest"
+                ],
+                "test": [
+                    "@analyse",
+                    "@lint:check",
+                    "@test:unit"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Daniele Barbaro",
+                    "email": "barbaro.daniele@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Ashby job board connector for the plin-code job-boards family",
+            "homepage": "https://github.com/plin-code/job-boards-ashby",
+            "keywords": [
+                "PlinCode",
+                "ashby",
+                "ats",
+                "job-board",
+                "job-boards",
+                "laravel",
+                "plin-code"
+            ],
+            "support": {
+                "source": "https://github.com/plin-code/job-boards-ashby/tree/v0.1.1",
+                "issues": "https://github.com/plin-code/job-boards-ashby/issues"
+            },
+            "time": "2026-09-08T09:37:25+00:00"
+        },
+        {
+            "name": "plin-code/job-boards-core",
+            "version": "v0.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/plin-code/job-boards-core.git",
+                "reference": "35ce3ea9f301b19422aa314328d7ba6642bc03cd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/plin-code/job-boards-core/zipball/35ce3ea9f301b19422aa314328d7ba6642bc03cd",
+                "reference": "35ce3ea9f301b19422aa314328d7ba6642bc03cd",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.3",
+                "psr/http-client": "^1.0",
+                "psr/http-factory": "^1.0",
+                "psr/http-message": "^1.1||^2.0",
+                "psr/log": "^2.0||^3.0"
+            },
+            "require-dev": {
+                "guzzlehttp/guzzle": "^7.8",
+                "laravel/pint": "^1.14",
+                "pestphp/pest": "^3.0||^4.0",
+                "phpstan/phpstan": "^2.0"
+            },
+            "suggest": {
+                "guzzlehttp/guzzle": "To use PlinCode\\JobBoards\\Http\\GuzzleTimeoutClient, which makes per-call timeouts take effect, and the PSR-18 test doubles under PlinCode\\JobBoards\\Testing."
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PlinCode\\JobBoards\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "PlinCode\\JobBoards\\Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "analyse": [
+                    "vendor/bin/phpstan analyse"
+                ],
+                "test": [
+                    "vendor/bin/pest"
+                ],
+                "test-coverage": [
+                    "vendor/bin/pest --coverage"
+                ],
+                "format": [
+                    "vendor/bin/pint"
+                ],
+                "check": [
+                    "@analyse",
+                    "@test"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Daniele Barbaro",
+                    "email": "barbaro.daniele@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Framework agnostic contracts, DTOs and HTTP helpers shared by every plin-code job board connector",
+            "homepage": "https://github.com/plin-code/job-boards-core",
+            "keywords": [
+                "PlinCode",
+                "ats",
+                "job-board",
+                "job-boards",
+                "plin-code",
+                "psr-18",
+                "scraping"
+            ],
+            "support": {
+                "source": "https://github.com/plin-code/job-boards-core/tree/v0.3.0",
+                "issues": "https://github.com/plin-code/job-boards-core/issues"
+            },
+            "time": "2026-09-08T07:15:56+00:00"
+        },
+        {
+            "name": "plin-code/job-boards-greenhouse",
+            "version": "v0.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/plin-code/job-boards-greenhouse.git",
+                "reference": "c46f410b3ed976f9a770b891b6e88bb71cfcb7a5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/plin-code/job-boards-greenhouse/zipball/c46f410b3ed976f9a770b891b6e88bb71cfcb7a5",
+                "reference": "c46f410b3ed976f9a770b891b6e88bb71cfcb7a5",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^7.8",
+                "illuminate/contracts": "^12.0||^13.0",
+                "php": "^8.3",
+                "plin-code/job-boards-core": "^0.2||^0.3",
+                "psr/http-client": "^1.0",
+                "psr/http-factory": "^1.0",
+                "psr/log": "^2.0||^3.0",
+                "spatie/laravel-package-tools": "^1.16"
+            },
+            "require-dev": {
+                "larastan/larastan": "^3.0",
+                "laravel/pint": "^1.24",
+                "orchestra/testbench": "^10.0||^11.0",
+                "pestphp/pest": "^3.0||^4.0",
+                "pestphp/pest-plugin-laravel": "^3.0||^4.0",
+                "phpstan/extension-installer": "^1.4"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "PlinCode\\JobBoards\\Greenhouse\\GreenhouseServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "PlinCode\\JobBoards\\Greenhouse\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "PlinCode\\JobBoards\\Greenhouse\\Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "post-autoload-dump": [
+                    "@prepare"
+                ],
+                "prepare": [
+                    "@php vendor/bin/testbench package:discover --ansi"
+                ],
+                "lint": [
+                    "vendor/bin/pint --parallel"
+                ],
+                "lint:check": [
+                    "vendor/bin/pint --parallel --test"
+                ],
+                "analyse": [
+                    "vendor/bin/phpstan analyse"
+                ],
+                "test:unit": [
+                    "vendor/bin/pest"
+                ],
+                "test": [
+                    "@analyse",
+                    "@lint:check",
+                    "@test:unit"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Daniele Barbaro",
+                    "email": "barbaro.daniele@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Greenhouse job board connector for the plin-code job-boards family",
+            "homepage": "https://github.com/plin-code/job-boards-greenhouse",
+            "keywords": [
+                "PlinCode",
+                "ats",
+                "greenhouse",
+                "job-board",
+                "job-boards",
+                "laravel",
+                "plin-code"
+            ],
+            "support": {
+                "source": "https://github.com/plin-code/job-boards-greenhouse/tree/v0.1.1",
+                "issues": "https://github.com/plin-code/job-boards-greenhouse/issues"
+            },
+            "time": "2026-09-08T09:37:30+00:00"
+        },
+        {
+            "name": "plin-code/job-boards-lever",
+            "version": "v0.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/plin-code/job-boards-lever.git",
+                "reference": "344f3d43ab2fb74baf2961859dacc8d3af03522d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/plin-code/job-boards-lever/zipball/344f3d43ab2fb74baf2961859dacc8d3af03522d",
+                "reference": "344f3d43ab2fb74baf2961859dacc8d3af03522d",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^7.8",
+                "illuminate/contracts": "^12.0||^13.0",
+                "php": "^8.3",
+                "plin-code/job-boards-core": "^0.2||^0.3",
+                "psr/http-client": "^1.0",
+                "psr/http-factory": "^1.0",
+                "psr/log": "^2.0||^3.0",
+                "spatie/laravel-package-tools": "^1.16",
+                "symfony/dom-crawler": "^6.4||^7.0||^8.0"
+            },
+            "require-dev": {
+                "larastan/larastan": "^3.0",
+                "laravel/pint": "^1.24",
+                "orchestra/testbench": "^10.0||^11.0",
+                "pestphp/pest": "^3.0||^4.0",
+                "pestphp/pest-plugin-laravel": "^3.0||^4.0",
+                "phpstan/extension-installer": "^1.4"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "PlinCode\\JobBoards\\Lever\\LeverServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "PlinCode\\JobBoards\\Lever\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "PlinCode\\JobBoards\\Lever\\Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "post-autoload-dump": [
+                    "@prepare"
+                ],
+                "prepare": [
+                    "@php vendor/bin/testbench package:discover --ansi"
+                ],
+                "lint": [
+                    "vendor/bin/pint --parallel"
+                ],
+                "lint:check": [
+                    "vendor/bin/pint --parallel --test"
+                ],
+                "analyse": [
+                    "vendor/bin/phpstan analyse"
+                ],
+                "test:unit": [
+                    "vendor/bin/pest"
+                ],
+                "test": [
+                    "@analyse",
+                    "@lint:check",
+                    "@test:unit"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Daniele Barbaro",
+                    "email": "barbaro.daniele@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Lever job board connector for the plin-code job-boards family",
+            "homepage": "https://github.com/plin-code/job-boards-lever",
+            "keywords": [
+                "PlinCode",
+                "ats",
+                "job-board",
+                "job-boards",
+                "laravel",
+                "lever",
+                "plin-code"
+            ],
+            "support": {
+                "source": "https://github.com/plin-code/job-boards-lever/tree/v0.1.2",
+                "issues": "https://github.com/plin-code/job-boards-lever/issues"
+            },
+            "time": "2026-09-08T09:51:40+00:00"
+        },
+        {
+            "name": "plin-code/job-boards-personio",
+            "version": "v0.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/plin-code/job-boards-personio.git",
+                "reference": "3ce62b66a2f2044d454ecd194af6a83d1a7d4312"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/plin-code/job-boards-personio/zipball/3ce62b66a2f2044d454ecd194af6a83d1a7d4312",
+                "reference": "3ce62b66a2f2044d454ecd194af6a83d1a7d4312",
+                "shasum": ""
+            },
+            "require": {
+                "ext-libxml": "*",
+                "ext-simplexml": "*",
+                "guzzlehttp/guzzle": "^7.8",
+                "illuminate/contracts": "^12.0||^13.0",
+                "php": "^8.3",
+                "plin-code/job-boards-core": "^0.2||^0.3",
+                "psr/http-client": "^1.0",
+                "psr/http-factory": "^1.0",
+                "psr/log": "^2.0||^3.0",
+                "spatie/laravel-package-tools": "^1.16"
+            },
+            "require-dev": {
+                "larastan/larastan": "^3.0",
+                "laravel/pint": "^1.24",
+                "orchestra/testbench": "^10.0||^11.0",
+                "pestphp/pest": "^3.0||^4.0",
+                "pestphp/pest-plugin-laravel": "^3.0||^4.0",
+                "phpstan/extension-installer": "^1.4"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "PlinCode\\JobBoards\\Personio\\PersonioServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "PlinCode\\JobBoards\\Personio\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "PlinCode\\JobBoards\\Personio\\Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "post-autoload-dump": [
+                    "@prepare"
+                ],
+                "prepare": [
+                    "@php vendor/bin/testbench package:discover --ansi"
+                ],
+                "lint": [
+                    "vendor/bin/pint --parallel"
+                ],
+                "lint:check": [
+                    "vendor/bin/pint --parallel --test"
+                ],
+                "analyse": [
+                    "vendor/bin/phpstan analyse"
+                ],
+                "test:unit": [
+                    "vendor/bin/pest"
+                ],
+                "test": [
+                    "@analyse",
+                    "@lint:check",
+                    "@test:unit"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Daniele Barbaro",
+                    "email": "barbaro.daniele@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Personio job board connector for the plin-code job-boards family",
+            "homepage": "https://github.com/plin-code/job-boards-personio",
+            "keywords": [
+                "PlinCode",
+                "ats",
+                "job-board",
+                "job-boards",
+                "laravel",
+                "personio",
+                "plin-code"
+            ],
+            "support": {
+                "source": "https://github.com/plin-code/job-boards-personio/tree/v0.1.1",
+                "issues": "https://github.com/plin-code/job-boards-personio/issues"
+            },
+            "time": "2026-09-08T09:37:36+00:00"
+        },
+        {
+            "name": "plin-code/job-boards-smartrecruiters",
+            "version": "v0.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/plin-code/job-boards-smartrecruiters.git",
+                "reference": "4235e8265bef4e00f18257dc8472d53ebe7bb595"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/plin-code/job-boards-smartrecruiters/zipball/4235e8265bef4e00f18257dc8472d53ebe7bb595",
+                "reference": "4235e8265bef4e00f18257dc8472d53ebe7bb595",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^7.8",
+                "illuminate/contracts": "^12.0||^13.0",
+                "php": "^8.3",
+                "plin-code/job-boards-core": "^0.2||^0.3",
+                "psr/http-client": "^1.0",
+                "psr/http-factory": "^1.0",
+                "psr/log": "^2.0||^3.0",
+                "spatie/laravel-package-tools": "^1.16"
+            },
+            "require-dev": {
+                "larastan/larastan": "^3.0",
+                "laravel/pint": "^1.24",
+                "orchestra/testbench": "^10.0||^11.0",
+                "pestphp/pest": "^3.0||^4.0",
+                "pestphp/pest-plugin-laravel": "^3.0||^4.0",
+                "phpstan/extension-installer": "^1.4"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "PlinCode\\JobBoards\\SmartRecruiters\\SmartRecruitersServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "PlinCode\\JobBoards\\SmartRecruiters\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "PlinCode\\JobBoards\\SmartRecruiters\\Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "post-autoload-dump": [
+                    "@prepare"
+                ],
+                "prepare": [
+                    "@php vendor/bin/testbench package:discover --ansi"
+                ],
+                "lint": [
+                    "vendor/bin/pint --parallel"
+                ],
+                "lint:check": [
+                    "vendor/bin/pint --parallel --test"
+                ],
+                "analyse": [
+                    "vendor/bin/phpstan analyse"
+                ],
+                "test:unit": [
+                    "vendor/bin/pest"
+                ],
+                "test": [
+                    "@analyse",
+                    "@lint:check",
+                    "@test:unit"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Daniele Barbaro",
+                    "email": "barbaro.daniele@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "SmartRecruiters job board connector for the plin-code job-boards family",
+            "homepage": "https://github.com/plin-code/job-boards-smartrecruiters",
+            "keywords": [
+                "PlinCode",
+                "ats",
+                "job-board",
+                "job-boards",
+                "laravel",
+                "plin-code",
+                "smartrecruiters"
+            ],
+            "support": {
+                "source": "https://github.com/plin-code/job-boards-smartrecruiters/tree/v0.1.1",
+                "issues": "https://github.com/plin-code/job-boards-smartrecruiters/issues"
+            },
+            "time": "2026-09-08T09:37:42+00:00"
+        },
+        {
+            "name": "plin-code/job-boards-workable",
+            "version": "v0.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/plin-code/job-boards-workable.git",
+                "reference": "78b0294df363a99180dc8d7391942a75ede5a096"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/plin-code/job-boards-workable/zipball/78b0294df363a99180dc8d7391942a75ede5a096",
+                "reference": "78b0294df363a99180dc8d7391942a75ede5a096",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^7.8",
+                "illuminate/contracts": "^12.0||^13.0",
+                "php": "^8.3",
+                "plin-code/job-boards-core": "^0.2||^0.3",
+                "psr/http-client": "^1.0",
+                "psr/http-factory": "^1.0",
+                "psr/log": "^2.0||^3.0",
+                "spatie/laravel-package-tools": "^1.16"
+            },
+            "require-dev": {
+                "larastan/larastan": "^3.0",
+                "laravel/pint": "^1.24",
+                "orchestra/testbench": "^10.0||^11.0",
+                "pestphp/pest": "^3.0||^4.0",
+                "pestphp/pest-plugin-laravel": "^3.0||^4.0",
+                "phpstan/extension-installer": "^1.4"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "PlinCode\\JobBoards\\Workable\\WorkableServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "PlinCode\\JobBoards\\Workable\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "PlinCode\\JobBoards\\Workable\\Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "post-autoload-dump": [
+                    "@prepare"
+                ],
+                "prepare": [
+                    "@php vendor/bin/testbench package:discover --ansi"
+                ],
+                "lint": [
+                    "vendor/bin/pint --parallel"
+                ],
+                "lint:check": [
+                    "vendor/bin/pint --parallel --test"
+                ],
+                "analyse": [
+                    "vendor/bin/phpstan analyse"
+                ],
+                "test:unit": [
+                    "vendor/bin/pest"
+                ],
+                "test": [
+                    "@analyse",
+                    "@lint:check",
+                    "@test:unit"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Daniele Barbaro",
+                    "email": "barbaro.daniele@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Workable job board connector for the plin-code job-boards family",
+            "homepage": "https://github.com/plin-code/job-boards-workable",
+            "keywords": [
+                "PlinCode",
+                "ats",
+                "job-board",
+                "job-boards",
+                "laravel",
+                "plin-code",
+                "workable"
+            ],
+            "support": {
+                "source": "https://github.com/plin-code/job-boards-workable/tree/v0.1.2",
+                "issues": "https://github.com/plin-code/job-boards-workable/issues"
+            },
+            "time": "2026-09-08T09:37:13+00:00"
         },
         {
             "name": "plin-code/laravel-istat-foreign-countries",

@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use App\Domain\Company\Company;
-use App\Infrastructure\Services\Contracts\JobBoardClient;
 use App\Infrastructure\Services\JobBoardClientFactory;
+use PlinCode\JobBoards\Contracts\JobBoardClient;
 
 it('adds a company successfully', function (): void {
     $mockClient = Mockery::mock(JobBoardClient::class);

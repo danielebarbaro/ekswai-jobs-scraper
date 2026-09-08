@@ -26,9 +26,9 @@ it('parses jobs from real factorial html', function (): void {
     $jobs = $this->scraper->fetchJobsForCompany('shippypro');
 
     expect($jobs)->not->toBeEmpty()
-        ->and($jobs->first()->title)->toBeString()->not->toBeEmpty()
-        ->and($jobs->first()->externalId)->toBeString()->not->toBeEmpty()
-        ->and($jobs->first()->url)->toBeString()->toContain('factorialhr.com');
+        ->and($jobs[0]->title)->toBeString()->not->toBeEmpty()
+        ->and($jobs[0]->externalId)->toBeString()->not->toBeEmpty()
+        ->and($jobs[0]->url)->toBeString()->toContain('factorialhr.com');
 });
 
 it('extracts numeric external id from url', function (): void {
@@ -37,7 +37,7 @@ it('extracts numeric external id from url', function (): void {
     $jobs = $this->scraper->fetchJobsForCompany('shippypro');
 
     // URL ends with -290373, so ID should be numeric
-    expect($jobs->first()->externalId)->toMatch('/^\d+$/');
+    expect($jobs[0]->externalId)->toMatch('/^\d+$/');
 });
 
 it('extracts data attributes into raw payload', function (): void {
@@ -45,7 +45,7 @@ it('extracts data attributes into raw payload', function (): void {
 
     $jobs = $this->scraper->fetchJobsForCompany('shippypro');
 
-    expect($jobs->first()->rawPayload)
+    expect($jobs[0]->rawPayload)
         ->toBeArray()
         ->toHaveKey('source', 'factorial')
         ->toHaveKey('contract_type')
@@ -59,6 +59,6 @@ it('extracts department', function (): void {
 
     $jobs = $this->scraper->fetchJobsForCompany('shippypro');
 
-    $withDept = $jobs->filter(fn ($job): bool => $job->department !== null);
+    $withDept = array_filter($jobs, fn ($job): bool => $job->department !== null);
     expect($withDept)->not->toBeEmpty();
 });

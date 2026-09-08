@@ -112,7 +112,7 @@ Users subscribe to companies via `company_user` pivot (with email notification t
 ### Adding a provider
 
 1. Add a new case to `JobBoardProvider` enum (`app/Domain/Company/JobBoardProvider.php`)
-2. Create a class implementing `JobBoardClient` (`app/Infrastructure/Services/Contracts/JobBoardClient.php`)
+2. Get a client implementing `PlinCode\JobBoards\Contracts\JobBoardClient`. For an API board, prefer a `plin-code/job-boards-*` package (start from [job-boards-skeleton](https://github.com/plin-code/job-boards-skeleton)) so the connector is reusable outside this app. For an HTML board, subclass `BaseHtmlScraper` (`app/Infrastructure/Services/Scraping/BaseHtmlScraper.php`)
 3. Register it in `JobBoardClientFactory::make()` (`app/Infrastructure/Services/JobBoardClientFactory.php`)
 4. Add the host to `JobBoardUrlParser` so pasted career page URLs resolve to the provider (`app/Application/Services/JobBoardUrlParser.php`)
 5. Add the provider to the hardcoded dropdown in `resources/js/pages/companies.tsx`. The Filament selects read `JobBoardProvider::cases()` and pick it up on their own, this one does not

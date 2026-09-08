@@ -7,9 +7,9 @@ use App\Application\Actions\JobPosting\SyncCompanyJobPostingsAction;
 use App\Application\DTOs\ScanItaliaremoteSummary;
 use App\Domain\Company\Company;
 use App\Domain\Company\JobBoardProvider;
-use App\Infrastructure\Services\Contracts\JobBoardClient;
 use App\Infrastructure\Services\JobBoardClientFactory;
 use Illuminate\Support\Facades\Http;
+use PlinCode\JobBoards\Contracts\JobBoardClient;
 
 const ITALIAREMOTE_JSON_URL = 'https://raw.githubusercontent.com/italiaremote/awesome-italia-remote/refs/heads/main/outputs.json';
 

@@ -3,12 +3,12 @@
 declare(strict_types=1);
 
 use App\Application\Actions\JobPosting\SyncCompanyJobPostingsAction;
-use App\Application\DTOs\JobPostingDTO;
 use App\Domain\Company\Company;
 use App\Domain\JobPosting\JobPosting;
 use App\Domain\User\User;
-use App\Infrastructure\Services\Contracts\JobBoardClient;
 use App\Infrastructure\Services\JobBoardClientFactory;
+use PlinCode\JobBoards\Contracts\JobBoardClient;
+use PlinCode\JobBoards\Data\JobPostingDTO;
 
 beforeEach(function (): void {
     $this->user = User::factory()->create();
@@ -25,7 +25,7 @@ beforeEach(function (): void {
 });
 
 it('creates new job postings from api', function (): void {
-    $jobs = collect([
+    $jobs = [
         new JobPostingDTO(
             externalId: 'job-1',
             title: 'Software Engineer',
@@ -42,7 +42,7 @@ it('creates new job postings from api', function (): void {
             department: 'Product',
             rawPayload: ['shortcode' => 'job-2', 'title' => 'Product Manager']
         ),
-    ]);
+    ];
 
     $this->jobBoardClient
         ->shouldReceive('fetchJobsForCompany')
@@ -66,7 +66,7 @@ it('creates job_posting_user records for all subscribers', function (): void {
     $user2 = User::factory()->create();
     $this->company->subscribers()->attach($user2->id);
 
-    $jobs = collect([
+    $jobs = [
         new JobPostingDTO(
             externalId: 'job-1',
             title: 'Software Engineer',
@@ -75,7 +75,7 @@ it('creates job_posting_user records for all subscribers', function (): void {
             department: 'Engineering',
             rawPayload: ['shortcode' => 'job-1']
         ),
-    ]);
+    ];
 
     $this->jobBoardClient
         ->shouldReceive('fetchJobsForCompany')
@@ -98,7 +98,7 @@ it('does not create duplicate jobs', function (): void {
         'first_seen_at' => now()->subDays(5),
     ]);
 
-    $jobs = collect([
+    $jobs = [
         new JobPostingDTO(
             externalId: 'job-1',
             title: 'Software Engineer',
@@ -115,7 +115,7 @@ it('does not create duplicate jobs', function (): void {
             department: 'Product',
             rawPayload: ['shortcode' => 'job-2']
         ),
-    ]);
+    ];
 
     $this->jobBoardClient
         ->shouldReceive('fetchJobsForCompany')
@@ -137,7 +137,7 @@ it('returns empty collection when api returns no jobs', function (): void {
         ->shouldReceive('fetchJobsForCompany')
         ->with('test-company')
         ->once()
-        ->andReturn(collect());
+        ->andReturn([]);
 
     $newJobs = $this->action->execute($this->company);
 

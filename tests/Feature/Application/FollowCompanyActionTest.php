@@ -9,9 +9,9 @@ use App\Domain\Company\Company;
 use App\Domain\Company\JobBoardProvider;
 use App\Domain\JobPosting\JobPosting;
 use App\Domain\User\User;
-use App\Infrastructure\Services\Contracts\JobBoardClient;
 use App\Infrastructure\Services\JobBoardClientFactory;
 use Illuminate\Validation\ValidationException;
+use PlinCode\JobBoards\Contracts\JobBoardClient;
 
 beforeEach(function (): void {
     $this->user = User::factory()->create();
@@ -28,7 +28,7 @@ beforeEach(function (): void {
 it('creates a new company and subscribes the user', function (): void {
     $this->jobBoardClient->shouldReceive('validateSlug')->with('test-company')->andReturn('Test Company');
     $this->jobBoardClient->shouldReceive('fetchCompanyDescription')->with('test-company')->andReturn(null);
-    $this->jobBoardClient->shouldReceive('fetchJobsForCompany')->andReturn(collect());
+    $this->jobBoardClient->shouldReceive('fetchJobsForCompany')->andReturn([]);
 
     $company = $this->action->execute($this->user, 'test-company', JobBoardProvider::Workable);
 
@@ -46,7 +46,7 @@ it('subscribes to an existing company without creating a duplicate', function ()
 
     $this->jobBoardClient->shouldReceive('validateSlug')->with('existing-co')->andReturn('Existing Co');
     $this->jobBoardClient->shouldReceive('fetchCompanyDescription')->with('existing-co')->andReturn(null);
-    $this->jobBoardClient->shouldReceive('fetchJobsForCompany')->andReturn(collect());
+    $this->jobBoardClient->shouldReceive('fetchJobsForCompany')->andReturn([]);
 
     $company = $this->action->execute($this->user, 'existing-co', JobBoardProvider::Workable);
 
@@ -84,7 +84,7 @@ it('throws validation error when already following', function (): void {
 it('normalizes slug to lowercase', function (): void {
     $this->jobBoardClient->shouldReceive('validateSlug')->with('my-company')->andReturn('My Company');
     $this->jobBoardClient->shouldReceive('fetchCompanyDescription')->with('my-company')->andReturn(null);
-    $this->jobBoardClient->shouldReceive('fetchJobsForCompany')->andReturn(collect());
+    $this->jobBoardClient->shouldReceive('fetchJobsForCompany')->andReturn([]);
 
     $company = $this->action->execute($this->user, '  My-Company  ', JobBoardProvider::Workable);
 

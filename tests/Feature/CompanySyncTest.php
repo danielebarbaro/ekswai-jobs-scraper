@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-use App\Application\DTOs\JobPostingDTO;
 use App\Domain\Company\Company;
 use App\Domain\User\User;
-use App\Infrastructure\Services\Contracts\JobBoardClient;
 use App\Infrastructure\Services\JobBoardClientFactory;
+use PlinCode\JobBoards\Contracts\JobBoardClient;
+use PlinCode\JobBoards\Data\JobPostingDTO;
 
 beforeEach(function (): void {
     $this->user = User::factory()->create();
@@ -16,9 +16,9 @@ beforeEach(function (): void {
 
     $mockClient = Mockery::mock(JobBoardClient::class);
     $mockClient->shouldReceive('fetchJobsForCompany')
-        ->andReturn(collect([
+        ->andReturn([
             new JobPostingDTO('1', 'Engineer', 'Berlin', 'http://example.com/1', 'Engineering', []),
-        ]));
+        ]);
 
     $mockFactory = Mockery::mock(JobBoardClientFactory::class);
     $mockFactory->shouldReceive('make')->andReturn($mockClient);

@@ -3,14 +3,14 @@
 declare(strict_types=1);
 
 use App\Application\Actions\Sync\RunDailySyncAction;
-use App\Application\DTOs\JobPostingDTO;
 use App\Domain\Company\Company;
 use App\Domain\JobFilter\JobFilter;
 use App\Domain\User\User;
 use App\Infrastructure\Mail\NewJobsFoundMail;
-use App\Infrastructure\Services\Contracts\JobBoardClient;
 use App\Infrastructure\Services\JobBoardClientFactory;
 use Illuminate\Support\Facades\Mail;
+use PlinCode\JobBoards\Contracts\JobBoardClient;
+use PlinCode\JobBoards\Data\JobPostingDTO;
 
 beforeEach(function (): void {
     Mail::fake();
@@ -28,10 +28,10 @@ it('filters notification jobs based on user global filter', function (): void {
 
     $mockClient = Mockery::mock(JobBoardClient::class);
     $mockClient->shouldReceive('fetchJobsForCompany')
-        ->andReturn(collect([
+        ->andReturn([
             new JobPostingDTO('1', 'Senior Engineer', 'Berlin', 'http://example.com/1', 'Engineering', []),
             new JobPostingDTO('2', 'VP of Sales', 'Berlin', 'http://example.com/2', 'Sales', []),
-        ]));
+        ]);
 
     $mockFactory = Mockery::mock(JobBoardClientFactory::class);
     $mockFactory->shouldReceive('make')->andReturn($mockClient);
@@ -53,10 +53,10 @@ it('sends all jobs when user has no filter', function (): void {
 
     $mockClient = Mockery::mock(JobBoardClient::class);
     $mockClient->shouldReceive('fetchJobsForCompany')
-        ->andReturn(collect([
+        ->andReturn([
             new JobPostingDTO('1', 'Senior Engineer', 'Berlin', 'http://example.com/1', 'Engineering', []),
             new JobPostingDTO('2', 'VP of Sales', 'Berlin', 'http://example.com/2', 'Sales', []),
-        ]));
+        ]);
 
     $mockFactory = Mockery::mock(JobBoardClientFactory::class);
     $mockFactory->shouldReceive('make')->andReturn($mockClient);
@@ -83,9 +83,9 @@ it('skips notification entirely when all jobs are filtered out', function (): vo
 
     $mockClient = Mockery::mock(JobBoardClient::class);
     $mockClient->shouldReceive('fetchJobsForCompany')
-        ->andReturn(collect([
+        ->andReturn([
             new JobPostingDTO('1', 'Senior Engineer', 'Berlin', 'http://example.com/1', 'Engineering', []),
-        ]));
+        ]);
 
     $mockFactory = Mockery::mock(JobBoardClientFactory::class);
     $mockFactory->shouldReceive('make')->andReturn($mockClient);

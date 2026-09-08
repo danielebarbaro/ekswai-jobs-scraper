@@ -6,7 +6,6 @@ namespace App\Application\Actions\Sync;
 
 use App\Application\Actions\JobPosting\SyncCompanyJobPostingsAction;
 use App\Application\Actions\Notification\NotifyUserOfNewJobsAction;
-use App\Application\DTOs\JobPostingDTO;
 use App\Application\Services\JobFilterService;
 use App\Domain\Company\Company;
 use App\Domain\JobPosting\JobPosting;
@@ -14,6 +13,7 @@ use App\Domain\User\User;
 use App\Infrastructure\Services\Scraping\Exceptions\ScrapingFailedException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use PlinCode\JobBoards\Data\JobPostingDTO;
 
 class RunDailySyncAction
 {

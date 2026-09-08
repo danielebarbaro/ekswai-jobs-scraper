@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Application\Services;
 
-use App\Application\DTOs\JobPostingDTO;
 use App\Domain\Company\Company;
 use App\Domain\JobFilter\JobFilter;
 use App\Domain\User\User;
@@ -13,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use PlinCode\IstatForeignCountries\Models\ForeignCountries\Country;
+use PlinCode\JobBoards\Data\JobPostingDTO;
 
 class JobFilterService
 {
