@@ -56,7 +56,7 @@ it('reads the scraper config once per sync instead of once per job posting', fun
     Http::fake(['https://weroad.teamtailor.com/jobs' => Http::response($this->fixture, 200)]);
 
     $queries = 0;
-    DB::listen(function ($query) use (&$queries): void {
+    \Illuminate\Support\Facades\DB::listen(function ($query) use (&$queries): void {
         if (str_contains($query->sql, 'scraper_configs')) {
             $queries++;
         }
