@@ -70,16 +70,20 @@ return [
         ],
     ],
 
-    'extensibility' => [
-        'heading' => 'Progettato per essere estensibile',
-        'description' => 'ekswai ha un\'architettura provider-agnostic. Supporta integrazioni API (Workable, Lever, Ashby, Greenhouse) e scraper HTML con selettori configurabili (Teamtailor, Factorial). Vuoi vedere la tua job board preferita? I contributi sono benvenuti.',
-        'steps' => [
-            '1' => 'Aggiungi un nuovo case all\'enum JobBoardProvider',
-            '2' => 'Crea una classe che implementa l\'interfaccia JobBoardClient',
-            '3' => 'Registrala nella JobBoardClientFactory',
-            '4' => 'Per gli scraper HTML: aggiungi una ScraperConfig con i selettori CSS',
+    'connectors' => [
+        'badge' => 'Fase iniziale · v0.1.x',
+        'heading' => 'Connettori open source',
+        'description' => 'Pacchetti PHP gratuiti con licenza MIT per 7 job board. Compatibili PSR-18, funzionano con Laravel, Symfony o PHP puro. ekswai ne usa sei in produzione.',
+        'core' => [
+            'title' => 'job-boards-core',
+            'description' => 'Il contratto condiviso su cui si basa ogni connettore: un\'interfaccia comune, i DTO e un helper HTTP PSR-18.',
         ],
-        'cta' => 'Contribuisci su GitHub',
+        'skeleton' => [
+            'title' => 'job-boards-skeleton',
+            'description' => 'Manca la tua job board preferita? Clona lo skeleton, rinominalo, implementa l\'interfaccia.',
+        ],
+        'scrapers_note' => 'Teamtailor e Factorial sono gestiti dagli scraper HTML interni di ekswai, non da pacchetti.',
+        'cta' => 'Scopri su GitHub',
     ],
 
     'cta_final' => [
