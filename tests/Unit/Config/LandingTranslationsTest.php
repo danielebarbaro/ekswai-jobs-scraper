@@ -20,7 +20,12 @@ it('has english translations with all required keys', function (): void {
     expect(__('landing.preview.companies.title'))->toBeString()->not->toContain('landing.');
     expect(__('landing.preview.dashboard.title'))->toBeString()->not->toContain('landing.');
     expect(__('landing.features.opensource.title'))->toBeString()->not->toContain('landing.');
-    expect(__('landing.extensibility.heading'))->toBeString()->not->toContain('landing.');
+    expect(__('landing.connectors.heading'))->toBeString()->not->toContain('landing.');
+    expect(__('landing.connectors.badge'))->toBeString()->not->toContain('landing.');
+    expect(__('landing.connectors.core.title'))->toBeString()->not->toContain('landing.');
+    expect(__('landing.connectors.skeleton.title'))->toBeString()->not->toContain('landing.');
+    expect(__('landing.connectors.scrapers_note'))->toBeString()->not->toContain('landing.');
+    expect(__('landing.connectors.cta'))->toBeString()->not->toContain('landing.');
     expect(__('landing.footer.opensource_by'))->toBeString()->not->toContain('landing.');
 });
 
@@ -42,7 +47,12 @@ it('has italian translations with all required keys', function (): void {
     expect(__('landing.preview.companies.title'))->toBeString()->not->toContain('landing.');
     expect(__('landing.preview.dashboard.title'))->toBeString()->not->toContain('landing.');
     expect(__('landing.features.opensource.title'))->toBeString()->not->toContain('landing.');
-    expect(__('landing.extensibility.heading'))->toBeString()->not->toContain('landing.');
+    expect(__('landing.connectors.heading'))->toBeString()->not->toContain('landing.');
+    expect(__('landing.connectors.badge'))->toBeString()->not->toContain('landing.');
+    expect(__('landing.connectors.core.title'))->toBeString()->not->toContain('landing.');
+    expect(__('landing.connectors.skeleton.title'))->toBeString()->not->toContain('landing.');
+    expect(__('landing.connectors.scrapers_note'))->toBeString()->not->toContain('landing.');
+    expect(__('landing.connectors.cta'))->toBeString()->not->toContain('landing.');
     expect(__('landing.footer.opensource_by'))->toBeString()->not->toContain('landing.');
 });
 
@@ -54,4 +64,10 @@ it('has different content for each locale', function (): void {
     $itTitle = __('landing.hero.headline');
 
     expect($enTitle)->not->toBe($itTitle);
+});
+
+it('no longer resolves the old extensibility translation key', function (): void {
+    app()->setLocale('en');
+
+    expect(__('landing.extensibility.heading'))->toBe('landing.extensibility.heading');
 });
