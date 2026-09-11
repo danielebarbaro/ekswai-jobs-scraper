@@ -42,7 +42,7 @@ return [
     'preview' => [
         'companies' => [
             'title' => 'My Companies',
-            'description' => 'Add companies from Workable, Lever, Ashby, Greenhouse, Teamtailor, or Factorial',
+            'description' => 'Add companies from Workable, Lever, Ashby, Greenhouse, Personio, SmartRecruiters, Teamtailor, or Factorial',
         ],
         'dashboard' => [
             'title' => 'Your Dashboard',
@@ -58,7 +58,7 @@ return [
         ],
         'providers' => [
             'title' => 'Job board integration',
-            'description' => 'Supports Workable, Lever, Ashby, Greenhouse, Teamtailor, and Factorial. Add any company by their provider slug and we start syncing automatically.',
+            'description' => 'Supports Workable, Lever, Ashby, Greenhouse, Personio, SmartRecruiters, Teamtailor, and Factorial. Add any company by their provider slug and we start syncing automatically.',
         ],
         'pipeline' => [
             'title' => 'Personal job pipeline',
@@ -73,14 +73,14 @@ return [
     'connectors' => [
         'badge' => 'Early · v0.1.x',
         'heading' => 'Open source connectors',
-        'description' => 'Free, MIT licensed PHP connectors for 7 ATS job boards. PSR-18 compatible, they work in Laravel, Symfony, or plain PHP. ekswai runs six of them in production.',
+        'description' => 'Free, MIT licensed PHP connectors for popular ATS job boards. PSR-18 compatible, they work in Laravel, Symfony, or plain PHP. ekswai runs most of them in production.',
         'core' => [
             'title' => 'job-boards-core',
             'description' => 'The shared contract every connector builds on: a common interface, DTOs, and a PSR-18 HTTP helper.',
         ],
         'skeleton' => [
             'title' => 'job-boards-skeleton',
-            'description' => 'Your job board is missing? Clone the skeleton, rename it, implement the interface.',
+            'description' => 'Missing your job board? Clone the skeleton, rename it, implement the interface.',
         ],
         'scrapers_note' => 'Teamtailor and Factorial are handled by ekswai\'s own HTML scrapers, not packages.',
         'cta' => 'Explore on GitHub',
