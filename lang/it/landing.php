@@ -42,7 +42,7 @@ return [
     'preview' => [
         'companies' => [
             'title' => 'Le Mie Aziende',
-            'description' => 'Aggiungi aziende da Workable, Lever, Ashby, Greenhouse, Teamtailor o Factorial',
+            'description' => 'Aggiungi aziende da Workable, Lever, Ashby, Greenhouse, Personio, SmartRecruiters, Teamtailor o Factorial',
         ],
         'dashboard' => [
             'title' => 'La Tua Dashboard',
@@ -58,7 +58,7 @@ return [
         ],
         'providers' => [
             'title' => 'Integrazione job board',
-            'description' => 'Supporta Workable, Lever, Ashby, Greenhouse, Teamtailor e Factorial. Aggiungi qualsiasi azienda con il suo slug e sincronizziamo automaticamente.',
+            'description' => 'Supporta Workable, Lever, Ashby, Greenhouse, Personio, SmartRecruiters, Teamtailor e Factorial. Aggiungi qualsiasi azienda con il suo slug e sincronizziamo automaticamente.',
         ],
         'pipeline' => [
             'title' => 'Pipeline personale',
@@ -73,7 +73,7 @@ return [
     'connectors' => [
         'badge' => 'Fase iniziale · v0.1.x',
         'heading' => 'Connettori open source',
-        'description' => 'Pacchetti PHP gratuiti con licenza MIT per 7 job board. Compatibili PSR-18, funzionano con Laravel, Symfony o PHP puro. ekswai ne usa sei in produzione.',
+        'description' => 'Pacchetti PHP gratuiti con licenza MIT per i job board più diffusi. Compatibili PSR-18, funzionano con Laravel, Symfony o PHP puro. ekswai ne usa quasi tutti in produzione.',
         'core' => [
             'title' => 'job-boards-core',
             'description' => 'Il contratto condiviso su cui si basa ogni connettore: un\'interfaccia comune, i DTO e un helper HTTP PSR-18.',
