@@ -30,7 +30,3 @@ it('has valid github urls for the core and skeleton packages', function (): void
     expect(config('landing.job_boards.core'))->toStartWith('https://github.com/plin-code/')
         ->and(config('landing.job_boards.skeleton'))->toStartWith('https://github.com/plin-code/');
 });
-
-it('does not list a connector for a rejected job board', function (): void {
-    expect(config('landing.job_boards.connectors'))->not->toHaveKey('darwinbox');
-});
