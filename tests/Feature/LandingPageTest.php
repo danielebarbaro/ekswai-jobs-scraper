@@ -47,6 +47,17 @@ it('passes landing config to the page', function (): void {
         );
 });
 
+it('passes job boards config to the page', function (): void {
+    $connectorsCount = count(config('landing.job_boards.connectors'));
+
+    $this->get('/en')
+        ->assertInertia(fn ($page) => $page
+            ->has('config.job_boards.core')
+            ->has('config.job_boards.skeleton')
+            ->has('config.job_boards.connectors', $connectorsCount)
+        );
+});
+
 it('passes translations to the page', function (): void {
     $this->get('/en')
         ->assertInertia(fn ($page) => $page

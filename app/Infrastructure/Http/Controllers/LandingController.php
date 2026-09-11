@@ -34,6 +34,18 @@ class LandingController extends Controller
             'config' => [
                 'repo_url' => config('landing.repo_url'),
                 'umami' => config('landing.umami'),
+                'job_boards' => [
+                    'core' => config('landing.job_boards.core'),
+                    'skeleton' => config('landing.job_boards.skeleton'),
+                    'connectors' => collect(config('landing.job_boards.connectors'))
+                        ->map(fn (string $name, string $slug): array => [
+                            'slug' => $slug,
+                            'name' => $name,
+                            'url' => "https://github.com/plin-code/job-boards-{$slug}",
+                        ])
+                        ->values()
+                        ->all(),
+                ],
             ],
         ]);
     }
