@@ -1,6 +1,6 @@
 import { useAppearance } from '@/hooks/use-appearance';
 import { Head, Link } from '@inertiajs/react';
-import { Bell, Bookmark, Building2, Check, Github, Mail, Puzzle, Moon, Sun, ArrowRight } from 'lucide-react';
+import { Bell, Bookmark, Building2, Check, Github, GitFork, Mail, Package, Puzzle, Moon, Sun, ArrowRight } from 'lucide-react';
 
 interface LandingTranslations {
     meta: {
@@ -25,10 +25,13 @@ interface LandingTranslations {
     preview: Record<string, { title: string; description: string }>;
     features_heading: string;
     features: Record<string, { title: string; description: string }>;
-    extensibility: {
+    connectors: {
+        badge: string;
         heading: string;
         description: string;
-        steps: Record<string, string>;
+        core: { title: string; description: string };
+        skeleton: { title: string; description: string };
+        scrapers_note: string;
         cta: string;
     };
     cta_final: {
@@ -47,6 +50,11 @@ interface LandingConfig {
         enabled: boolean;
         script_url: string | null;
         website_id: string | null;
+    };
+    job_boards: {
+        core: string;
+        skeleton: string;
+        connectors: { slug: string; name: string; url: string }[];
     };
 }
 
@@ -314,33 +322,70 @@ export default function Landing({ locale, alternateLocale, translations: t, conf
                     </div>
                 </section>
 
-                {/* Extensibility */}
+                {/* Open source connectors */}
                 <section className="bg-stone-50 px-6 py-24 dark:bg-stone-900">
                     <div className="mx-auto max-w-3xl text-center">
                         <h2 className="text-2xl font-semibold lg:text-3xl">
-                            {t.extensibility.heading}
+                            {t.connectors.heading}
+                            <span className="ml-2 inline-block rounded-full bg-orange-100 px-2.5 py-0.5 align-middle text-xs font-medium text-orange-800 dark:bg-orange-900 dark:text-orange-300">
+                                {t.connectors.badge}
+                            </span>
                         </h2>
                         <p className="mt-4 text-lg text-stone-600 dark:text-stone-400">
-                            {t.extensibility.description}
+                            {t.connectors.description}
                         </p>
-                        <ol className="mx-auto mt-8 max-w-md space-y-3 text-left">
-                            {Object.entries(t.extensibility.steps).map(([key, step]) => (
-                                <li key={key} className="flex items-start gap-3">
-                                    <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-orange-100 text-xs font-semibold text-orange-700 dark:bg-orange-900 dark:text-orange-300">
-                                        {key}
-                                    </span>
-                                    <span className="text-sm text-stone-700 dark:text-stone-300">{step}</span>
-                                </li>
+
+                        <div className="mt-6 flex flex-wrap justify-center gap-2">
+                            {config.job_boards.connectors.map((connector) => (
+                                <a
+                                    key={connector.slug}
+                                    href={connector.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="rounded-full border border-stone-300 px-3 py-1 text-sm text-stone-700 hover:bg-stone-100 dark:border-stone-600 dark:text-stone-300 dark:hover:bg-stone-800"
+                                >
+                                    {connector.name}
+                                </a>
                             ))}
-                        </ol>
+                        </div>
+
+                        <div className="mt-10 grid gap-6 text-left sm:grid-cols-2">
+                            <a
+                                href={config.job_boards.core}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="rounded-lg border border-stone-200 bg-white p-6 shadow-sm hover:border-orange-300 dark:border-stone-800 dark:bg-stone-800 dark:hover:border-orange-700"
+                            >
+                                <div className="mb-4 flex size-10 items-center justify-center rounded-lg bg-orange-50 dark:bg-orange-950">
+                                    <Package className="size-5 text-orange-500 dark:text-orange-400" />
+                                </div>
+                                <h3 className="font-semibold">{t.connectors.core.title}</h3>
+                                <p className="mt-2 text-sm text-stone-600 dark:text-stone-400">{t.connectors.core.description}</p>
+                            </a>
+                            <a
+                                href={config.job_boards.skeleton}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="rounded-lg border border-stone-200 bg-white p-6 shadow-sm hover:border-orange-300 dark:border-stone-800 dark:bg-stone-800 dark:hover:border-orange-700"
+                            >
+                                <div className="mb-4 flex size-10 items-center justify-center rounded-lg bg-orange-50 dark:bg-orange-950">
+                                    <GitFork className="size-5 text-orange-500 dark:text-orange-400" />
+                                </div>
+                                <h3 className="font-semibold">{t.connectors.skeleton.title}</h3>
+                                <p className="mt-2 text-sm text-stone-600 dark:text-stone-400">{t.connectors.skeleton.description}</p>
+                            </a>
+                        </div>
+
+                        <p className="mt-6 text-sm text-stone-500 dark:text-stone-400">{t.connectors.scrapers_note}</p>
+
                         <a
-                            href={config.repo_url}
+                            href={config.job_boards.core}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="mt-8 inline-flex items-center gap-2 rounded-md border border-stone-300 px-6 py-3 text-base font-medium text-stone-700 hover:bg-stone-100 dark:border-stone-600 dark:text-stone-300 dark:hover:bg-stone-800"
                         >
                             <Github className="size-4" />
-                            {t.extensibility.cta}
+                            {t.connectors.cta}
                         </a>
                     </div>
                 </section>
