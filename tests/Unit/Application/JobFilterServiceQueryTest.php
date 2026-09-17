@@ -37,6 +37,23 @@ it('applies title exclude filter to query', function (): void {
         ->and($result->first()->title)->toBe('Senior Engineer');
 });
 
+it('matches title and location filters regardless of case', function (): void {
+    $company = Company::factory()->create();
+    JobPosting::factory()->create(['company_id' => $company->id, 'title' => 'Senior PHP Engineer', 'location' => 'Milano, Italia']);
+    JobPosting::factory()->create(['company_id' => $company->id, 'title' => 'Senior PHP Engineer', 'location' => 'Berlin, Germany']);
+    JobPosting::factory()->create(['company_id' => $company->id, 'title' => 'Sales Manager', 'location' => 'Milano, Italia']);
+    JobPosting::factory()->create(['company_id' => $company->id, 'title' => 'php intern', 'location' => 'Milano, Italia']);
+
+    $filter = JobFilter::factory()->make([
+        'title_include' => ['php'],
+        'title_exclude' => ['INTERN'],
+    ]);
+    $query = JobPosting::query()->where('company_id', $company->id);
+    $result = $this->service->applyToQuery($query, $filter)->pluck('location')->sort()->values()->all();
+
+    expect($result)->toBe(['Berlin, Germany', 'Milano, Italia']);
+});
+
 it('applies remote only filter to query', function (): void {
     $company = Company::factory()->create();
     JobPosting::factory()->create(['company_id' => $company->id, 'title' => 'Remote Dev', 'location' => 'Remote']);

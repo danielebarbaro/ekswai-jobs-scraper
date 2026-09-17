@@ -13,6 +13,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use PlinCode\IstatForeignCountries\Models\ForeignCountries\Country;
 use PlinCode\JobBoards\Data\JobPostingDTO;
+use PlinCode\SqlDialect\LikeOperator;
 
 class JobFilterService
 {
@@ -79,7 +80,8 @@ class JobFilterService
     }
 
     /**
-     * Uses LOWER() + LIKE for cross-database compatibility (PostgreSQL, MySQL, SQLite).
+     * LIKE clauses go through LikeOperator, which escapes wildcards and writes
+     * the right operator and ESCAPE clause for PostgreSQL, MySQL and SQLite.
      */
     public function applyToQuery(Builder|BelongsToMany $query, ?JobFilter $filter): Builder|BelongsToMany
     {
@@ -90,15 +92,18 @@ class JobFilterService
         if (! empty($filter->title_include)) {
             $query->where(function (Builder $q) use ($filter): void {
                 foreach ($filter->title_include as $keyword) {
-                    $q->orWhereRaw("LOWER(title) LIKE ? ESCAPE '!'", [$this->likePattern($keyword)]);
+                    LikeOperator::orApplyContains($q, 'title', $keyword);
                 }
             });
         }
 
         if (! empty($filter->title_exclude)) {
-            foreach ($filter->title_exclude as $keyword) {
-                $query->whereRaw("LOWER(title) NOT LIKE ? ESCAPE '!'", [$this->likePattern($keyword)]);
-            }
+            // Grouped because LikeOperator needs an Eloquent Builder and $query may be a relation.
+            $query->where(function (Builder $q) use ($filter): void {
+                foreach ($filter->title_exclude as $keyword) {
+                    LikeOperator::applyNotContains($q, 'title', $keyword);
+                }
+            });
         }
 
         if (! empty($filter->country_ids)) {
@@ -106,15 +111,15 @@ class JobFilterService
             $query->where(function (Builder $q) use ($countryPatterns): void {
                 $q->whereNull('location');
                 foreach ($countryPatterns as $pattern) {
-                    $q->orWhereRaw("LOWER(location) LIKE ? ESCAPE '!'", [$this->likePattern($pattern)]);
+                    LikeOperator::orApplyContains($q, 'location', $pattern);
                 }
             });
         }
 
         if ($filter->remote_only) {
             $query->where(function (Builder $q): void {
-                $q->whereRaw('LOWER(location) LIKE ?', ['%remote%'])
-                    ->orWhere('raw_payload->isRemote', true)
+                LikeOperator::applyContains($q, 'location', 'remote');
+                $q->orWhere('raw_payload->isRemote', true)
                     ->orWhere('raw_payload->is_remote', true);
             });
         }
@@ -129,20 +134,6 @@ class JobFilterService
         }
 
         return $query;
-    }
-
-    /**
-     * Build a LIKE pattern that matches the keyword literally.
-     *
-     * Escapes %, _ and the escape character itself, so a keyword such as
-     * "100% remote" is not treated as a wildcard. Callers must pair this with
-     * an explicit ESCAPE '!' clause: SQLite has no default escape character,
-     * and '!' is used instead of backslash because MySQL treats a backslash
-     * inside a string literal as an escape, which breaks ESCAPE '\'.
-     */
-    private function likePattern(string $keyword): string
-    {
-        return '%'.strtr(mb_strtolower($keyword), ['!' => '!!', '%' => '!%', '_' => '!_']).'%';
     }
 
     /**
