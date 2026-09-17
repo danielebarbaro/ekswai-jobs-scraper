@@ -44,11 +44,24 @@ class FactorialScraper extends BaseHtmlScraper
             rawPayload: [
                 'source' => 'factorial',
                 'contract_type' => $node->attr('data-contract-type'),
-                'is_remote' => $node->attr('data-is-remote'),
+                'is_remote' => $this->parseBooleanAttribute($node->attr('data-is-remote')),
                 'location_id' => $node->attr('data-location-id'),
                 'team_id' => $node->attr('data-team-id'),
             ],
         );
+    }
+
+    /**
+     * Factorial renders the flag as the string 'true' or 'false'. Store a real
+     * boolean so the remote filter, which compares against true, matches it.
+     */
+    private function parseBooleanAttribute(?string $value): ?bool
+    {
+        if ($value === null) {
+            return null;
+        }
+
+        return filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
     }
 
     private function extractIdFromUrl(string $url): string
