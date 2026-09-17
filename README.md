@@ -52,7 +52,7 @@ API providers use JSON endpoints directly. Personio serves an XML feed on both t
 |-----------|------------|
 | Framework | Laravel 12 (PHP 8.4) |
 | Frontend | React 19, Inertia.js, TypeScript, Tailwind CSS 4 |
-| Database | PostgreSQL (SQLite for tests) |
+| Database | MySQL or PostgreSQL (SQLite for local tests, CI runs both MySQL and PostgreSQL) |
 | Admin | Filament 4 |
 | Country Data | [laravel-istat-foreign-countries](https://github.com/plin-code/laravel-istat-foreign-countries) |
 | Testing | Pest |
