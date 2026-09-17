@@ -9,11 +9,11 @@ import { type FormEvent, type KeyboardEvent, useCallback, useState } from 'react
 export interface JobFilter {
     id: string;
     company_id: string | null;
-    title_include: string[];
-    title_exclude: string[];
-    countries: string[];
+    title_include: string[] | null;
+    title_exclude: string[] | null;
+    country_ids: string[] | null;
     remote_only: boolean;
-    departments: string[];
+    department_include: string[] | null;
 }
 
 export interface Country {
@@ -31,9 +31,9 @@ export const emptyFilter: JobFilter = {
     company_id: null,
     title_include: [],
     title_exclude: [],
-    countries: [],
+    country_ids: [],
     remote_only: false,
-    departments: [],
+    department_include: [],
 };
 
 export function TagInput({
@@ -203,18 +203,18 @@ export function FilterForm({
 }) {
     const [titleInclude, setTitleInclude] = useState<string[]>(filter.title_include ?? []);
     const [titleExclude, setTitleExclude] = useState<string[]>(filter.title_exclude ?? []);
-    const [selectedCountries, setSelectedCountries] = useState<string[]>(filter.countries ?? []);
+    const [selectedCountries, setSelectedCountries] = useState<string[]>(filter.country_ids ?? []);
     const [remoteOnly, setRemoteOnly] = useState(filter.remote_only ?? false);
-    const [selectedDepartments, setSelectedDepartments] = useState<string[]>(filter.departments ?? []);
+    const [selectedDepartments, setSelectedDepartments] = useState<string[]>(filter.department_include ?? []);
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
         onSubmit({
             title_include: titleInclude,
             title_exclude: titleExclude,
-            countries: selectedCountries,
+            country_ids: selectedCountries,
             remote_only: remoteOnly,
-            departments: selectedDepartments,
+            department_include: selectedDepartments,
         });
     };
 
