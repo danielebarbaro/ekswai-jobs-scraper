@@ -9,9 +9,42 @@ on:
 
 jobs:
   ci:
+    name: ci (${{ matrix.db.connection }})
     runs-on: ubuntu-latest
 
+    strategy:
+      fail-fast: false
+      matrix:
+        db:
+          - connection: mysql
+            port: 3306
+          - connection: pgsql
+            port: 5432
+
+    env:
+      DB_CONNECTION: ${{ matrix.db.connection }}
+      DB_HOST: 127.0.0.1
+      DB_PORT: ${{ matrix.db.port }}
+      DB_DATABASE: testing
+      DB_USERNAME: sail
+      DB_PASSWORD: password
+
     services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: testing
+          MYSQL_USER: sail
+          MYSQL_PASSWORD: password
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd "mysqladmin ping -h 127.0.0.1 -ppassword"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+
       postgres:
         image: postgres:18-alpine
         env:
@@ -69,21 +102,7 @@ jobs:
         run: npm run build
 
       - name: Run Migrations
-        env:
-          DB_CONNECTION: pgsql
-          DB_HOST: localhost
-          DB_PORT: 5432
-          DB_DATABASE: testing
-          DB_USERNAME: sail
-          DB_PASSWORD: password
         run: php artisan migrate --force
 
       - name: Tests
-        env:
-          DB_CONNECTION: pgsql
-          DB_HOST: localhost
-          DB_PORT: 5432
-          DB_DATABASE: testing
-          DB_USERNAME: sail
-          DB_PASSWORD: password
         run: composer test
