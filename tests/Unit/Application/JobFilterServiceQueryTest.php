@@ -50,6 +50,21 @@ it('applies remote only filter to query', function (): void {
         ->and($result->first()->title)->toBe('Remote Dev');
 });
 
+it('applies remote only filter to raw payload flags', function (): void {
+    $company = Company::factory()->create();
+    JobPosting::factory()->create(['company_id' => $company->id, 'title' => 'Ashby Remote', 'location' => 'Berlin', 'raw_payload' => ['isRemote' => true]]);
+    JobPosting::factory()->create(['company_id' => $company->id, 'title' => 'Factorial Remote', 'location' => 'Milano', 'raw_payload' => ['is_remote' => true]]);
+    JobPosting::factory()->create(['company_id' => $company->id, 'title' => 'Ashby Office', 'location' => 'Berlin', 'raw_payload' => ['isRemote' => false]]);
+    JobPosting::factory()->create(['company_id' => $company->id, 'title' => 'Factorial Office', 'location' => 'Milano', 'raw_payload' => ['is_remote' => false]]);
+    JobPosting::factory()->create(['company_id' => $company->id, 'title' => 'No Flag', 'location' => 'Milano', 'raw_payload' => []]);
+
+    $filter = JobFilter::factory()->make(['remote_only' => true]);
+    $query = JobPosting::query()->where('company_id', $company->id);
+    $result = $this->service->applyToQuery($query, $filter)->pluck('title')->sort()->values()->all();
+
+    expect($result)->toBe(['Ashby Remote', 'Factorial Remote']);
+});
+
 it('applies department include filter to query', function (): void {
     $company = Company::factory()->create();
     JobPosting::factory()->create(['company_id' => $company->id, 'title' => 'Dev', 'department' => 'Engineering']);

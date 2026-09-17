@@ -62,3 +62,16 @@ it('extracts department', function (): void {
     $withDept = array_filter($jobs, fn ($job): bool => $job->department !== null);
     expect($withDept)->not->toBeEmpty();
 });
+
+it('stores is_remote as a boolean', function (string $attribute, ?bool $expected): void {
+    $html = str_replace("data-is-remote='false'", "data-is-remote='{$attribute}'", $this->fixture);
+    Http::fake(['https://shippypro.factorialhr.com/' => Http::response($html, 200)]);
+
+    $jobs = $this->scraper->fetchJobsForCompany('shippypro');
+
+    expect($jobs[0]->rawPayload['is_remote'])->toBe($expected);
+})->with([
+    'true string' => ['true', true],
+    'false string' => ['false', false],
+    'unexpected value' => ['maybe', null],
+]);
